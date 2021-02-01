@@ -63,14 +63,20 @@ class Database
 					implode(",:", array_keys($columns))
 				." );");	
 		}else{
-			//UPDATE
+			$params = [];
+            foreach( array_keys($columns) as $field )
+            {
+					if(!is_null($this->$field) && !empty($this->$field))
+					{
+						array_push($params, $field . " = '" . $this->$field . "'");
+					}
+				}
+				$req     = "UPDATE " . $this->table . " SET " . implode(', ', $params) . ' WHERE id = ' . $this->getId() ;
+				$query     = $this->pdo->prepare($req);
+			}
 
 		}
-
 		$query->execute($columns);
-		
-
-
 	}
 
 }
