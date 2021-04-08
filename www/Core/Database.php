@@ -11,6 +11,8 @@ class Database
 	public function __construct(){
 		try{
 			$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".DBHOST.";port=".DBPORT,DBUSER,DBPWD);
+			//$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".'51.178.52.245'.";port=".DBPORT,'myopens-remote','G3n3sis2%');
+			//$this->pdo = new \PDO('mysql:host=myopens.fr;dbname=myopens', 'myopens-remote', 'G3n3sis2%', array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 
 			if(ENV == "dev"){
 				$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
