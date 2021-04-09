@@ -19,9 +19,12 @@
   controller: Security
   action: login  
 
-
 /se-deconnecter:
   controller: Security
   action: logout
+
+/create:
+  controller: ManageSite
+  action: create
 
 

@@ -11,6 +11,8 @@ class Database
 	public function __construct(){
 		try{
 			$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".DBHOST.";port=".DBPORT,DBUSER,DBPWD);
+			//$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".'51.178.52.245'.";port=".DBPORT,'myopens-remote','G3n3sis2%');
+			//$this->pdo = new \PDO('mysql:host=myopens.fr;dbname=myopens', 'myopens-remote', 'G3n3sis2%', array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 
 			if(ENV == "dev"){
 				$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -28,24 +30,6 @@ class Database
 
 	public function save(){
 
-		/*
-		//Prepare
-		$query = $this->pdo->prepare("INSERT INTO wpml_user (firstname, lastname, email) 
-				VALUES ( :firstname , :lastname , :email );");  // 1
-
-		//Executer
-		$query->execute(
-				[
-					"firstname"=>"Yves",
-					"lastname"=>"Skrzypczyk",
-					"email"=>"y.skrzypczyk@gmail.com"
-				]
-		);
-		*/
-
-	
-
-
 		$columns = array_diff_key (
 						get_object_vars($this),
 						get_class_vars(get_class())
@@ -53,7 +37,6 @@ class Database
 
 
 		//INSERT OU UPDATE
-		// $id == null -> INSERT SINON UPDATE
 		if( is_null($this->getId()) ){
 			//INSERT
 			$query = $this->pdo->prepare("INSERT INTO ".$this->table." (".
@@ -63,20 +46,31 @@ class Database
 					implode(",:", array_keys($columns))
 				." );");	
 		}else{
-			$params = [];
-            foreach( array_keys($columns) as $field )
-            {
-					if(!is_null($this->$field) && !empty($this->$field))
-					{
-						array_push($params, $field . " = '" . $this->$field . "'");
-					}
+			//UPDATE
+			$setCmd = [];
+			foreach( array_keys($columns) as $field )
+			{
+				if(!is_null($this->$field) && !empty($this->$field))
+				{
+					array_push($setCmd, $field . " = '" . $this->$field . "'");
 				}
-				$req     = "UPDATE " . $this->table . " SET " . implode(', ', $params) . ' WHERE id = ' . $this->getId() ;
-				$query     = $this->pdo->prepare($req);
 			}
-
+			$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId() ;
+			$query 	= $this->pdo->prepare($req);
 		}
+
 		$query->execute($columns);
+	}
+
+	public function insert($table, array $values){
+		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
+		implode(",", array_keys($values))
+		.") 
+		VALUES ( :".
+			implode(",:", $values)
+		." );");
+		$query->execute($columns);
+
 	}
 
 }
