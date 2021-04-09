@@ -14,6 +14,7 @@ class Site extends Database
 	protected $creator;
 	protected $subDomain = null;
 	protected $prefix = null;
+    protected $type = null;
 
 	public function __construct(){
 		parent::__construct();
@@ -82,6 +83,16 @@ class Site extends Database
     public function setPrefix(string $prefix)
     {
         $this->prefix = $prefix;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type)
+    {
+        $this->type = $type;
     }
 
     public function initializeSite(){

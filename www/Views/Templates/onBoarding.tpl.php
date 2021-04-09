@@ -24,12 +24,12 @@
     async function createSite(){
         let category    = document.getElementById ('category').value;
         let type        = document.getElementById ('type').value;
-        let url         = document.getElementById ('url').value;
+        let subDomain   = document.getElementById ('url').value;
         let currentData = localStorage.getItem('siteData');
         currentData = JSON.parse(currentData);
         let { name, description } = currentData;
 
-        let body = {name, description, type, category, url};
+        let body = {name, description, type, category, subDomain};
         let formBody = [];
         for (let property in body) {
             let encodedKey = encodeURIComponent(property);

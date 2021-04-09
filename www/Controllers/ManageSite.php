@@ -30,9 +30,9 @@ class ManageSite{
             case 'finalize':
 
                 [ 'name' => $name, 'description' => $description, 
-                  'type' => $type, 'category' => $category, 'url' => $url ] = $_POST;
+                  'type' => $type, 'category' => $category, 'subDomain' => $subDomain ] = $_POST;
 
-                if(!$name || !$description || !$type || !$category || !$url){
+                if(!$name || !$description || !$type || !$category || !$subDomain){
                     $return=array("status" => "Missing field(s)", "code" => 400);
                     self::returnJson($return['status'], $return['code']);
                     exit;
@@ -42,8 +42,9 @@ class ManageSite{
                     $site->setDescription($description);
                     $site->setImage('rien');
                     $site->setCreator(1);
-                    $site->setSubDomain('impera');
+                    $site->setSubDomain($subDomain);
                     $site->setPrefix('imp');
+                    $site->setType($type);
                     $site->save();
                     $return=array("status" => "Successfully created", "code" => 201);
                     self::returnJson($return['status'], $return['code']);
@@ -58,7 +59,8 @@ class ManageSite{
                 $site->setCreator(1);
                 $site->setSubDomain('impera');
                 $site->setPrefix('imp');
-                $site->save();
+                $site->setType('type default');
+                $site->initializeSite();
                 break;
 
             default:
