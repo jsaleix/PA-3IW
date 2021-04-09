@@ -1,6 +1,7 @@
 <?php
-
 namespace App;
+
+define('STYLES', "/Styles/main.css"); 
 
 use App\Core\Router;
 use App\Core\ConstantMaker;
