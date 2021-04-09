@@ -6,6 +6,8 @@ use App\Core\Router;
 use App\Core\ConstantMaker;
 use App\Core\Helpers as h;
 
+session_start();
+
 //require "Core/Router.php";
 //require "Core/Security.php";
 
@@ -47,7 +49,6 @@ if( file_exists("./Controllers/".$c.".php")){
 		}
 
 	}else{
-	
 		die("La classe controller : ".$c." n'existe pas");
 	}
 

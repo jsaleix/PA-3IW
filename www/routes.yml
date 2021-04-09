@@ -23,4 +23,8 @@
   controller: Security
   action: logout
 
+/create:
+  controller: ManageSite
+  action: create
+
 

@@ -62,6 +62,17 @@ class Database
 		$query->execute($columns);
 	}
 
+	public function insert($table, array $values){
+		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
+		implode(",", array_keys($values))
+		.") 
+		VALUES ( :".
+			implode(",:", $values)
+		." );");
+		$query->execute($columns);
+
+	}
+
 }
 
 
