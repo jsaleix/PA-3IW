@@ -4,7 +4,7 @@
 
         <input id="name" class="inputOnboard" placeholder="Entrez ici le nom de votre restaurant"/>
 
-        <h2 style="margin-top: 2em;" id="textAreaLabel">Le nom que vous lui donnerez sera modifiable à tout moment</h2>
+        <h2 style="margin-top: 2em;" id="textAreaLabel">Décrivez ensuite ce qui caractérise votre restaurant</h2>
         <div class="row">
             <textarea id="description" class="onBoardingTextarea" placeholder="Écrivez ici une petite description du restaurant"></textarea>
         </div>

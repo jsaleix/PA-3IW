@@ -5,6 +5,7 @@
 	<title>Créer mon site - EasyMeal</title>
 	<meta name="Création d'un site" content="Page d'initialisation d'un nouveau site sur EasyMeal">
     <link rel="stylesheet" href=<?php echo STYLES ?>>
+    <link rel="icon" href="/Assets/images/logo.png" />
 </head>
 <body style="background-color: #2DC091;">
 	<!-- intégration de la vue -->

@@ -21,7 +21,7 @@
         <div class="row" id="colNext" style="margin-top: 2em; z-index: 1;">
             <div class="col">
                 <div class="row" id="btnRow">
-                    <a href="?step2" class="btn btn-green">Retour</a>
+                    <a href="?step=2" class="btn btn-green">Retour</a>
                     <a id="endButton" onClick="createSite()" href="#" class="btn btn-purple">Terminer</a>
                 </div>
             </div>
