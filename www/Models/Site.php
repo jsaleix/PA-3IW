@@ -14,6 +14,7 @@ class Site extends Database
 	protected $creator;
 	protected $subDomain = null;
 	protected $prefix = null;
+    protected $type = null;
 
 	public function __construct(){
 		parent::__construct();
@@ -28,6 +29,7 @@ class Site extends Database
     {
         $this->id = $id;
     }
+    
     public function setName($name)
     {
         $this->name = $name;
@@ -83,9 +85,19 @@ class Site extends Database
         $this->prefix = $prefix;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type)
+    {
+        $this->type = $type;
+    }
+
     public function initializeSite(){
-        if(!$this->name){ throw new InvalidArgumentException("missing fields") }
-        if($this->id){ throw new InvalidArgumentException("The site already exists") }
+        if(!$this->name){ throw new InvalidArgumentException("missing fields"); }
+        if($this->id){ throw new InvalidArgumentException("The site already exists"); }
         $this->save();
         // Creation of new tables 
 
