@@ -28,6 +28,7 @@ class Site extends Database
     {
         $this->id = $id;
     }
+    
     public function setName($name)
     {
         $this->name = $name;
@@ -84,8 +85,8 @@ class Site extends Database
     }
 
     public function initializeSite(){
-        if(!$this->name){ throw new InvalidArgumentException("missing fields") }
-        if($this->id){ throw new InvalidArgumentException("The site already exists") }
+        if(!$this->name){ throw new InvalidArgumentException("missing fields"); }
+        if($this->id){ throw new InvalidArgumentException("The site already exists"); }
         $this->save();
         // Creation of new tables 
 
