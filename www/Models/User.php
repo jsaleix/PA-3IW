@@ -260,30 +260,37 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_login",
-                "class"=>"form_builder",
-                "submit"=>"Se connecter"
+                "class"=>"form-auth",
+                "submit"=>"Connexion",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "email"=>[ 
                     "type"=>"email",
-                    "label"=>"Votre email",
+                    "label"=>"",
                     "minLength"=>8,
                     "maxLength"=>320,
-                    "id"=>"email",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "id"=>"mail",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Adresse email",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
                 ],
                 "pwd"=>[ 
                     "type"=>"password",
-                    "label"=>"Votre mot de passe",
+                    "label"=>"",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
+                ],
+                "remember"=>[
+                    "type"=>"checkbox",
+                    "id"=>"checkbox-auth",
+                    "labelClass"=>"checkbox-label",
+                    "label"=>"Se souvenir de moi"
                 ]
             ]
 
