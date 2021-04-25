@@ -70,7 +70,11 @@ class Database
 			implode(",:", $values)
 		." );");
 		$query->execute($columns);
+	}
 
+	public function createTable($req){
+		$query = $this->pdo->prepare($req);
+		$query->execute();
 	}
 
 }

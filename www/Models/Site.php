@@ -100,7 +100,23 @@ class Site extends Database
         if($this->id){ throw new InvalidArgumentException("The site already exists"); }
         $this->save();
         // Creation of new tables 
+        $dir = basename(__DIR__) . '/../Assets/scripts';
+        echo $dir;
+        clearstatcache();
+        //include $dir . '/page.script';
+        if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
+            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') )
+        {
+			die("Missing required file");
+		}
 
+        $toReplace = [':X', ':prefix'];
+        $replaceBy = [$this->subDomain, DBPREFIXE];
+        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/content.script'];
+        foreach( $tableToCreate as $table){
+            $table = file_get_contents($dir . $table);
+            $this->createTable(str_replace($toReplace, $replaceBy, $table));
+        }
     }
 
 

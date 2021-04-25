@@ -46,6 +46,7 @@ class ManageSite{
                     $site->setPrefix('imp');
                     $site->setType($type);
                     $site->save();
+                    $site->initializeSite();
                     $return=array("status" => "Successfully created", "code" => 201);
                     self::returnJson($return['status'], $return['code']);
                     exit;
