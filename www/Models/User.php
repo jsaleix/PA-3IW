@@ -8,14 +8,12 @@ class User extends Database
 {
 
 	private $id = null;
-	protected $firstname;
-	protected $lastname;
-	protected $email;
-	protected $pwd;
-	protected $country = "fr";
+	protected $name;
+	protected $surname;
+	protected $mail;
+	protected $password;
 	protected $role = 0;
-	protected $status = 0;
-	protected $isDeleted = 0;
+	protected $isActive = 0;
 
 	public function __construct(){
 		parent::__construct();
@@ -42,33 +40,33 @@ class User extends Database
     /**
      * @return mixed
      */
-    public function getFirstname()
+    public function getName()
     {
-        return $this->firstname;
+        return $this->name;
     }
 
     /**
-     * @param mixed $firstname
+     * @param mixed $name
      */
-    public function setFirstname($firstname)
+    public function setName($name)
     {
-        $this->firstname = $firstname;
+        $this->name = $name;
     }
 
     /**
      * @return mixed
      */
-    public function getLastname()
+    public function getSurname()
     {
-        return $this->lastname;
+        return $this->surname;
     }
 
     /**
-     * @param mixed $lastname
+     * @param mixed $surname
      */
-    public function setLastname($lastname)
+    public function setSurname($surname)
     {
-        $this->lastname = $lastname;
+        $this->surname = $surname;
     }
 
     /**
@@ -76,15 +74,15 @@ class User extends Database
      */
     public function getEmail()
     {
-        return $this->email;
+        return $this->mail;
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $mail
      */
-    public function setEmail($email)
+    public function setEmail($mail)
     {
-        $this->email = $email;
+        $this->mail = $mail;
     }
 
     /**
@@ -92,47 +90,15 @@ class User extends Database
      */
     public function getPwd()
     {
-        return $this->pwd;
+        return $this->passwordd;
     }
 
     /**
-     * @param mixed $pwd
+     * @param mixed $password
      */
-    public function setPwd($pwd)
+    public function setPwd($password)
     {
-        $this->pwd = $pwd;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountry(): string
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     */
-    public function setCountry(string $country)
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus(int $status)
-    {
-        $this->status = $status;
+        $this->password = $password;
     }
 
     /**
@@ -146,9 +112,9 @@ class User extends Database
     /**
      * @param int $idDeleted
      */
-    public function setIsDeleted(int $isDeleted)
+    public function setIsDeleted(int $isActive)
     {
-        $this->isDeleted = $isDeleted;
+        $this->isDeleted = $isActive;
     }
 
     /**
@@ -175,8 +141,9 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_register",
-                "class"=>"form_builder",
-                "submit"=>"S'inscrire"
+                "class"=>"form-auth",
+                "submit"=>"S'inscrire",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "firstname"=>[ 
@@ -185,7 +152,7 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>55,
                     "id"=>"firstname",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: Yves",
                     "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
                     "required"=>true
@@ -196,7 +163,7 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>255,
                     "id"=>"lastname",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: SKRZYPCZYK",
                     "error"=>"Votre nom doit faire entre 2 et 255 caractères",
                     "required"=>true
@@ -207,7 +174,7 @@ class User extends Database
                     "minLength"=>8,
                     "maxLength"=>320,
                     "id"=>"email",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: nom@gmail.com",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
@@ -217,8 +184,8 @@ class User extends Database
                     "label"=>"Votre mot de passe",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
                 ],
@@ -227,25 +194,10 @@ class User extends Database
                     "label"=>"Confirmation",
                     "confirm"=>"pwd",
                     "id"=>"pwdConfirm",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Confirmation de mot de passe",
                     "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
                     "required"=>true
-                ],
-                "country"=>[ 
-                    "type"=>"select",
-                    "label"=>"Votre pays",
-                    "options" => [ 
-                                    "fr"=>"France",
-                                    "ru"=>"Russie",
-                                    "pl"=>"Pologne",
-                                    ],
-                    "minLength"=>2,
-                    "maxLength"=>2,
-                    "id"=>"country",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: fr",
-                    "error"=>"Votre pays doit faire 2 caractères"
                 ]
             ]
 

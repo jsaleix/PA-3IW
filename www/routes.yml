@@ -7,7 +7,7 @@
   controller: Security
   action: default
 
-/s-inscrire:
+/register:
   controller: Security
   action: register
 

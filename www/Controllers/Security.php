@@ -43,18 +43,16 @@ class Security{
 		$view = new View("register");
 
 		$form = $user->formRegister();
-		$formLogin = $user->formLogin();
 
 		if(!empty($_POST)){
 
 			$errors = FormValidator::check($form, $_POST);
 
 			if(empty($errors)){
-				$user->setFirstname($_POST["firstname"]);
-				$user->setLastname($_POST["lastname"]);
+				$user->setName($_POST["firstname"]);
+				$user->setSurname($_POST["lastname"]);
 				$user->setEmail($_POST["email"]);
 				$user->setPwd($_POST["pwd"]);
-				$user->setCountry($_POST["country"]);
 				$user->save();
 
 			}else{
@@ -64,7 +62,6 @@ class Security{
 		}
 
 		$view->assign("form", $form);
-		$view->assign("formLogin", $formLogin);
 
 	}
 
