@@ -14,7 +14,10 @@ class FormBuilder
 				action='".($form["config"]["action"]??"")."'>";
 		
 		if($form["config"]["class"] === "form-auth"){
-			$html .= '<h2 style="font-weight:lighter">Connexion</h2>';
+			if($form["config"]["submit"] === "S'inscrire")
+				$html .= '<h2 style="font-weight:lighter">Inscription</h2>';
+			else 
+				$html .= '<h2 style="font-weight:lighter">Connexion</h2>';
 		}
 
 		foreach ($form["inputs"] as $name => $configInput) {
