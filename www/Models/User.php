@@ -12,10 +12,8 @@ class User extends Database
 	protected $lastname;
 	protected $email;
 	protected $pwd;
-	protected $country = "fr";
 	protected $role = 0;
-	protected $status = 0;
-	protected $isDeleted = 0;
+	protected $isActive = 0;
 
 	public function __construct(){
 		parent::__construct();
@@ -104,38 +102,6 @@ class User extends Database
     }
 
     /**
-     * @return string
-     */
-    public function getCountry(): string
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     */
-    public function setCountry(string $country)
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus(int $status)
-    {
-        $this->status = $status;
-    }
-
-    /**
      * @return int
      */
     public function getIsDeleted(): int
@@ -175,8 +141,9 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_register",
-                "class"=>"form_builder",
-                "submit"=>"S'inscrire"
+                "class"=>"form-auth",
+                "submit"=>"S'inscrire",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "firstname"=>[ 
@@ -185,7 +152,7 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>55,
                     "id"=>"firstname",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: Yves",
                     "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
                     "required"=>true
@@ -196,7 +163,7 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>255,
                     "id"=>"lastname",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: SKRZYPCZYK",
                     "error"=>"Votre nom doit faire entre 2 et 255 caractères",
                     "required"=>true
@@ -207,7 +174,7 @@ class User extends Database
                     "minLength"=>8,
                     "maxLength"=>320,
                     "id"=>"email",
-                    "class"=>"form_input",
+                    "class"=>"input-auth",
                     "placeholder"=>"Exemple: nom@gmail.com",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
@@ -217,8 +184,8 @@ class User extends Database
                     "label"=>"Votre mot de passe",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
                 ],
@@ -227,25 +194,10 @@ class User extends Database
                     "label"=>"Confirmation",
                     "confirm"=>"pwd",
                     "id"=>"pwdConfirm",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
                     "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
                     "required"=>true
-                ],
-                "country"=>[ 
-                    "type"=>"select",
-                    "label"=>"Votre pays",
-                    "options" => [ 
-                                    "fr"=>"France",
-                                    "ru"=>"Russie",
-                                    "pl"=>"Pologne",
-                                    ],
-                    "minLength"=>2,
-                    "maxLength"=>2,
-                    "id"=>"country",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: fr",
-                    "error"=>"Votre pays doit faire 2 caractères"
                 ]
             ]
 
@@ -260,30 +212,37 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_login",
-                "class"=>"form_builder",
-                "submit"=>"Se connecter"
+                "class"=>"form-auth",
+                "submit"=>"Connexion",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "email"=>[ 
                     "type"=>"email",
-                    "label"=>"Votre email",
+                    "label"=>"",
                     "minLength"=>8,
                     "maxLength"=>320,
-                    "id"=>"email",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "id"=>"mail",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Adresse email",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
                 ],
                 "pwd"=>[ 
                     "type"=>"password",
-                    "label"=>"Votre mot de passe",
+                    "label"=>"",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
+                ],
+                "remember"=>[
+                    "type"=>"checkbox",
+                    "id"=>"checkbox-auth",
+                    "labelClass"=>"checkbox-label",
+                    "label"=>"Se souvenir de moi"
                 ]
             ]
 
