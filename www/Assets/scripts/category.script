@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_Category` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Category` (
   `id` INT NOT NULL,
   `name` VARCHAR(45) NULL,
   `description` VARCHAR(255) NULL,
@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_Category` (
   `creationDate` DATE NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_category_creator_idx` (`creator` ASC),
-  CONSTRAINT `fk_category_creator`
+  CONSTRAINT `fk_category_creator_:X`
     FOREIGN KEY (`creator`)
-    REFERENCES `EasyMeal`.`:prefixUser` (`id`)
+    REFERENCES `easymeal`.`:prefixUser` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
