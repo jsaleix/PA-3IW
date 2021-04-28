@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_Dish` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `image` VARCHAR(255) NULL,
+  `description` VARCHAR(255) NULL,
+  `price` VARCHAR(45) NULL,
+  `category` INT NULL,
+  `notes` VARCHAR(100) NULL,
+  `allergens` VARCHAR(100) NULL,
+  `isActive` TINYINT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_dish_category_idx` (`category` ASC),
+  CONSTRAINT `fk_dish_category`
+    FOREIGN KEY (`category`)
+    REFERENCES `EasyMeal`.`:X_Dish_Category` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)

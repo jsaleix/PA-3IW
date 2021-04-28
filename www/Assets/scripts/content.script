@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_content` (
+  `id` INT NOT NULL,
+  `title` VARCHAR(45) NULL,
+  `content` LONGTEXT NULL,
+  `page` INT NULL,
+  `publisher` INT NULL,
+  `publicationDate` DATE NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_content_creator_idx` (`publisher` ASC),
+  INDEX `fk_content_page_idx` (`page` ASC),
+  CONSTRAINT `fk_content_publisher`
+    FOREIGN KEY (`publisher`)
+    REFERENCES `EasyMeal`.`:prefixUser` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_content_page`
+    FOREIGN KEY (`page`)
+    REFERENCES `EasyMeal`.`:X_page` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)

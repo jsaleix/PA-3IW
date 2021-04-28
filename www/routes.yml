@@ -7,21 +7,20 @@
   controller: Security
   action: default
 
-/s-inscrire:
+/register:
   controller: Security
   action: register
-
-/se-connecter:
-  controller: Security
-  action: login
 
 /login:
   controller: Security
   action: login  
 
-
-/se-deconnecter:
+/logout:
   controller: Security
   action: logout
+
+/create:
+  controller: ManageSite
+  action: create
 
 

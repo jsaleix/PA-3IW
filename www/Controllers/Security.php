@@ -16,78 +16,55 @@ class Security{
 		echo "Controller security action default";
 	}
 
-
 	public function loginAction(){
-		echo "Controller security action login";
+		$user = new User();
+		$view = new View("login");
+
+		$form = $user->formLogin();
+
+		if(!empty($_POST) && !empty($_POST['email'])){
+			$doesUserExist = true /*$user->exists("email", $_POST['email'], "*")*/;
+
+			if(!empty($doesUserExist) && !is_null($doesUserExist)){
+				echo var_dump($doesUserExist);
+			}else{
+				$errors = ["Utilisateur non trouvé"];
+				$view->assign("errors", $errors);
+			}
+		}
+
+		$view->assign("form", $form);
+
 	}
 
-
 	public function registerAction(){
-
-
-		
-		//Vérification des valeurs en POST
-
-
-		/*
-		$user = new User();
-		$user->setFirstname("Yves");
-		$user->setLastname("SKRZYPCZYK");
-		$user->setEmail("y.skrzypczyk@gmail.com");
-		$user->setPwd("Test1234");
-		$user->setCountry("fr");
-
-		$user->save();
-
-
-		$log = new Log();
-		$log->user("y.skrzypczyk@gmail.com");
-		$log->date(time());
-		$log->success(false);
-		$log->save();
-
-		$user = new User();
-		print_r($user) // VIDE
-		$user->setId(2); // double action de peupler l'objet avec ce qu'il y a en bdd
-		print_r($user) // J'ai le user en bdd
-		$user->setFirstname("Toto");
-		$user->save();
-		*/
-
 
 		$user = new User();
 		$view = new View("register");
 
 		$form = $user->formRegister();
-		$formLogin = $user->formLogin();
 
 		if(!empty($_POST)){
 
 			$errors = FormValidator::check($form, $_POST);
 
 			if(empty($errors)){
-				
 				$user->setFirstname($_POST["firstname"]);
 				$user->setLastname($_POST["lastname"]);
 				$user->setEmail($_POST["email"]);
 				$user->setPwd($_POST["pwd"]);
-				$user->setCountry($_POST["country"]);
 				$user->save();
 
 			}else{
+				echo "ERRORS";
 				$view->assign("errors", $errors);
 			}
-
-
 
 		}
 
 		$view->assign("form", $form);
-		$view->assign("formLogin", $formLogin);
 
 	}
-
-
 
 	public function logoutAction(){
 
@@ -101,6 +78,13 @@ class Security{
 	}
 
 
+	public function updateAction(){
+		echo $_GET["yo"];
+		$user = new User();
+		$user->setId(1);
+		$user->setEmail("testAjaha");
+		$user->save();
+	}
 	
 
 }
