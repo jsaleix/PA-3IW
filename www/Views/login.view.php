@@ -10,7 +10,7 @@
             <div class="head-row row">
                 <div class="col-6 col-md-12 col-sm-12 head-sm">
                     <img src="Assets/images/logo.png">
-                    <button onclick="location.href='./inscription.html'" class="cta-white" type="button">Inscription</button>
+                    <button onclick="location.href='./register'" class="cta-white" type="button">Inscription</button>
                 </div>
             </div>
                 <div class="logo fadeInRight fadeInRight-s2">
@@ -24,7 +24,7 @@
                         <div class="form-auth" id="second-auth" >
                             <hr>
                             <h3 style="font-weight: lighter;">Pas encore de compte ?</h3>
-                            <button onclick="location.href='./inscription.html'" class="cta-white width-80 last-elem" type="button" >Inscription</button>
+                            <button onclick="location.href='./register'" class="cta-white width-80 last-elem" type="button" >Inscription</button>
                         </div>
                     </div>
                 </div>

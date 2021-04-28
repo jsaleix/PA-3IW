@@ -6,6 +6,8 @@
 /admin:
   controller: Security
   action: default
+  auth: true
+  role: admin
 
 /register:
   controller: Security

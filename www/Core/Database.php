@@ -60,9 +60,29 @@ class Database
 		}
 
 		$query->execute($columns);
+
+		return is_null($this->getId()) ? $this->pdo->lastInsertId() : 0;
+	}
+
+	public function find($table, array $values){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+
+		$query = $this->pdo->prepare("SELECT * FROM ".$table." (".
+		implode(",", array_keys($values))
+		.") VALUES ( :".implode(",:", $values)
+		." );");
+		$query->execute($columns);
 	}
 
 	public function insert($table, array $values){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+
 		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
 		implode(",", array_keys($values))
 		.") 
