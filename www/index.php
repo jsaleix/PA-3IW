@@ -17,13 +17,16 @@ require "Autoload.php";
 Autoload::register();
 new ConstantMaker();
 
-
-
 $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
 $uri = $uriExploded[0];
 
 if( preg_match('/\/site\/+/', $uri) ){
-	echo 'You\'re on a user\'s site';
+	if( file_exists('./Cms/index.php') ){
+		include './Cms/index.php';
+		\CMS\handleCMS($uri);
+	}else{
+		die('Missing required cms file');
+	}
 	return;
 }
 
