@@ -1,11 +1,5 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap);
 
-
-*{
-  -webkit-appearance: none;
-}
-
-
 .fadeInDown {
   -webkit-animation: fadeInDown 1s ease-in-out;
   animation: fadeInDown 1s ease-in-out;
@@ -224,6 +218,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-appearance: none;
 }
 
 html,
@@ -1921,6 +1916,7 @@ main {
   padding: 1em;
   color: white;
   z-index: 1;
+  font-family: "Roboto", sans-serif;
 }
 
 @media screen and (max-width: 768px) {

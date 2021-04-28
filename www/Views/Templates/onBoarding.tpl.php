@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Créer mon site - EasyMeal</title>
 	<meta name="Création d'un site" content="Page d'initialisation d'un nouveau site sur EasyMeal">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=<?php echo STYLES ?>>
     <link rel="icon" href="/Assets/images/logo.png" />
 </head>
