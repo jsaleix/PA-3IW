@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_Dish_Category` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Dish_Category` (
   `id` INT NOT NULL,
   `name` VARCHAR(45) NULL,
   `description` VARCHAR(255) NULL,

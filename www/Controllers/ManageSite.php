@@ -36,33 +36,44 @@ class ManageSite{
                     $return=array("status" => "Missing field(s)", "code" => 400);
                     self::returnJson($return['status'], $return['code']);
                     exit;
-                }else{
-                    $site = new Site();
-                    $site->setName($name);
-                    $site->setDescription($description);
-                    $site->setImage('rien');
-                    $site->setCreator(1);
-                    $site->setSubDomain($subDomain);
-                    $site->setPrefix('imp');
-                    $site->setType($type);
-                    $site->save();
-                    $site->initializeSite();
-                    $return=array("status" => "Successfully created", "code" => 201);
-                    self::returnJson($return['status'], $return['code']);
-                    exit;
                 }
-                
+                $prefix = random_bytes(4);
+                $prefix = bin2hex($prefix);
+                $site = new Site();
+                $site->setName($name);
+                $site->setDescription($description);
+                $site->setCreator(1);
+                $site->setSubDomain($subDomain);
+                $site->setPrefix($prefix);
+                $site->setType($type);
+                $creation = $site->initializeSite();
+                if(!$creation){
+                    $return=array("status" => "Unsuccessful", "code" => 500);
+                }else{
+                    $return=array("status" => "Successfully created", "code" => 201);
+                }
+                self::returnJson($return['status'], $return['code']);
+                exit;
+               
             case 'test':
+                $prefix = random_bytes(4);
+                $prefix = bin2hex($prefix);
                 $site = new Site();
                 $site->setName('test');
                 $site->setDescription('description');
                 $site->setImage('rien');
                 $site->setCreator(1);
                 $site->setSubDomain('impera');
-                $site->setPrefix('imp');
+                $site->setPrefix($prefix);
                 $site->setType('type default');
-                $site->initializeSite();
-                break;
+                $creation = $site->initializeSite();
+                if(!$creation){
+                    $return=array("status" => "Unsuccessful", "code" => 500);
+                }else{
+                    $return=array("status" => "Successfully created", "code" => 201);
+                }
+                self::returnJson($return['status'], $return['code']);
+                exit;
 
             default:
             $view = new View("/onBoarding/step1", 'onBoarding' );
@@ -71,13 +82,10 @@ class ManageSite{
 	}
 
     private function returnJson(string $status, int $code){
-        header($status, false, $code); 
-        json_encode(array('status' => $status, 'code' => $code));
+        //header($status, false, $code); 
+        http_response_code($code);
+        echo json_encode(array('status' => $status, 'code' => $code));
         exit;
-    }
-
-    private function createAWebSite(){
-
     }
 
 }

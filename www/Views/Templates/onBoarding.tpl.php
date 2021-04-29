@@ -25,6 +25,7 @@
     }
 
     async function createSite(){
+        console.log('executed')
         let category    = document.getElementById ('category').value;
         let type        = document.getElementById ('type').value;
         let subDomain   = document.getElementById ('url').value;
@@ -52,9 +53,11 @@
             })
             .then( (res) => {console.log(res); return res})
             .then( (res) => res.status);
-            if(res == 201){
+            if(res === 201){
                 alert('Site crée !');
-                //localStorage.removeItem('siteData');
+                localStorage.removeItem('siteData');
+                window.location.replace("/");
+
             }else{
                 alert('Une erreur est survenue');
             }

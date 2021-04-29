@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_page` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_page` (
   `id` INT NOT NULL,
   `name` VARCHAR(45) NULL,
   `category` INT NULL,
@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_page` (
   PRIMARY KEY (`id`),
   INDEX `fk_page_creator_idx` (`creator` ASC),
   INDEX `fk_page_category_idx` (`category` ASC),
-  CONSTRAINT `fk_page_creator`
+  CONSTRAINT `fk_page_creator_:X`
     FOREIGN KEY (`creator`)
-    REFERENCES `EasyMeal`.`:prefixUser` (`id`)
+    REFERENCES `easymeal`.`:prefixUser` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_page_category`
+  CONSTRAINT `fk_page_category_:X`
     FOREIGN KEY (`category`)
-    REFERENCES `EasyMeal`.`:X_Category` (`id`)
+    REFERENCES `easymeal`.`:X_Category` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
