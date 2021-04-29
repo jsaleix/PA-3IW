@@ -40,33 +40,33 @@ class User extends Database
     /**
      * @return mixed
      */
-    public function getName()
+    public function getFirstname()
     {
-        return $this->name;
+        return $this->firstname;
     }
 
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setFirstname($firstname)
     {
-        $this->name = $name;
+        $this->firstname = $firstname;
     }
 
     /**
      * @return mixed
      */
-    public function getSurname()
+    public function getLastname()
     {
-        return $this->surname;
+        return $this->lastname;
     }
 
     /**
      * @param mixed $surname
      */
-    public function setSurname($surname)
+    public function setLastname($lastname)
     {
-        $this->surname = $surname;
+        $this->lastname = $lastname;
     }
 
     /**
@@ -74,15 +74,15 @@ class User extends Database
      */
     public function getEmail()
     {
-        return $this->mail;
+        return $this->email;
     }
 
     /**
      * @param mixed $mail
      */
-    public function setEmail($mail)
+    public function setEmail($email)
     {
-        $this->mail = $mail;
+        $this->email = $email;
     }
 
     /**
@@ -90,7 +90,7 @@ class User extends Database
      */
     public function getPwd()
     {
-        return $this->passwordd;
+        return $this->pwd;
     }
 
     /**
@@ -98,7 +98,7 @@ class User extends Database
      */
     public function setPwd($password)
     {
-        $this->pwd = $pwd;
+        $this->pwd = $password;
     }
 
     /**

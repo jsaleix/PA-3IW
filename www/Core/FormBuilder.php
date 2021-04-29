@@ -14,15 +14,9 @@ class FormBuilder
 				action='".($form["config"]["action"]??"")."'>";
 		
 		if($form["config"]["class"] === "form-auth"){
-<<<<<<< HEAD
-			if($form["config"]["submit"] === "S'inscrire")
-				$html .= '<h2 style="font-weight:lighter">Inscription</h2>';
-			else 
-=======
 			if($form["config"]["id"] === "form_register")
 			$html .= '<h2 style="font-weight:lighter">Inscription</h2>';
 			else
->>>>>>> 56ef7eda6004f886ac61a16eb0484a3ecc49cd5b
 				$html .= '<h2 style="font-weight:lighter">Connexion</h2>';
 		}
 

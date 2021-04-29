@@ -49,11 +49,12 @@ class Security{
 			$errors = FormValidator::check($form, $_POST);
 
 			if(empty($errors)){
-				$user->setName($_POST["firstname"]);
-				$user->setSurname($_POST["lastname"]);
+				$user->setFirstname($_POST["firstname"]);
+				$user->setLastname($_POST["lastname"]);
 				$user->setEmail($_POST["email"]);
 				$user->setPwd($_POST["pwd"]);
 				$userId = $user->save();
+				echo "AH";
 				$mail = new MailToken();
 				$mail->setUserId($userId);
 				$mail->setExpiresDate(new \DateTime('now'));
