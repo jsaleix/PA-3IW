@@ -15,23 +15,24 @@ session_start();
 require "Autoload.php";
 
 Autoload::register();
-
-
 new ConstantMaker();
 
-
-
-// $uri  => /se-connecter?user_id=2 => /se-connecter
 $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
-
 $uri = $uriExploded[0];
 
-$router = new Router($uri);
+if( preg_match('/\/site\/+/', $uri) ){
+	if( file_exists('./Cms/index.php') ){
+		include './Cms/index.php';
+		\CMS\handleCMS($uri);
+	}else{
+		die('Missing required cms file');
+	}
+	return;
+}
 
+$router = new Router($uri);
 $c = $router->getController();
 $a = $router->getAction();
-
-
 
 if( file_exists("./Controllers/".$c.".php")){
 
@@ -52,7 +53,6 @@ if( file_exists("./Controllers/".$c.".php")){
 	}else{
 		die("La classe controller : ".$c." n'existe pas");
 	}
-
 
 }else{
 	die("Le fichier controller : ".$c." n'existe pas");

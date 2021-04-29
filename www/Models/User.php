@@ -8,10 +8,10 @@ class User extends Database
 {
 
 	private $id = null;
-	protected $name;
-	protected $surname;
-	protected $mail;
-	protected $password;
+	protected $firstname;
+	protected $lastname;
+	protected $email;
+	protected $pwd;
 	protected $role = 0;
 	protected $isActive = 0;
 
@@ -98,7 +98,7 @@ class User extends Database
      */
     public function setPwd($password)
     {
-        $this->password = $password;
+        $this->pwd = $pwd;
     }
 
     /**
@@ -185,7 +185,7 @@ class User extends Database
                     "minLength"=>8,
                     "id"=>"pwd",
                     "class"=>"input-auth",
-                    "placeholder"=>"Mot de passe",
+                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
                 ],
@@ -195,7 +195,7 @@ class User extends Database
                     "confirm"=>"pwd",
                     "id"=>"pwdConfirm",
                     "class"=>"input-auth",
-                    "placeholder"=>"Confirmation de mot de passe",
+                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
                     "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
                     "required"=>true
                 ]

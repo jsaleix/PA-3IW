@@ -6,18 +6,20 @@
 /admin:
   controller: Security
   action: default
-  auth: true
-  role: admin
 
-/register:
+/s-inscrire:
   controller: Security
   action: register
+
+/se-connecter:
+  controller: Security
+  action: login
 
 /login:
   controller: Security
   action: login  
 
-/logout:
+/se-deconnecter:
   controller: Security
   action: logout
 

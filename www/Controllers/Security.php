@@ -8,6 +8,7 @@ use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
 
 use App\Models\User;
+use App\Models\MailToken;
 
 class Security{
 
@@ -45,7 +46,6 @@ class Security{
 		$form = $user->formRegister();
 
 		if(!empty($_POST)){
-
 			$errors = FormValidator::check($form, $_POST);
 
 			if(empty($errors)){
@@ -53,14 +53,18 @@ class Security{
 				$user->setSurname($_POST["lastname"]);
 				$user->setEmail($_POST["email"]);
 				$user->setPwd($_POST["pwd"]);
-				$user->save();
+				$userId = $user->save();
+				$mail = new MailToken();
+				$mail->setUserId($userId);
+				$mail->setExpiresDate(new \DateTime('now'));
+				$mail->setToken(bin2hex(random_bytes(128)));
+				$mail->save();
 
 			}else{
 				$view->assign("errors", $errors);
 			}
 
 		}
-
 		$view->assign("form", $form);
 
 	}
