@@ -4,6 +4,10 @@ namespace App\Models;
 
 use App\Core\Database;
 
+
+use PHPMailer\PHPMailer\PHPMailer;
+require_once __DIR__ . '/../vendor/autoload.php';
+
 class MailToken extends Database
 {
     private $id = null;
@@ -13,6 +17,32 @@ class MailToken extends Database
 
     public function __construct(){
         parent::__construct();
+    }
+
+    public function sendConfirmationMail($mail){
+        if( !$this->token || !$this->userId || !$this->expiresDate)
+            return;
+        $mailing = new PHPMailer(True);
+        $mailing->isSMTP();
+        $mailing->Host = MAIL_SMTP;
+        $mailing->SMTPAuth = true;
+        $mailing->Username = MAIL;
+        $mailing->Password = MAIL_PWD;
+        $mailing->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mailing->Port = 465;
+
+        $mailing->setFrom(MAIL, 'Mailer');
+        $mailing->addAddress($_POST["email"]);
+        $mailing->isHTML(true);
+        $mailing->Subject = 'Confirmez votre email';
+        $mailing->Body = '
+            <h1>Bonjour et merci de vous être inscrit chez nous ! </h1>
+            <h2>Avant de pouvoir entièrement utiliser notre site vous devrez d\'abord confirmer votre email.</h2>
+                <a href="'.URI.'/confirmMail?token='.$this->token.'">Pour ce faire, cliquez ici ! </a>';
+		if(!$mailing->send())
+            echo "error";
+        else 
+            echo "sent";
     }
 
     /**
