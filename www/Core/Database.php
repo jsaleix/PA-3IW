@@ -11,6 +11,8 @@ class Database
 	public function __construct(){
 		try{
 			$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".DBHOST.";port=".DBPORT,DBUSER,DBPWD);
+			//$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".'51.178.52.245'.";port=".DBPORT,'myopens-remote','G3n3sis2%');
+			//$this->pdo = new \PDO('mysql:host=myopens.fr;dbname=myopens', 'myopens-remote', 'G3n3sis2%', array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 
 			if(ENV == "dev"){
 				$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -58,6 +60,59 @@ class Database
 		}
 
 		$query->execute($columns);
+
+		return is_null($this->getId()) ? $this->pdo->lastInsertId() : 0;
+	}
+
+	public function findAll(){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+		foreach($columns as $key => $col){
+			if( empty($col) || $col === NULL )
+				unset($columns[$key]);
+		}
+		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
+		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+		$query->execute(array_values($columns));
+		$result = $query->fetchAll();
+		return $result;
+	}
+	public function findOne(){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+		foreach($columns as $key => $col){
+			if( empty($col) || $col === NULL )
+				unset($columns[$key]);
+		}
+		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
+		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+		$query->execute(array_values($columns));
+		$result = $query->fetch();
+		return $result;
+	}
+
+	public function insert($table, array $values){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+
+		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
+		implode(",", array_keys($values))
+		.") 
+		VALUES ( :".
+			implode(",:", $values)
+		." );");
+		$query->execute($columns);
+	}
+
+	public function createTable($req){
+		$query = $this->pdo->prepare($req);
+		$query->execute();
 	}
 
 }

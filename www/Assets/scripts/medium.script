@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_medium` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `type` VARCHAR(45) NULL,
+  `path` VARCHAR(255) NULL,
+  `publisher` INT NULL,
+  `publicationDate` DATE NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_medium_publisher_idx` (`publisher` ASC),
+  CONSTRAINT `fk_medium_publisher`
+    FOREIGN KEY (`publisher`)
+    REFERENCES `EasyMeal`.`:prefixUser` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)

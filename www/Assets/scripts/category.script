@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS `EasyMeal`.`:X_Category` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `description` VARCHAR(255) NULL,
+  `creator` INT NULL,
+  `creationDate` DATE NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_category_creator_idx` (`creator` ASC),
+  CONSTRAINT `fk_category_creator`
+    FOREIGN KEY (`creator`)
+    REFERENCES `EasyMeal`.`:prefixUser` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
