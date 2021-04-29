@@ -28,17 +28,11 @@ class Security{
 		$form = $user->formLogin();
 
 		if(!empty($_POST) && !empty($_POST['email'])){
-			$doesUserExist = true /*$user->exists("email", $_POST['email'], "*")*/;
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
 			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']))
-				echo "true";
-			else
-				echo "false";
 				print_r($result);
-			
-			if(!empty($doesUserExist) && !is_null($doesUserExist)){
-			}else{
+			else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
 			}
