@@ -2,7 +2,7 @@
 namespace CMS;
 
 use CMS\Core\Router;
-use CMS\Core\PageManager;
+use CMS\Core\PageRenderer;
 use CMS\Models\Page;
 
 function handleCMS($uri){
@@ -10,7 +10,6 @@ function handleCMS($uri){
     $uri = explode('/', $uri);
     array_shift($uri);
     array_shift($uri);
-
     if($uri[0] !== 'admin'){
         /**
          * Récupere le nom du site et le chemin demandé
@@ -18,7 +17,7 @@ function handleCMS($uri){
          * Recup les données
          * renderPage va instancier un objet page et lui transmettre le contenu
          **/
-        $page = new PageManager($uri[0], $uri);
+        $page = new PageRenderer($uri[0], $uri);
         $page->renderPage();
     }
 
