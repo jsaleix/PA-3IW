@@ -2,7 +2,7 @@
 namespace CMS;
 
 use CMS\Core\Router;
-use CMS\Core\PageRenderer;
+use CMS\Controllers\PageRenderer;
 use CMS\Models\Page;
 
 function handleCMS($uri){

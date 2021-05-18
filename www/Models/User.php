@@ -7,7 +7,7 @@ use App\Core\Database;
 class User extends Database
 {
 
-	private $id = null;
+	protected $id = null;
 	protected $firstname;
 	protected $lastname;
 	protected $email;

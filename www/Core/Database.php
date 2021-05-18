@@ -62,23 +62,38 @@ class Database
 			echo $e->getMessage();
 			return false;
 		}
-
-
 	}
 
-	public function insert($table, array $values){
-		try{
-			$query = $this->pdo->prepare("INSERT INTO ".$table." (".
-				implode(",", array_keys($values))
-				.") 
-				VALUES ( :".
-					implode(",:", $values)
-				." );");
-			$query->execute($columns);
-			return $query;
-		}catch(\Exception $e){
-			return false;
+	public function findAll(){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+		foreach($columns as $key => $col){
+			if( empty($col) || $col === NULL )
+				unset($columns[$key]);
 		}
+		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
+		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+		$query->execute(array_values($columns));
+		$result = $query->fetchAll();
+		return $result;
+	}
+	
+	public function findOne(){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+		foreach($columns as $key => $col){
+			if( empty($col) || $col === NULL )
+				unset($columns[$key]);
+		}
+		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
+		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+		$query->execute(array_values($columns));
+		$result = $query->fetch();	
+		return $result;
 	}
 
 	public function createTable($req){

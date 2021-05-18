@@ -1,6 +1,10 @@
 <?php
-namespace CMS\Core;
+namespace CMS\Controllers;
 use App\Core\Database as db;
+use App\Models\User;
+
+use CMS\Models\Page;
+use CMS\Models\Content;
 
 class PageRenderer 
 {
@@ -50,6 +54,25 @@ class PageRenderer
         
     }
 
+    public function renderContent($content){
+        $publisherData = new User();
+        extract($content);
+        $publisherData->setId($publisher);
+        $publisher = $publisherData->findOne();
+        
+		switch($type){
+			case 'article':
+				echo '<h1>' . $title . '</h1>';
+				echo '<p id='. $publisher['id'] .' >' . $publisher['firstname'] . ' ' .  $publisher['lastname'] . '</p>';
+				echo '<p>' . $content . '</p>';
+				echo '<hr>';
+				break;
+
+			default: 
+			    return;
+		}
+	}
+
     public function renderPage(){
         if($this->error){
             echo $this->error;
@@ -64,11 +87,12 @@ class PageRenderer
         }
 
         foreach($contents as $content){
-            //print_r($content);
-            echo $content['content'] . '<br>';
+            $contentObj = new Content($content['title'], $content['content'], $content['page'], $content['publisher']);
+            $this->renderContent($contentObj->returnData());
         }
         
     }
     
+
 
 }

@@ -1,19 +1,19 @@
 <?php
 
 namespace CMS\Models;
+use App\Core\Database;
 
-//use App\Core\Database;
-
-class Page
+class Page extends Database
 {
 
 	private $id = null;
-	protected $name;
-	protected $category;
+	private $name;
+	private $category = null;
+    private $creationDate = null;
 
-	public function __construct(String $name, array $content){
-		
-        
+	public function __construct( $name, $category = null ){
+		$this->setName($name);
+        $this->setCategory($category);
 	}
 
 	/**
