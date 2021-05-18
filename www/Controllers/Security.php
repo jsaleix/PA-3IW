@@ -100,13 +100,14 @@ class Security{
 		$token = $token->findOne();
 		$user = new User();
 		$user->setId($token['userId']);
+		$result = $user->findOne();
+		if( $result["isActive"] == 1 ){
+			echo "already active";
+			return;
+		}
 		$user->setIsActive(1);
-		$user->save();/*
-		$test = new User();
-		$test->setId($token['userId']);
-		$test = $test->findOne();
-		//print_r($user):
-		//print_r($user);*/
+		if( $user->save())
+			echo "Compte activé";
 	}
 
 }
