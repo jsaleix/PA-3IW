@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_booking` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL ,
   `date` DATE NULL,
   `number` INT NULL,
   `notes` VARCHAR(100) NULL,

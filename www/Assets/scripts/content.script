@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_content` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NULL,
   `content` LONGTEXT NULL,
   `page` INT NULL,
