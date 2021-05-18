@@ -87,9 +87,8 @@ class Security{
 
 
 	public function updateAction(){
-		echo $_GET["yo"];
 		$user = new User();
-		$user->setId(1);
+		$user->setId(2);
 		$user->setEmail("testAjaha");
 		$user->save();
 	}

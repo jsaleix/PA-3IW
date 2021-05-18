@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_medium` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `type` VARCHAR(45) NULL,
   `path` VARCHAR(255) NULL,

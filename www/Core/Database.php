@@ -100,21 +100,6 @@ class Database
 		return $result;
 	}
 
-	public function insert($table, array $values){
-		$columns = array_diff_key (
-			get_object_vars($this),
-			get_class_vars(get_class())
-		);
-
-		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
-		implode(",", array_keys($values))
-		.") 
-		VALUES ( :".
-			implode(",:", $values)
-		." );");
-		$query->execute($columns);
-	}
-
 	public function createTable($req){
 		try{
 			$query = $this->pdo->prepare($req);
@@ -125,6 +110,46 @@ class Database
 			return false;
 		}
 	}
+
+    public function find(string $sql, array $params = []): ?array {
+        $statement = $this->internalExec($sql, $params);
+        if($statement === null) {
+            return null;
+        }
+        $line = $statement->fetch(\PDO::FETCH_ASSOC);
+        if($line === false) {
+            return null;
+        }
+        return $line;
+    }
+
+	public function exec(string $sql, array $params = []): int {
+        $statement = $this->internalExec($sql, $params);
+        if($statement === null) {
+            return 0;
+        }
+        return $statement->rowCount();
+    }
+
+    private function internalExec(string $sql, array $params): ?\PDOStatement {
+        $statement = $this->pdo->prepare($sql);
+        if($statement === false) {
+            return null;
+        }
+        $res = $statement->execute($params);
+        if($res === false) {
+            return null;
+        }
+        return $statement;
+    }
+
+	public function getAll(string $sql, array $params = []): array {
+        $statement = $this->internalExec($sql, $params);
+        if($statement === null) {
+            return [];
+        }
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
 }
 
