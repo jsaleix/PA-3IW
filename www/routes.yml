@@ -25,4 +25,8 @@
   controller: ManageSite
   action: create
 
+/confirmMail:
+  controller: Security
+  action: confirmMail
+
 

@@ -93,5 +93,8 @@ class Security{
 		$user->save();
 	}
 	
+	public function confirmMail(){
+		echo $_GET["token"];
+	}
 
 }
