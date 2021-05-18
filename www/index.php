@@ -45,7 +45,6 @@ if( file_exists("./Controllers/".$c.".php")){
 		$cObjet = new $c();
 		if(method_exists($cObjet, $a)){
 			$cObjet->$a();
-
 		}else{
 			die("L'action' : ".$a." n'existe pas");
 		}
