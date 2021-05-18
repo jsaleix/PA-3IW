@@ -44,28 +44,28 @@ class Database
 					." );");	
 			}else{
 				//UPDATE
+				unset($columns["id"]);
+				foreach($columns as $key => $col){
+					if( empty($col) || $col === NULL )
+						unset($columns[$key]);
+				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
 				{
 					if(!is_null($this->$field) && !empty($this->$field))
 					{
-						array_push($setCmd, $field . " = '" . $this->$field . "'");
+						array_push($setCmd, $field . " = :" . $field . "");
 					}
 				}
-				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId() ;
+				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
 				$query 	= $this->pdo->prepare($req);
 			}
 			$query->execute($columns);
 			return true;
-
 		}catch(\Exception $e){
 			echo $e->getMessage();
 			return false;
 		}
-
-		$query->execute($columns);
-
-		return is_null($this->getId()) ? $this->pdo->lastInsertId() : 0;
 	}
 
 	public function findAll(){
@@ -95,7 +95,7 @@ class Database
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 		$query->execute(array_values($columns));
-		$result = $query->fetch();
+		$result = $query->fetch();	
 		return $result;
 	}
 
