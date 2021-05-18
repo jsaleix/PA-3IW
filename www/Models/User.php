@@ -7,7 +7,7 @@ use App\Core\Database;
 class User extends Database
 {
 
-	private $id = null;
+	protected $id = null;
 	protected $firstname;
 	protected $lastname;
 	protected $email;
@@ -104,17 +104,17 @@ class User extends Database
     /**
      * @return int
      */
-    public function getIsDeleted(): int
+    public function getIsActive(): int
     {
-        return $this->isDeleted;
+        return $this->isActive;
     }
 
     /**
      * @param int $idDeleted
      */
-    public function setIsDeleted(int $isActive)
+    public function setIsActive(int $isActive)
     {
-        $this->isDeleted = $isActive;
+        $this->isActive = $isActive;
     }
 
     /**

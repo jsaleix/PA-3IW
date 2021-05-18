@@ -57,9 +57,10 @@ class Security{
 				$user->setLastname(htmlspecialchars($_POST["lastname"]));
 				$user->setEmail(htmlspecialchars($_POST["email"]));
 				$user->setPwd( password_hash(htmlspecialchars($_POST["pwd"]), PASSWORD_BCRYPT) );
-				$userId = $user->save();
+				$user->save();
+				$userFetch = $user->findOne();
 				$mail = new MailToken();
-				$mail->setUserId($userId);
+				$mail->setUserId($userFetch["id"]);
 				$mail->setExpiresDate(new \DateTime('now'));
 				$mail->setToken(bin2hex(random_bytes(128)));
 				$mail->save();
@@ -93,5 +94,20 @@ class Security{
 		$user->save();
 	}
 	
+	public function mailconfirmAction(){
+		$token = new MailToken();
+		$token->setToken($_GET['token']);
+		$token = $token->findOne();
+		$user = new User();
+		$user->setId($token['userId']);
+		$result = $user->findOne();
+		if( $result["isActive"] == 1 ){
+			echo "already active";
+			return;
+		}
+		$user->setIsActive(1);
+		if( $user->save())
+			echo "Compte activé";
+	}
 
 }
