@@ -83,6 +83,7 @@ class Database
 		$result = $query->fetchAll();
 		return $result;
 	}
+	
 	public function findOne(){
 		$columns = array_diff_key (
 			get_object_vars($this),
