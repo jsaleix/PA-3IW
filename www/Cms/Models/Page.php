@@ -71,6 +71,37 @@ class Page extends Database
         
     }
 
+    public function listFormalize($pageData){
+        return [
+            "config"=>[
+                "method"=>"",
+                "action"=>"?" . $pageData['id'],
+                "id"=>"",
+                "class"=>"inline-list",
+                "submit"=>"Edit",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "fields"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['name']
+                ],
+				"category"=>[ 
+					"type"=>"text",
+                    "value" => $pageData['category']
+                ],
+                "creator"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['creator']
+                ],
+                "creationDate"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['creationDate']
+                ],
+            ]
+        ];
+    }
+
 
 
 }

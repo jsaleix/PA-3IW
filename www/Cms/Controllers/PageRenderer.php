@@ -18,7 +18,7 @@ class PageRenderer
 	public function __construct($url){
         $this->path     = $url;
         $this->domain   = $url[0];
-        if(empty($uri[1])){ $url[1] = 'home'; }
+        if(empty($url[1])){ $url[1] = 'home'; }
         $this->setParams($url);
 	}
 
@@ -68,26 +68,33 @@ class PageRenderer
         
 		switch($type){
 			case 'article':
-				echo '<h1>' . $title . '</h1>';
-				echo '<p id='. $publisher['id'] .' >' . $publisher['firstname'] . ' ' .  $publisher['lastname'] . '</p>';
-				echo '<p>' . $content . '</p>';
-				echo '<hr>';
+				$html = '<h2>' . $title . '</h2>';
+				$html .= '<p id='. $publisher['id'] .' >By ' . $publisher['firstname'] . ' ' .  $publisher['lastname'] . '</p>';
+				$html .= '<p>' . $content . '</p>';
+				$html .= '<hr>';
 				break;
 
 			default: 
 			    return;
 		}
+        echo $html;
 	}
 
     public function renderPage(){
+        $this->renderNavigation();
+
         if($this->error){
             echo $this->error;
             return;
         }
-        $db = new db();
-        $contents = $db->getAll("SELECT * FROM " . $this->site->getPrefix() . "_Content WHERE page = ? ", [$this->page->getId()]);
 
-        if($contents === 0){
+        $contentObj = new Content(null, null, null, null);
+        $contentObj->setTableName($this->site->getPrefix());
+        $contentObj->setPage($this->page->getId());
+        $contents = $contentObj->findAll();
+
+        
+        if(count($contents) === 0){
             echo 'No content found :/';
             return;
         }
@@ -99,6 +106,21 @@ class PageRenderer
         
     }
     
+    public function renderNavigation(){
+        $pageObj = new Page(null, $this->site->getPrefix());
+        $pageObj->setCategory('IS NULL');
+        $pagesToShow = $pageObj->findAll();
+        $html = "<header>";
+        $html .= "<h1>" . $this->site->getName() . "'s restaurant</h1>";
+        $html .= '<ul>';
+        foreach($pagesToShow as $tab){
+            $html .= '<li><a href="/site/' . $this->site->getSubDomain() . '/' . $tab['name'] . '"/>' . $tab['name'] . '</a></li>';
+        }
+        $html .= '</ul>';
+        $html .= "</header>";
+
+        echo $html;
+    }
 
 
 }

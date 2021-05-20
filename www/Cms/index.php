@@ -2,8 +2,8 @@
 namespace CMS;
 
 use App\Core\Router;
-use CMS\Controller\PageRenderer;
 use App\Models\Site;
+use CMS\Controller\PageRenderer;
 
 function handleCMS($uri){
     if(!$uri){ throw new InvalidArgumentException ('Missing uri parameter');}
@@ -17,8 +17,6 @@ function handleCMS($uri){
         $page->renderPage();
 
     }else{
-        
-        
         $siteData = new Site();
         $siteData->setSubDomain($uri[0]);
         $site = $siteData->findOne();

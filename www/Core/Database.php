@@ -84,16 +84,35 @@ class Database
 		foreach($columns as $key => $col){
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
+
+			if($col == 'NULL')
+				$columns[$key] = 'IS NULL';
 		}
 
 		$req = "SELECT * FROM ".$this->table;
-		if(count($columns) > 0) {
+		/*if(count($columns) > 0) {
 			$req .= " WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		}*/
+		$index = 0;
+		$len = count($columns);
+		if( $len > 0) {
+			$req .= " WHERE ";
+			foreach( $columns as $key => $col ){
+				if($col == 'IS NULL' || $col == 'IS NOT NULL'){
+					$req .= $key . ' ' .$col ;
+					unset($columns[$key]);
+				}else{
+					$req .= $key . ' = ? ';
+				}
+				$index++;
+				if($index < $len){
+					$req .= ' AND ';
+				}
+			}
 		}
 		$query = $this->pdo->prepare($req);
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
-
 
 		return $result;
 	}
