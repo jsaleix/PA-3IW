@@ -14,7 +14,7 @@ class Content extends Database
 	protected $type = 'article';
 	protected $publicationDate;
 
-	public function __construct ($title, $content, $page, $publisher ){
+	public function __construct ($title = null, $content = null, $page = null, $publisher = null ){
 		parent::__construct();
 		$this->setTitle($title);
 		$this->setContent($content);
@@ -122,7 +122,7 @@ class Content extends Database
                     "class"=>"input-content",
                     "placeholder"=>"New article",
                     "error"=>"The title cannot be empty!",
-                    "required"=>true
+                    "required"=>true,
                 ],
                 "content"=>[ 
                     "type"=>"text",
@@ -135,17 +135,6 @@ class Content extends Database
                     "error"=>"A content is required for an article!",
                     "required"=>true
                 ],
-                /*"page"=>[ 
-                    "type"=>"select",
-                    "label"=>"Page associated",
-                    "id"=>"page",
-                    "class"=>"input-page_select",
-                    "error"=>"A page needs to be associated with your article!",
-                    "required"=>true,
-					"options" => [
-						"1" => "test1",
-						"2" => "test2"
-					],*/
 				"page"=>[ 
 					"type"=>"select",
 					"label"=>"Page associated",
@@ -156,7 +145,102 @@ class Content extends Database
 					"options" => $pagesArr
 					]
                 ]
-            
+        ];
+    }
+
+	public function formEditContent($content, $pagesArr){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "title"=>[ 
+                    "type"=>"text",
+                    "label"=>"Title",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"title",
+                    "class"=>"input-content",
+                    "placeholder"=>"New article",
+                    "error"=>"The title cannot be empty!",
+                    "required"=>true,
+					"value"=> $content['title']
+                ],
+                "content"=>[ 
+                    "type"=>"text",
+                    "label"=>"Content",
+                    "minLength"=>2,
+                    "maxLength"=>255,
+                    "id"=>"content",
+                    "class"=>"input-content",
+                    "placeholder"=>"Let's write something here",
+                    "error"=>"A content is required for an article!",
+                    "required"=>true,
+					"value"=> $content['content']
+                ],
+				"page"=>[ 
+					"type"=>"select",
+					"label"=>"Page associated",
+					"id"=>"page",
+					"class"=>"input-page_select",
+					"error"=>"A page needs to be associated with your article!",
+					"required"=>true,
+					"options" => $pagesArr,
+					"value"=> $content['page']
+					]
+                ]
+        ];
+    }
+
+	public function listFormalize($data){
+        return [
+            "config"=>[
+                "method"=>"",
+                "action"=>"",
+				"href" => "editArticle?id=" . $data['id'],
+                "id"=>"form_content",
+                "class"=>"inline-list",
+                "submit"=>"Edit",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "fields"=>[
+                "title"=>[ 
+                    "type"=>"text",
+                    "value" => $data['title']??$data['title'],
+					"name" => $data['title']
+                ],
+				"content"=>[ 
+					"type"=>"text",
+                    "value" => $data['content']??'content',
+					"name" => $data['content']
+                ],
+                "page"=>[ 
+                    "type"=>"text",
+                    "value" => $data['page']??'page',
+					"name" => $data['page']
+                ],
+				"publicationDate"=>[ 
+                    "type"=>"text",
+                    "value" => $data['publicationDate']??'publicationDate',
+					"name" => $data['publicationDate']
+                ],
+				"type"=>[ 
+                    "type"=>"text",
+                    "value" => $data['type'],
+					"name" => $data['type']
+                ],
+				"publisher" => [
+					"type"=>"text",
+                    "value" => $data['publisher'],
+					"name" => $data['publisher']
+				]
+            ]
         ];
     }
 	

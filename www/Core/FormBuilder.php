@@ -42,9 +42,6 @@ class FormBuilder
 			
 		}
 
-		
-			
-
 		if($form["config"]["class"] === "form-auth")
 			$html .= "<input class=\"".($form["config"]["submitClass"]??"")."\"type='submit' value=\"".($form["config"]["submit"]??"Connexion")."\" />";
 		else
@@ -65,9 +62,9 @@ class FormBuilder
 						type='".($configInput["type"]??"text")."'
 						id='".($configInput["id"]??"")."'
 						class='".($configInput["class"]??"")."'
-						placeholder='".($configInput["placeholder"]??"")."'
-						".(!empty($configInput["required"])?"required='required'":"")."
-					>";
+						placeholder='".($configInput["placeholder"]??"")."'". 
+						(!empty($configInput["required"])?"required='required'":"") .
+						"value='" . ($configInput["value"]??"") . "'/>";
 	}
 
 	public static function renderCheckBox($name, $configInput){
