@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Core\Database;
 
+use CMS\Models\Page;
+use CMS\Models\Content;
+
 class Site extends Database
 {
 
-	private $id = null;
+	protected $id = null;
 	protected $name;
 	protected $description;
 	protected $image;
@@ -119,6 +122,15 @@ class Site extends Database
                 $create = $this->createTable(str_replace($toReplace, $replaceBy, $table));
                 if(!$create){ return false; }
             }
+            $insert = new Page('home', $this->prefix);
+            $insert->save();
+            echo 'Page created';
+
+            $insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
+            $insert->setTableName($this->prefix);
+            $insert->save();
+            echo 'Content created';
+
             return true;
         }catch(\Exception $e){
             return false;

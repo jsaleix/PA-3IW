@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_booking` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL ,
   `date` DATE NULL,

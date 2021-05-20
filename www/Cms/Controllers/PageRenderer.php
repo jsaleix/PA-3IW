@@ -2,56 +2,62 @@
 namespace CMS\Controller;
 use App\Core\Database as db;
 use App\Models\User;
+use App\Models\Site;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
 
 class PageRenderer 
 {
-    private $siteName;
-    private $prefix;
-    private $siteId;
-
-    private $name;
-    private $pageId;
+    private $site;
+    private $page;
     private $category = null;
     private $path;
     private $error = null;
 
-    
-	public function __construct($name, $url){
-        $this->path = $url;
-        $this->siteName = $name;
+	public function __construct($url){
+        $this->path     = $url;
+        $this->domain   = $url[0];
+        if(empty($uri[1])){ $url[1] = 'home'; }
         $this->setParams($url);
-        //Verifier si la page et le site existent
 	}
 
-    private function setParams($value){
-        $category = [];
-        while( count($value) > 1 ){
-            $removed = array_shift($value);
+    private function setParams($url){
+        $siteData = new Site();
+        $siteData->setSubDomain($this->domain);
+        $site = $siteData->findOne();
+        if(empty($site['id'])){
+            $this->error = 'This website does not exist :/';
+            return;
+        }
+
+        $siteData->setId($site['id']);
+        $siteData->setName($site['name']);
+        $siteData->setDescription($site['description']);
+        $siteData->setImage($site['image']);
+        $siteData->setCreator($site['creator']);
+        $siteData->setSubDomain($site['subDomain']);
+        $siteData->setPrefix($site['prefix']);
+        $siteData->setType($site['type']);
+        $this->site = $siteData;
+
+        $pageName = $url[1];
+        /*$category = [];
+        while( count($url) > 1 ){
+            $removed = array_shift($url);
             if($removed){
                 $category[] = $removed;
             }
         }
-        $this->name = $value[0];
-        $this->category = $category;
-        $db = new db();
-        $checkSite = $db->find("SELECT name, id, prefix FROM ag_Site WHERE subDomain = ?", [$this->siteName]);
-        //echo var_dump($checkSite);
-
-        $this->siteId = $checkSite['id'];
-        $this->prefix = $checkSite['prefix'];
-
-        if(!$checkSite){
-            $this->error = 'This website does not exist :/';
+        $this->category = $category;*/
+        $page = new Page($pageName, $this->site->getPrefix());
+        $pageData = $page->findOne();
+        if(empty($pageData['id'])){
+            $this->error = 'The requested page does not exist :/';
+            return;
         }
-        $checkPage =  $db->find("SELECT id, category FROM {$this->prefix}_page WHERE name = ?", [$this->name]);
-        if(!$checkPage){
-            $this->error = 'The requested page does not exist (anymore?)';
-        }
-        $this->pageId = $checkPage['id'];
-        
+        $page->setId($pageData['id']);
+        $this->page = $page;
     }
 
     public function renderContent($content){
@@ -79,7 +85,7 @@ class PageRenderer
             return;
         }
         $db = new db();
-        $contents = $db->getAll("SELECT * FROM {$this->prefix}_content WHERE page = ? ", [$this->pageId]);
+        $contents = $db->getAll("SELECT * FROM " . $this->site->getPrefix() . "_Content WHERE page = ? ", [$this->page->getId()]);
 
         if($contents === 0){
             echo 'No content found :/';

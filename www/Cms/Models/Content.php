@@ -6,18 +6,24 @@ use App\Core\Database;
 class Content extends Database
 {
 
-	private $id = null;
+	protected $id;
 	protected $title;
 	protected $content;
 	protected $page;
 	protected $publisher;
 	protected $type = 'article';
+	protected $publicationDate;
 
 	public function __construct ($title, $content, $page, $publisher ){
+		parent::__construct();
 		$this->setTitle($title);
 		$this->setContent($content);
         $this->setPage($page);
 		$this->setPublisher($publisher);
+	}
+
+	public function setTableName($prefix){
+		parent::setTableName($prefix.'_');
 	}
 
 	public function setId($id){
@@ -66,6 +72,14 @@ class Content extends Database
 
 	public function getType(){
 		return $this->type;
+	}
+
+	public function setPublicationDate($publicationDate){
+		$this->publicationDate = $publicationDate;
+	}
+
+	public function getPublicationDate($publicationDate){
+		return $this->publicationDate;
 	}
 
 	public function returnData() : array{
