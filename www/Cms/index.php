@@ -1,7 +1,7 @@
 <?php
 namespace CMS;
 
-use CMS\Core\Router;
+use App\Core\Router;
 use CMS\Controller\PageRenderer;
 use App\Models\Site;
 
@@ -10,31 +10,30 @@ function handleCMS($uri){
     $uri = explode('/', $uri);
     $uri = array_slice($uri, 2);
 
-    /*$siteData = new Site();
-    $siteData->setSubDomain($uri[0]);
-    $site = $siteData->findOne();
-    if(empty($site->id)){
-        'This site does not exist';
-        return;
-    }*/
     if(empty($uri[1]) || $uri[1] !== 'admin'){
-        /**
-         * Récupere le nom du site et le chemin demandé
-         * Cherche en base si le site existe et la ressource demandée aussi sinon exception
-         * Recup les données
-         * renderPage va instancier un objet page et lui transmettre le contenu
-         **/
         include "Cms/Controllers/PageRenderer.php";
         $pageRenderer = "CMS\\Controller\\PageRenderer";
         $page = new $pageRenderer($uri);
         $page->renderPage();
 
     }else{
-        if(empty($uri[2])){ return; }
+        
+        
+        $siteData = new Site();
+        $siteData->setSubDomain($uri[0]);
+        $site = $siteData->findOne();
+        if(empty($site['id'])){
+            echo 'This site does not exist <br>';
+            return;
+        }
         $uri = array_slice($uri, 2);
-        $uri[0] = '/' . $uri[0];
+        if(empty($uri[0])){
+            $uri[0] = '/';
+        }else{
+            $uri[0] = '/' . $uri[0];
+        }
         $uri = implode($uri, '/');
-        $router = new Router($uri);
+        $router = new Router($uri, "Cms/routes.yml");
         $c = $router->getController();
         $a = $router->getAction();
 

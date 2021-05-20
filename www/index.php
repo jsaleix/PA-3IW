@@ -30,7 +30,7 @@ if( preg_match('/\/site\/+/', $uri) ){
 	return;
 }
 
-$router = new Router($uri);
+$router = new Router($uri, "routes.yml");
 $c = $router->getController();
 $a = $router->getAction();
 

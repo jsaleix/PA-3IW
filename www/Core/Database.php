@@ -102,8 +102,6 @@ class Database
 				unset($columns[$key]);
 		}
 
-		print_r( array_values($columns) );
-
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 		$query->execute(array_values($columns));

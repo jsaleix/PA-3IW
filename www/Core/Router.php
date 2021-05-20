@@ -9,7 +9,8 @@ class Router
 	private $controller;
 	private $action;
 
-	public function __construct($uri){
+	public function __construct($uri, $routePath){
+		$this->routesPath = $routePath;
 		$this->setUri($uri);
 		if(file_exists($this->routesPath)){
 			//[/] => Array ( [controller] => Global [action] => default )
