@@ -5,15 +5,16 @@ class Router
 {
 	private $routes = [];
 	private $uri;
-	private $routesPath = "routes.yml";
+	private $routesPath = "Cms/routes.yml";
 	private $controller;
 	private $action;
 
 	public function __construct($uri){
 		$this->setUri($uri);
-		if(file_exists($this->routesPath)){
-			$this->routes = yaml_parse_file($this->routesPath);
 
+		if(file_exists($this->routesPath)){
+			//[/] => Array ( [controller] => Global [action] => default )
+			$this->routes = yaml_parse_file($this->routesPath);
 			if( !empty($this->routes[$this->uri]) && $this->routes[$this->uri]["controller"] && $this->routes[$this->uri]["action"]){
 
 				$this->setController($this->routes[$this->uri]["controller"]);
@@ -29,7 +30,9 @@ class Router
 
 	public function setUri($uri){
 		$this->uri = trim(mb_strtolower($uri));
+
 	}
+
 
 	public function setController($controller){
 		$this->controller = $controller;

@@ -20,7 +20,6 @@ class Router
 				$this->setController($this->routes[$this->uri]["controller"]);
 				$this->setAction($this->routes[$this->uri]["action"]);
 			}else{
-				print_r($this->routes[$this->uri]["action"]);
 				die("Chemin inexistant : 404");
 			}
 
