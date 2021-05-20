@@ -10,13 +10,10 @@ class View
 	private $view; // home admin login et logout
 	private $data = [];
 
-	public function __construct( $view, $template = "back", $extraData = null ){
+	public function __construct( $view, $template = "back" ){
 
 		$this->setTemplate($template);
 		$this->setView($view);
-		if(!empty($extraData)){
-			extract($extraData);
-		}
 
 	}
 

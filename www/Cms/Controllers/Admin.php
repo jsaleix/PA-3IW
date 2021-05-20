@@ -17,31 +17,37 @@ class Admin{
 	}
 
 	public function createArticleAction($site){
-		echo $site['prefix'];
+		$content = new Content(null, null, null, null);
+
+		$page = new Page(null, $site['prefix']);
+		$pages = $page->findAll();
+		$pagesArr = array();
+		foreach($pages as $data){
+			$pagesArr[$data['id']] = $data['name'];
+		}
+
+		$form = $content->formAddContent($pagesArr);
+
+		$view = new View('admin', 'back');
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
 			if($title && $content && $page){
+				$insert = new Content($title, $content, $page, 2);
+				$insert->setTableName($site['prefix']);
+				$adding = $insert->save();
+				if($adding){
+					$message ='Article successfully published!';
+					$view->assign("message", $message);
+				}else{
+					$errors = ["Impossible d\'inserer l'article"];
+					$view->assign("errors", $errors);
+				}
 				echo 'We\'re gonna add this into the database <br>';
 			}
-			return;
 		}
-
-
-		$page = new Page(null, $site['prefix']);
-		$pages = $page->findAll();
-		print_r($pages);
-
-		/*$content = new Content(null, null, null, null);
-		$form = $content->formAddContent();
-		$extraVars = ['pageTitle' => 'Add an article'];
-
-		$view = new View('admin', 'back', $extraVars);
-		$view->assign("form", $form);
-
-		//$pageTitle = 'Add an article';
-		$view->assign('pageTitle', "Add an article");*/
-
 
 
 

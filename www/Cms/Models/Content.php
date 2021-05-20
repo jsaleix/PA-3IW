@@ -101,7 +101,7 @@ class Content extends Database
 		}
 	}
 
-	public function formAddContent(){
+	public function formAddContent($pagesArr){
         return [
 
             "config"=>[
@@ -135,7 +135,7 @@ class Content extends Database
                     "error"=>"A content is required for an article!",
                     "required"=>true
                 ],
-                "page"=>[ 
+                /*"page"=>[ 
                     "type"=>"select",
                     "label"=>"Page associated",
                     "id"=>"page",
@@ -143,10 +143,20 @@ class Content extends Database
                     "error"=>"A page needs to be associated with your article!",
                     "required"=>true,
 					"options" => [
-						"1" => "test1"
+						"1" => "test1",
+						"2" => "test2"
+					],*/
+				"page"=>[ 
+					"type"=>"select",
+					"label"=>"Page associated",
+					"id"=>"page",
+					"class"=>"input-page_select",
+					"error"=>"A page needs to be associated with your article!",
+					"required"=>true,
+					"options" => $pagesArr
 					]
                 ]
-            ]
+            
         ];
     }
 	
