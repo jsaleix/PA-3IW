@@ -43,7 +43,7 @@ function handleCMS($uri){
             if(class_exists($c)){
                 $cObjet = new $c();
                 if(method_exists($cObjet, $a)){
-                    $cObjet->$a();
+                    $cObjet->$a($site);
                 }else{
                     die("L'action' : ".$a." n'existe pas");
                 }

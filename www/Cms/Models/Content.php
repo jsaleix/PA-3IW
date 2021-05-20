@@ -101,6 +101,55 @@ class Content extends Database
 		}
 	}
 
+	public function formAddContent(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Publish",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "title"=>[ 
+                    "type"=>"text",
+                    "label"=>"Title",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"title",
+                    "class"=>"input-content",
+                    "placeholder"=>"New article",
+                    "error"=>"The title cannot be empty!",
+                    "required"=>true
+                ],
+                "content"=>[ 
+                    "type"=>"text",
+                    "label"=>"Content",
+                    "minLength"=>2,
+                    "maxLength"=>255,
+                    "id"=>"content",
+                    "class"=>"input-content",
+                    "placeholder"=>"Let's write something here",
+                    "error"=>"A content is required for an article!",
+                    "required"=>true
+                ],
+                "page"=>[ 
+                    "type"=>"select",
+                    "label"=>"Page associated",
+                    "id"=>"page",
+                    "class"=>"input-page_select",
+                    "error"=>"A page needs to be associated with your article!",
+                    "required"=>true,
+					"options" => [
+						"1" => "test1"
+					]
+                ]
+            ]
+        ];
+    }
+	
 }
 
 
