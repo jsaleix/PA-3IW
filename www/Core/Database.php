@@ -8,7 +8,7 @@ class Database
 	private $pdo;
 	private $table;
 
-	public function __construct(){
+	public function __construct($tablePrefix = null){
 		try{
 			$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".DBHOST.";port=".DBPORT,DBUSER,DBPWD);
 
@@ -22,9 +22,17 @@ class Database
 		}
 
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
-		$this->table = DBPREFIXE.end($getCalledClassExploded);
+		if($tablePrefix){
+			$this->table = $tablePrefix.end($getCalledClassExploded);
+		}else{
+			$this->table = DBPREFIXE.end($getCalledClassExploded);
+		}
 	}
 
+	protected function setTableName($prefix){
+		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
+		$this->table = $prefix.end($getCalledClassExploded);
+	}
 
 	public function save(){
 		try{
@@ -77,10 +85,16 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
-		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
-		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+
+		$req = "SELECT * FROM ".$this->table;
+		if(count($columns) > 0) {
+			$req .= " WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		}
+		$query = $this->pdo->prepare($req);
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
+
+
 		return $result;
 	}
 	
@@ -93,6 +107,7 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
+
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 		$query->execute(array_values($columns));

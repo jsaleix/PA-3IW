@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_page` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Page` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `category` INT NULL,
@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_page` (
     FOREIGN KEY (`category`)
     REFERENCES `easymeal`.`:X_Category` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION);

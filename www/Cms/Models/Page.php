@@ -6,12 +6,13 @@ use App\Core\Database;
 class Page extends Database
 {
 
-	private $id = null;
-	private $name;
-	private $category = null;
-    private $creationDate = null;
+	protected $id = null;
+	protected $name;
+	protected $category = null;
+    protected $creationDate = null;
 
-	public function __construct( $name, $category = null ){
+	public function __construct( $name, $tablePrefix, $category = null ){
+        parent::__construct($tablePrefix.'_');
 		$this->setName($name);
         $this->setCategory($category);
 	}
