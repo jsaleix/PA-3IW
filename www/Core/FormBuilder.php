@@ -58,13 +58,13 @@ class FormBuilder
 
 	public static function renderInput($name, $configInput){
 		return "<input 
-						name='".$name."' 
-						type='".($configInput["type"]??"text")."'
-						id='".($configInput["id"]??"")."'
-						class='".($configInput["class"]??"")."'
-						placeholder='".($configInput["placeholder"]??"")."'". 
-						(!empty($configInput["required"])?"required='required'":"") .
-						"value='" . ($configInput["value"]??"") . "'/>";
+						name=\"".$name."\" 
+						type=\" ".($configInput["type"]??"text")."\" 
+						id=\" ".($configInput["id"]??"")."\" 
+						class=\" ".($configInput["class"]??"")."\" 
+						placeholder=\" ".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						"value=\" " . ($configInput["value"]??"") . "\" />";
 	}
 
 	public static function renderCheckBox($name, $configInput){
