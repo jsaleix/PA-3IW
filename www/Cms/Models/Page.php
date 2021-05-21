@@ -67,8 +67,40 @@ class Page extends Database
         $this->category = $category;
     }
 
-    public function formRegister(){
-        
+    public function formAddContent($categories){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Create",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Title",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"title",
+                    "class"=>"input-content",
+                    "placeholder"=>"New page",
+                    "error"=>"The title cannot be empty!",
+                    "required"=>true,
+                ],
+				"category"=>[ 
+					"type"=>"select",
+					"label"=>"Page associated",
+					"id"=>"page",
+					"class"=>"input-page_select",
+					"error"=>"A page needs to be associated with your article!",
+					"required"=>true,
+					"options" => $categories
+					]
+                ]
+        ];
     }
 
     public function listFormalize($pageData){

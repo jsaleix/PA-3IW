@@ -6,6 +6,7 @@ use App\Models\Site;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
+use CMS\Models\Category;
 use CMS\Core\View;
 
 class Admin{
@@ -137,6 +138,47 @@ class Admin{
 		}
 	}
 
+	public function createPageAction($site){
+		$categoryObj = new Category();
+		$categoryObj->setTableName($site['prefix']);
+		$category = $categoryObj->findAll();
+		$categoryArr = array();
+		$categoryArr[] = 'None';
 
+		foreach($category as $data){
+			$categoryArr[$data['id']] = $data['name'];
+		}
+		$page = new Page(null, $site['prefix']);
+		$form = $page->formAddContent($categoryArr);
+
+		$view = new View('admin.create', 'back');
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add a page");
+
+		if(!empty($_POST) ) {
+			$erros = [];
+			[ "name" => $title, "category" => $category ] = $_POST;
+			if( $title ){
+				$insert = new Page($title, $site['prefix']);
+				if( !empty($category) && $category !== '0'){
+					$categoryObj->setId($category);
+					$checkCategory = $categoryObj->findOne();
+					if(!$checkCategory){
+						$errors[] = "The requested category does not exist";
+					}
+					$insert->setCategory($category);
+				}
+				$adding = $insert->save();
+				if($adding){
+					$message ='Page successfully published!';
+					$view->assign("message", $message);
+				}else{
+					$errors[] = "Cannot insert this page";
+					$view->assign("errors", $errors);
+				}
+				echo 'We\'re gonna add this into the database <br>';
+			}
+		}
+	}
 
 }
