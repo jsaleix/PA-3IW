@@ -15,9 +15,9 @@ class Site extends Database
 	protected $description;
 	protected $image;
 	protected $creator;
-	protected $subDomain = null;
-	protected $prefix = null;
-    protected $type = null;
+	protected $subDomain;
+	protected $prefix;
+    protected $type;
 
 	public function __construct(){
 		parent::__construct();
