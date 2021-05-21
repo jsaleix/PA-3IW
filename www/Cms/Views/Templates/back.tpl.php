@@ -24,9 +24,9 @@
 </head>
 <body>
 	<header>
-		<h1><?= $pageTitle?></h1>
+		<?=$navbar??''?>
 	</header>
-
+	<h1><?= $pageTitle?></h1>
 	<?php include $this->view ;?>
 
 </body>

@@ -11,10 +11,6 @@
   controller: admin
   action: createArticle
 
-/managepages:
-  controller: admin
-  action: managepages
-
 /managearticles:
   controller: admin
   action: managearticles
@@ -23,3 +19,10 @@
   controller: admin
   action: editarticle
 
+/createpage:
+  controller: admin
+  action: createpage
+
+/managepages:
+  controller: admin
+  action: managepages
