@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Content` (
   `content` LONGTEXT NULL,
   `page` INT NULL,
   `publisher` INT NULL,
-  `publicationDate` DATE NULL,
+  `publicationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `type` VARCHAR(45) NULL DEFAULT 'article',
   PRIMARY KEY (`id`),
   INDEX `fk_content_creator_idx` (`publisher` ASC),
