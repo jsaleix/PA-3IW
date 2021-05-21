@@ -1,9 +1,9 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_page` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Page` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `category` INT NULL,
   `creator` INT NULL,
-  `creationDate` DATE NULL,
+  `creationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_page_creator_idx` (`creator` ASC),
   INDEX `fk_page_category_idx` (`category` ASC),
@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_page` (
     FOREIGN KEY (`category`)
     REFERENCES `easymeal`.`:X_Category` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION);

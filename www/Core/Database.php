@@ -8,7 +8,7 @@ class Database
 	private $pdo;
 	private $table;
 
-	public function __construct(){
+	public function __construct($tablePrefix = null){
 		try{
 			$this->pdo = new \PDO(DBDRIVER.":dbname=".DBNAME.";host=".DBHOST.";port=".DBPORT,DBUSER,DBPWD);
 
@@ -22,9 +22,17 @@ class Database
 		}
 
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
-		$this->table = DBPREFIXE.end($getCalledClassExploded);
+		if($tablePrefix){
+			$this->table = $tablePrefix.end($getCalledClassExploded);
+		}else{
+			$this->table = DBPREFIXE.end($getCalledClassExploded);
+		}
 	}
 
+	protected function setTableName($prefix){
+		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
+		$this->table = $prefix.end($getCalledClassExploded);
+	}
 
 	public function save(){
 		try{
@@ -44,28 +52,28 @@ class Database
 					." );");	
 			}else{
 				//UPDATE
+				unset($columns["id"]);
+				foreach($columns as $key => $col){
+					if( empty($col) || $col === NULL )
+						unset($columns[$key]);
+				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
 				{
 					if(!is_null($this->$field) && !empty($this->$field))
 					{
-						array_push($setCmd, $field . " = '" . $this->$field . "'");
+						array_push($setCmd, $field . " = :" . $field . "");
 					}
 				}
-				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId() ;
+				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
 				$query 	= $this->pdo->prepare($req);
 			}
 			$query->execute($columns);
 			return true;
-
 		}catch(\Exception $e){
 			echo $e->getMessage();
 			return false;
 		}
-
-		$query->execute($columns);
-
-		return is_null($this->getId()) ? $this->pdo->lastInsertId() : 0;
 	}
 
 	public function findAll(){
@@ -76,13 +84,39 @@ class Database
 		foreach($columns as $key => $col){
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
+
+			if($col == 'NULL')
+				$columns[$key] = 'IS NULL';
 		}
-		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
-		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+
+		$req = "SELECT * FROM ".$this->table;
+		/*if(count($columns) > 0) {
+			$req .= " WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		}*/
+		$index = 0;
+		$len = count($columns);
+		if( $len > 0) {
+			$req .= " WHERE ";
+			foreach( $columns as $key => $col ){
+				if($col == 'IS NULL' || $col == 'IS NOT NULL'){
+					$req .= $key . ' ' .$col ;
+					unset($columns[$key]);
+				}else{
+					$req .= $key . ' = ? ';
+				}
+				$index++;
+				if($index < $len){
+					$req .= ' AND ';
+				}
+			}
+		}
+		$query = $this->pdo->prepare($req);
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
+
 		return $result;
 	}
+	
 	public function findOne(){
 		$columns = array_diff_key (
 			get_object_vars($this),
@@ -92,26 +126,12 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
+
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 		$query->execute(array_values($columns));
-		$result = $query->fetch();
+		$result = $query->fetch();	
 		return $result;
-	}
-
-	public function insert($table, array $values){
-		$columns = array_diff_key (
-			get_object_vars($this),
-			get_class_vars(get_class())
-		);
-
-		$query = $this->pdo->prepare("INSERT INTO ".$table." (".
-		implode(",", array_keys($values))
-		.") 
-		VALUES ( :".
-			implode(",:", $values)
-		." );");
-		$query->execute($columns);
 	}
 
 	public function createTable($req){

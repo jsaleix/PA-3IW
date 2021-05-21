@@ -1,10 +1,11 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_content` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Content` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NULL,
   `content` LONGTEXT NULL,
   `page` INT NULL,
   `publisher` INT NULL,
-  `publicationDate` DATE NULL,
+  `publicationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `type` VARCHAR(45) NULL DEFAULT 'article',
   PRIMARY KEY (`id`),
   INDEX `fk_content_creator_idx` (`publisher` ASC),
   INDEX `fk_content_page_idx` (`page` ASC),
@@ -15,6 +16,6 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_content` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_content_page_:X`
     FOREIGN KEY (`page`)
-    REFERENCES `easymeal`.`:X_page` (`id`)
+    REFERENCES `easymeal`.`:X_Page` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION);

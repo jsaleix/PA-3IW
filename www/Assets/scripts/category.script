@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Category` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `description` VARCHAR(255) NULL,
   `creator` INT NULL,
-  `creationDate` DATE NULL,
+  `creationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_category_creator_idx` (`creator` ASC),
   CONSTRAINT `fk_category_creator_:X`

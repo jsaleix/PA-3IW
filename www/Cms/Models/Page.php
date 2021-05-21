@@ -1,19 +1,20 @@
 <?php
 
 namespace CMS\Models;
+use App\Core\Database;
 
-//use App\Core\Database;
-
-class Page
+class Page extends Database
 {
 
-	private $id = null;
+	protected $id = null;
 	protected $name;
-	protected $category;
+	protected $category = null;
+    protected $creationDate = null;
 
-	public function __construct(String $name, array $content){
-		
-        
+	public function __construct( $name, $tablePrefix, $category = null ){
+        parent::__construct($tablePrefix.'_');
+		$this->setName($name);
+        $this->setCategory($category);
 	}
 
 	/**
@@ -68,6 +69,37 @@ class Page
 
     public function formRegister(){
         
+    }
+
+    public function listFormalize($pageData){
+        return [
+            "config"=>[
+                "method"=>"",
+                "action"=>"?" . $pageData['id'],
+                "id"=>"",
+                "class"=>"inline-list",
+                "submit"=>"Edit",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "fields"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['name']
+                ],
+				"category"=>[ 
+					"type"=>"text",
+                    "value" => $pageData['category']
+                ],
+                "creator"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['creator']
+                ],
+                "creationDate"=>[ 
+                    "type"=>"text",
+                    "value" => $pageData['creationDate']
+                ],
+            ]
+        ];
     }
 
 

@@ -30,7 +30,7 @@ if( preg_match('/\/site\/+/', $uri) ){
 	return;
 }
 
-$router = new Router($uri);
+$router = new Router($uri, "routes.yml");
 $c = $router->getController();
 $a = $router->getAction();
 
@@ -45,7 +45,6 @@ if( file_exists("./Controllers/".$c.".php")){
 		$cObjet = new $c();
 		if(method_exists($cObjet, $a)){
 			$cObjet->$a();
-
 		}else{
 			die("L'action' : ".$a." n'existe pas");
 		}

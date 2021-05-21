@@ -25,4 +25,8 @@
   controller: ManageSite
   action: create
 
+/mailconfirm:
+  controller: Security
+  action: mailconfirm
+
 
