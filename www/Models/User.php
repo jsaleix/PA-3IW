@@ -14,6 +14,7 @@ class User extends Database
 	protected $pwd;
 	protected $role;
 	protected $isActive;
+    protected $token;
 
 	public function __construct(){
 		parent::__construct();
@@ -133,6 +134,21 @@ class User extends Database
         $this->role = $role;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $surname
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
 
     public function formRegister(){
         return [

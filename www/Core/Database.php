@@ -118,7 +118,7 @@ class Database
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
 
-		return $result;
+		return !isset($result[0]) ? false : $result;
 	}
 	
 	public function findOne(){
@@ -135,7 +135,8 @@ class Database
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
-		return $result;
+
+		return !isset($result[0]) ? false : $result;
 	}
 
 	public function createTable($req){

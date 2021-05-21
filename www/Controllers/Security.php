@@ -42,6 +42,30 @@ class Security{
 
 	}
 
+	public function createToken($userPDO){
+		$token = bin2hex(random_bytes(128));
+
+		$user = new User();
+		$user->setId($userPDO['id']);
+		$user->setToken($token);
+		$user->save();
+
+		session_start();
+		$_SESSION['token'] = $token;
+		return true;
+	}
+	
+	public function verifyToken(){
+		$user = new User();
+		$user->setToken($_SESSION['token']);
+		$result = $user->findOne();
+		if( !$result){
+			echo "error";
+			return false;
+		}
+		$this->createToken($result);
+	}
+
 	public function registerAction(){
 
 		$user = new User();
