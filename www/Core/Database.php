@@ -44,6 +44,10 @@ class Database
 			//INSERT OU UPDATE
 			if( is_null($this->getId()) ){
 				//INSERT
+				foreach($columns as $key => $col){
+					if( empty($col))
+						unset($columns[$key]);
+				}
 				$query = $this->pdo->prepare("INSERT INTO ".$this->table." (".
 						implode(",", array_keys($columns))
 					.") 
@@ -54,7 +58,7 @@ class Database
 				//UPDATE
 				unset($columns["id"]);
 				foreach($columns as $key => $col){
-					if( empty($col) || $col === NULL )
+					if( empty($col))
 						unset($columns[$key]);
 				}
 				$setCmd = [];

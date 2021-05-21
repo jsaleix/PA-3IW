@@ -100,6 +100,19 @@ class Security{
 		$user = new User();
 		$user->setId($token['userId']);
 		$result = $user->findOne();
+		$now = new \DateTime('now');
+		$tokenDate = new \DateTime($token["expiresDate"]);
+		$interval = $now->diff($tokenDate);
+		if( $interval->format('%R') != "+"){
+			echo "Token expiré un nouveau vous a été envoyé";
+			$mail = new MailToken();
+			$mail->setUserId($result["id"]);
+			$mail->setExpiresDate(new \DateTime('now'));
+			$mail->setToken(bin2hex(random_bytes(128)));
+			$mail->save();
+			$mail->sendConfirmationMail($result["email"]);
+			return;
+		}
 		if( $result["isActive"] == 1 ){
 			echo "already active";
 			return;

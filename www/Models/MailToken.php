@@ -32,7 +32,7 @@ class MailToken extends Database
         $mailing->Port = 465;
 
         $mailing->setFrom(MAIL, 'Mailer');
-        $mailing->addAddress($_POST["email"]);
+        $mailing->addAddress($mail);
         $mailing->isHTML(true);
         $mailing->Subject = 'Confirmez votre email';
         $mailing->Body = '
@@ -41,8 +41,6 @@ class MailToken extends Database
                 <a href="'.URI.'/mailconfirm?token='.$this->token.'">Pour ce faire, cliquez ici ! </a>';
 		if(!$mailing->send())
             echo "error";
-        else 
-            echo "sent";
     }
 
     /**
