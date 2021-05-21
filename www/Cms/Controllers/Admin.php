@@ -6,6 +6,7 @@ use App\Models\Site;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
+use CMS\Models\Category;
 use CMS\Core\View;
 
 class Admin{
@@ -29,6 +30,7 @@ class Admin{
 		$form = $content->formAddContent($pagesArr);
 
 		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -60,6 +62,7 @@ class Admin{
 		}
 
 		$view = new View('admin.list', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
 	}
@@ -85,6 +88,7 @@ class Admin{
 		}
 
 		$view = new View('admin.list', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("list", $contentList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
@@ -114,6 +118,7 @@ class Admin{
 		$form = $contentObj->formEditContent((array)$content, $pagesArr);
 
 		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 
@@ -137,6 +142,64 @@ class Admin{
 		}
 	}
 
+	public function createPageAction($site){
+		$categoryObj = new Category();
+		$categoryObj->setTableName($site['prefix']);
+		$category = $categoryObj->findAll();
+		$categoryArr = array();
+		$categoryArr[] = 'None';
 
+		foreach($category as $data){
+			$categoryArr[$data['id']] = $data['name'];
+		}
+		$page = new Page(null, $site['prefix']);
+		$form = $page->formAddContent($categoryArr);
+
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add a page");
+
+		if(!empty($_POST) ) {
+			$erros = [];
+			[ "name" => $title, "category" => $category ] = $_POST;
+			if( $title ){
+				$insert = new Page($title, $site['prefix']);
+				if( !empty($category) && $category !== '0'){
+					$categoryObj->setId($category);
+					$checkCategory = $categoryObj->findOne();
+					if(!$checkCategory){
+						$errors[] = "The requested category does not exist";
+					}
+					$insert->setCategory($category);
+				}
+				$adding = $insert->save();
+				if($adding){
+					$message ='Page successfully published!';
+					$view->assign("message", $message);
+				}else{
+					$errors[] = "Cannot insert this page";
+					$view->assign("errors", $errors);
+				}
+				echo 'We\'re gonna add this into the database <br>';
+			}
+		}
+	}
+
+	public function renderNavBar($site){
+		$url = $site['subDomain'];
+		$html = '<nav><ul>';
+		$html .= "<li><a href=''>Dashboard</a></li>";
+		$html .= "<li><a href='managepages'>Pages</a></li>";
+		$html .= "<li><a href='managearticles'>Articles</a></li>";
+		$html .= "<li><a href='/'>Users</a></li>";
+		$html .= "<li><a href='/'>Media library</a></li>";
+		$html .= "<li><a href='/'>Roles</a></li>";
+		$html .= "<li><a href='/'>Mailing</a></li>";
+		$html .= "<li><a href='/'>Events</a></li>";
+		$html .= "<li><a href='/'>Advanced</a></li>";
+		$html .= "</ul></nav>";
+		return $html;
+	}
 
 }

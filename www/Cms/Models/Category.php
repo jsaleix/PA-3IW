@@ -3,23 +3,17 @@
 namespace CMS\Models;
 use App\Core\Database;
 
-class Content extends Database
+class Category extends Database
 {
 
 	protected $id;
-	protected $title;
-	protected $content;
-	protected $page;
-	protected $publisher;
-	protected $type = 'article';
-	protected $publicationDate;
+	protected $name;
+	protected $description;
+	protected $creator;
+	protected $creationDate;
 
-	public function __construct ($title = null, $content = null, $page = null, $publisher = null ){
+	public function __construct (){
 		parent::__construct();
-		$this->setTitle($title);
-		$this->setContent($content);
-        $this->setPage($page);
-		$this->setPublisher($publisher);
 	}
 
 	public function setTableName($prefix){
@@ -34,60 +28,40 @@ class Content extends Database
 		return $this->id;
 	}
 
-	public function setTitle($title){
-		$this->title = htmlspecialchars($title);
+	public function setName($name){
+		$this->name = $name;
 	}
 
-	public function getTitle(){
-		return $this->title;
+	public function getName(){
+		return $this->name;
 	}
 
-	public function setContent($content){
-		$this->content = htmlspecialchars($content);
+	public function setDescription($description){
+		$this->description = $description;
 	}
 
-	public function getContent(){
-		return $this->content;
+	public function getDescription(){
+		return $this->description;
 	}
 
-	public function setPage($page){
-		$this->page = $page;
+	public function setCreator($creator){
+		$this->$creator = $creator;
 	}
 
-	public function getPage(){
-		return $this->page;
+	public function getCreator(){
+		return $this->creator;
 	}
 
-	public function setPublisher($publisher){
-		$this->publisher = $publisher;
+	public function setCreationDate($creationDate){
+		$this->creationDate = $creationDate;
 	}
 
-	public function getPublisher(){
-		return $this->publisher;
+	public function getCreationDate(){
+		return $this->creationDate;
 	}
 
-	public function setType($type){
-		$this->type = $type;
-	}
-
-	public function getType(){
-		return $this->type;
-	}
-
-	public function setPublicationDate($publicationDate){
-		$this->publicationDate = $publicationDate;
-	}
-
-	public function getPublicationDate($publicationDate){
-		return $this->publicationDate;
-	}
-
-	public function returnData() : array{
-		return get_object_vars($this);
-	}
-
-	public function renderContent(){
-		switch($this->type){
+	public function renderCategory(){
+		/*switch($this->type){
 			case 'article':
 				extract(get_object_vars($this));
 				echo '<h1>' . $title . '</h1>';
@@ -98,10 +72,10 @@ class Content extends Database
 
 			default: 
 			return;
-		}
+		}*/
 	}
 
-	public function formAddContent($pagesArr){
+	public function formAddCategory(){
         return [
 
             "config"=>[
@@ -113,38 +87,29 @@ class Content extends Database
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
-                "title"=>[ 
+                "name"=>[ 
                     "type"=>"text",
-                    "label"=>"Title",
+                    "label"=>"Name",
                     "minLength"=>2,
                     "maxLength"=>45,
                     "id"=>"title",
                     "class"=>"input-content",
-                    "placeholder"=>"New article",
-                    "error"=>"The title cannot be empty!",
+                    "placeholder"=>"New category",
+                    "error"=>"The category name cannot be empty!",
                     "required"=>true,
                 ],
-                "content"=>[ 
+                "description"=>[ 
                     "type"=>"text",
-                    "label"=>"Content",
+                    "label"=>"Description",
                     "minLength"=>2,
                     "maxLength"=>255,
                     "id"=>"content",
                     "class"=>"input-content",
-                    "placeholder"=>"Let's write something here",
-                    "error"=>"A content is required for an article!",
+                    "placeholder"=>"Let\'s describe this category.",
+                    "error"=>"A description is required for an article!",
                     "required"=>true
                 ],
-				"page"=>[ 
-					"type"=>"select",
-					"label"=>"Page associated",
-					"id"=>"page",
-					"class"=>"input-page_select",
-					"error"=>"A page needs to be associated with your article!",
-					"required"=>true,
-					"options" => $pagesArr
-					]
-                ]
+            ]
         ];
     }
 
