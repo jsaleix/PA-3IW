@@ -56,7 +56,7 @@
             if(res === 201){
                 alert('Site crée !');
                 localStorage.removeItem('siteData');
-                window.location.replace("/");
+                window.location.replace("/site/" + subDomain );
 
             }else{
                 alert('Une erreur est survenue');
