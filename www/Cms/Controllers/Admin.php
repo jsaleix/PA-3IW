@@ -64,9 +64,11 @@ class Admin{
 		foreach($pages as $item){
 			$pagesList[] = $pageObj->listFormalize($item);
 		}
+		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("content", $createPageBtn);
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
 	}
@@ -90,9 +92,11 @@ class Admin{
 			$item['publisher'] = ("by " . $user['firstname'])??'None';
 			$contentList[] = $contentObj->listFormalize($item);
 		}
+		$createArticleBtn = '<a href="createarticle"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("content", $createArticleBtn);
 		$view->assign("list", $contentList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
