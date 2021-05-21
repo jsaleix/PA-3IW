@@ -12,8 +12,8 @@ class User extends Database
 	protected $lastname;
 	protected $email;
 	protected $pwd;
-	protected $role = 0;
-	protected $isActive = 0;
+	protected $role;
+	protected $isActive;
 
 	public function __construct(){
 		parent::__construct();
