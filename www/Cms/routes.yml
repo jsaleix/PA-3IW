@@ -26,3 +26,7 @@
 /managepages:
   controller: pagecontroller
   action: managepages
+
+/editpage:
+  controller: pagecontroller
+  action: editpage

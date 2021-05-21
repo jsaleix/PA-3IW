@@ -28,8 +28,18 @@ class PageController{
 		$pageObj = new Page(null, $site['prefix']);
 		$pages = $pageObj->findAll();
 		$pagesList = [];
-		
+
+		$categoryObj = new Category();
 		foreach($pages as $item){
+			if($item['category'] !== NULL){
+				$categoryObj->setTableName($site['prefix']);
+				$categoryObj->setId($item['category']);
+				$category = $categoryObj->findOne();
+				$item['category'] = $category['name']??'Unknown';
+
+			}else{
+				$item['category'] = $item['category']??'Unknown';
+			}
 			$pagesList[] = $pageObj->listFormalize($item);
 		}
 		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
@@ -78,6 +88,54 @@ class PageController{
 					$view->assign("message", $message);
 				}else{
 					$errors[] = "Cannot insert this page";
+					$view->assign("errors", $errors);
+				}
+			}
+		}
+	}
+
+	public function editPageAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'page not set ';
+			header("Location: managepages");
+
+		}
+
+		$pageObj = new Page(null, $site['prefix']);
+		//$pageObj->setTableName($site['prefix']);
+		$pageObj->setId($_GET['id']??0);
+		$page = $pageObj->findOne();
+		if(!$page){
+			header("Location: managepages");
+		}
+
+		$categoryObj = new Category();
+		$categoryObj->setTableName($site['prefix']);
+		$category = $categoryObj->findAll();
+		$categoryArr = array();
+		$categoryArr[] = 'None';
+
+		foreach($category as $data){
+			$categoryArr[$data['id']] = $data['name'];
+		}
+		$form = $pageObj->formEditContent((array)$page, $categoryArr);
+
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit a page");
+
+		if(!empty($_POST) ) {
+			[ "name" => $name, "category" => $category] = $_POST;
+			if($name && $category ){
+				$pageObj->setName($name);
+				$pageObj->setCategory($category);
+				$adding = $pageObj->save();
+				if($adding){
+					$message ='Page successfully updated!';
+					$view->assign("message", $message);
+				}else{
+					$errors = ["Error when updating this page"];
 					$view->assign("errors", $errors);
 				}
 			}

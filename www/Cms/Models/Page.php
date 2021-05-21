@@ -17,6 +17,10 @@ class Page extends Database
         $this->setCategory($category);
 	}
 
+    public function setTableName($prefix){
+		parent::setTableName($prefix.'_');
+	}
+
 	/**
      * @return mixed
      */
@@ -107,8 +111,9 @@ class Page extends Database
         return [
             "config"=>[
                 "method"=>"",
-                "action"=>"?" . $pageData['id'],
-                "id"=>"",
+                "action"=>"",
+				"href" => "editPage?id=" . $pageData['id'],
+                "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
@@ -134,7 +139,43 @@ class Page extends Database
         ];
     }
 
+    public function formEditContent($content, $dataArr){
+        return [
 
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Title",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"title",
+                    "class"=>"input-content",
+                    "placeholder"=>"New article",
+                    "error"=>"The title cannot be empty!",
+                    "required"=>true,
+					"value"=> $content['name']
+                ],
+				"category"=>[ 
+					"type"=>"select",
+					"label"=>"Page associated",
+					"id"=>"page",
+					"class"=>"input-page_select",
+					"error"=>"A page needs to be associated with your article!",
+					"required"=>true,
+					"options" => $dataArr,
+					"value"=> $content['category']
+					]
+            ]
+        ];
+    }
 
 }
 

@@ -12,12 +12,18 @@ class NavbarBuilder
 		$url = $site['subDomain'];
 		$html = '<nav><ul>';
 		$html .= "<li><a href='/site/${url}/admin/'>Dashboard</a></li>";
-		$html .= "<li><a href='managepages'>Pages</a></li>";
-			$html .= "<ul><li><a href='createpage'>Create</a></li></ul>";
-		$html .= "<li><a href='managearticles'>Articles</a></li>";
-			$html .= "<ul><li><a href='createarticle'>Create</a></li></ul>";
+
+		$html .= "<li>Pages</li>";
+		$html .= "<ul><li><a href='managepages'>Manage</a></li></ul>";
+		$html .= "<ul><li><a href='createpage'>Create</a></li></ul>";
+
+		$html .= "<li>Articles</li>";
+		$html .= "<ul><li><a href='managearticles'>Manage</a></li></ul>";
+		$html .= "<ul><li><a href='createarticle'>Create</a></li></ul>";
+
 		$html .= "<li><a href='/site/${url}/admin/'>Events</a></li>";
-			$html .= "<ul><li><a href='/site/${url}/admin/'>Add</a></li></ul>";
+		$html .= "<ul><li><a href='/site/${url}/admin/'>Add</a></li></ul>";
+		
 		$html .= "<li><a href='/site/${url}/admin/'>Users</a></li>";
 		$html .= "<li><a href='/site/${url}/admin/'>Media library</a></li>";
 		$html .= "<li><a href='/site/${url}/admin/'>Roles</a></li>";
