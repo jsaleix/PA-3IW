@@ -35,7 +35,7 @@ class Content extends Database
 	}
 
 	public function setTitle($title){
-		$this->title = $title;
+		$this->title = htmlspecialchars($title);
 	}
 
 	public function getTitle(){
@@ -43,7 +43,7 @@ class Content extends Database
 	}
 
 	public function setContent($content){
-		$this->content = $content;
+		$this->content = htmlspecialchars($content);
 	}
 
 	public function getContent(){

@@ -30,6 +30,7 @@ class Admin{
 		$form = $content->formAddContent($pagesArr);
 
 		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -61,6 +62,7 @@ class Admin{
 		}
 
 		$view = new View('admin.list', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
 	}
@@ -86,6 +88,7 @@ class Admin{
 		}
 
 		$view = new View('admin.list', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("list", $contentList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
@@ -115,6 +118,7 @@ class Admin{
 		$form = $contentObj->formEditContent((array)$content, $pagesArr);
 
 		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 
@@ -152,6 +156,7 @@ class Admin{
 		$form = $page->formAddContent($categoryArr);
 
 		$view = new View('admin.create', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
 
@@ -179,6 +184,22 @@ class Admin{
 				echo 'We\'re gonna add this into the database <br>';
 			}
 		}
+	}
+
+	public function renderNavBar($site){
+		$url = $site['subDomain'];
+		$html = '<nav><ul>';
+		$html .= "<li><a href=''>Dashboard</a></li>";
+		$html .= "<li><a href='managepages'>Pages</a></li>";
+		$html .= "<li><a href='managearticles'>Articles</a></li>";
+		$html .= "<li><a href='/'>Users</a></li>";
+		$html .= "<li><a href='/'>Media library</a></li>";
+		$html .= "<li><a href='/'>Roles</a></li>";
+		$html .= "<li><a href='/'>Mailing</a></li>";
+		$html .= "<li><a href='/'>Events</a></li>";
+		$html .= "<li><a href='/'>Advanced</a></li>";
+		$html .= "</ul></nav>";
+		return $html;
 	}
 
 }
