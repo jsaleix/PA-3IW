@@ -11,5 +11,6 @@
 <?php endif;?>
 
 <main class="main-container">
-    <?php App\Core\ListBuilder::render($list)?>
+    <?php if(!empty($content)){ echo $content;}?>
+    <?php !empty($list) && App\Core\ListBuilder::render($list)?>
 </main>

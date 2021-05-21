@@ -8,21 +8,25 @@
   action: default
 
 /createarticle:
-  controller: admin
+  controller: contentcontroller
   action: createArticle
 
 /managearticles:
-  controller: admin
+  controller: contentcontroller
   action: managearticles
 
 /editarticle:
-  controller: admin
+  controller: contentcontroller
   action: editarticle
 
 /createpage:
-  controller: admin
+  controller: pagecontroller
   action: createpage
 
 /managepages:
-  controller: admin
+  controller: pagecontroller
   action: managepages
+
+/editpage:
+  controller: pagecontroller
+  action: editpage
