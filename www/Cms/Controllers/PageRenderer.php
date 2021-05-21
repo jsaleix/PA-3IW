@@ -94,7 +94,7 @@ class PageRenderer
         $contents = $contentObj->findAll();
 
         
-        if(count($contents) === 0){
+        if(!$contents || count($contents) === 0){
             echo 'No content found :/';
             return;
         }
