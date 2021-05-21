@@ -2689,3 +2689,9 @@ main {
   width: 100%;
 }
 
+#alertContainer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+}

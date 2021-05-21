@@ -153,7 +153,7 @@ class User extends Database
                     "maxLength"=>55,
                     "id"=>"firstname",
                     "class"=>"input-auth",
-                    "placeholder"=>"Exemple: Yves",
+                    "placeholder"=>"Prénom",
                     "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
                     "required"=>true
                 ],
@@ -164,7 +164,7 @@ class User extends Database
                     "maxLength"=>255,
                     "id"=>"lastname",
                     "class"=>"input-auth",
-                    "placeholder"=>"Exemple: SKRZYPCZYK",
+                    "placeholder"=>"Nom de famille",
                     "error"=>"Votre nom doit faire entre 2 et 255 caractères",
                     "required"=>true
                 ],
@@ -175,7 +175,7 @@ class User extends Database
                     "maxLength"=>320,
                     "id"=>"email",
                     "class"=>"input-auth",
-                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "placeholder"=>"Email",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
                 ],
@@ -185,7 +185,7 @@ class User extends Database
                     "minLength"=>8,
                     "id"=>"pwd",
                     "class"=>"input-auth",
-                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
                 ],
@@ -195,7 +195,7 @@ class User extends Database
                     "confirm"=>"pwd",
                     "id"=>"pwdConfirm",
                     "class"=>"input-auth",
-                    "placeholder"=>"Exemple: MonM0tdeP4ss3&",
+                    "placeholder"=>"Confirmation de mot de passe",
                     "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
                     "required"=>true
                 ]
