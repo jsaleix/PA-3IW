@@ -11,5 +11,6 @@
 <?php endif;?>
 
 <main class="main-container">
-    <?php App\Core\FormBuilder::render($form)?>
+    <?php !empty($form) && App\Core\FormBuilder::render($form)?>
+    <?php if(!empty($content)){ echo $content;}?>
 </main>

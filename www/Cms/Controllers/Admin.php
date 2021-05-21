@@ -12,9 +12,14 @@ use CMS\Core\View;
 class Admin{
 
 
-	public function defaultAction(){
-		echo 'Default admin action on CMS <br>';
-		echo 'We\'re gonna assume that you are the site owner <br>'; 
+	public function defaultAction($site){
+		$html = 'Default admin action on CMS <br>';
+		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
+		$view = new View('admin', 'back');
+		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign('pageTitle', "Dashboard");
+		$view->assign('content', $html);
+		
 	}
 
 	public function createArticleAction($site){
@@ -47,7 +52,6 @@ class Admin{
 					$errors = ["Impossible d\'inserer l'article"];
 					$view->assign("errors", $errors);
 				}
-				echo 'We\'re gonna add this into the database <br>';
 			}
 		}
 	}
@@ -109,7 +113,9 @@ class Admin{
 		$contentObj->setTableName($site['prefix']);
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
-		
+		if(!$content){
+			header("Location: managearticles");
+		}
 		$pagesArr = array();
 		foreach($pages as $data){
 			$pagesArr[$data['id']] = $data['name'];
@@ -181,7 +187,6 @@ class Admin{
 					$errors[] = "Cannot insert this page";
 					$view->assign("errors", $errors);
 				}
-				echo 'We\'re gonna add this into the database <br>';
 			}
 		}
 	}
@@ -189,9 +194,11 @@ class Admin{
 	public function renderNavBar($site){
 		$url = $site['subDomain'];
 		$html = '<nav><ul>';
-		$html .= "<li><a href=''>Dashboard</a></li>";
+		$html .= "<li><a href='/site/${url}/admin/'>Dashboard</a></li>";
 		$html .= "<li><a href='managepages'>Pages</a></li>";
+		$html .= "<ul><li><a href='createpage'>Create</a></li></ul>";
 		$html .= "<li><a href='managearticles'>Articles</a></li>";
+		$html .= "<ul><li><a href='createarticle'>Create</a></li></ul>";
 		$html .= "<li><a href='/'>Users</a></li>";
 		$html .= "<li><a href='/'>Media library</a></li>";
 		$html .= "<li><a href='/'>Roles</a></li>";

@@ -64,7 +64,7 @@ class FormBuilder
 						class=\" ".($configInput["class"]??"")."\" 
 						placeholder=\" ".($configInput["placeholder"]??"")."\" ". 
 						(!empty($configInput["required"])?"required=\"required\"":"") .
-						"value=\" " . ($configInput["value"]??"") . "\" />";
+						"value=\"" . ($configInput["value"]??null) . "\" />";
 	}
 
 	public static function renderCheckBox($name, $configInput){
