@@ -16,6 +16,8 @@ function handleCMS($uri){
         $page = new $pageRenderer($uri);
         $page->renderPage();
 
+        
+
     }else{
         $siteData = new Site();
         $siteData->setSubDomain($uri[0]);

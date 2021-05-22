@@ -6,6 +6,7 @@ use App\Core\Database;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
+use CMS\Models\Post;
 
 class Site extends Database
 {
@@ -126,10 +127,22 @@ class Site extends Database
             $insert->save();
             echo 'Page created';
 
-            $insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
+            $contentObj = new Content();
+            $contentObj->setTableName($this->prefix);
+            $contentObj->setPage(1);
+            $contentObj->setMethod(1);
+            $contentObj->save();
+            echo 'Content created';
+
+            $postObj = new Post('Welcome', 'This is your first article on your new website.', 2);
+            $postObj->setTableName($this->prefix);
+            $postObj->save();
+            echo 'Post created';
+
+            /*$insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
             $insert->setTableName($this->prefix);
             $insert->save();
-            echo 'Content created';
+            echo 'Content created';*/
 
             return true;
         }catch(\Exception $e){
