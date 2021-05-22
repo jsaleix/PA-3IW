@@ -107,7 +107,7 @@ class Site extends Database
 
         clearstatcache();
         if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
-            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') )
+            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') )
         {
 			die("Missing required file");
             return false;
@@ -115,12 +115,12 @@ class Site extends Database
 
         $toReplace = [':X', ':prefix'];
         $replaceBy = [$this->prefix, DBPREFIXE];
-        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/content.script'];
+        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/post.script', '/content.script'];
         try{
             foreach( $tableToCreate as $table){
                 $table = file_get_contents($dir . $table);
                 $create = $this->createTable(str_replace($toReplace, $replaceBy, $table));
-                if(!$create){ return false; }
+                if(!$create){ echo $table; return false; }
             }
             $insert = new Page('home', $this->prefix);
             $insert->save();
