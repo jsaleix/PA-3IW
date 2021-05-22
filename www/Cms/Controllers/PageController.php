@@ -114,10 +114,12 @@ class PageController{
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
-
-		foreach($category as $data){
-			$categoryArr[$data['id']] = $data['name'];
+		if(!empty($category)){
+			foreach($category as $data){
+				$categoryArr[$data['id']] = $data['name'];
+			}
 		}
+
 		$form = $pageObj->formEditContent((array)$page, $categoryArr);
 
 		$view = new View('admin.create', 'back');
@@ -127,9 +129,9 @@ class PageController{
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "category" => $category] = $_POST;
-			if($name && $category ){
+			if($name ){
 				$pageObj->setName($name);
-				$pageObj->setCategory($category);
+				$pageObj->setCategory($category??null);
 				$adding = $pageObj->save();
 				if($adding){
 					$message ='Page successfully updated!';

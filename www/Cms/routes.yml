@@ -8,15 +8,15 @@
   action: default
 
 /createarticle:
-  controller: contentcontroller
+  controller: postcontroller
   action: createArticle
 
 /managearticles:
-  controller: contentcontroller
+  controller: postcontroller
   action: managearticles
 
 /editarticle:
-  controller: contentcontroller
+  controller: postcontroller
   action: editarticle
 
 /createpage:

@@ -41,9 +41,9 @@ class PostController{
 		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
-			if($title && $postObj && $page){
-				$insert = new Post($title, $content, $page, 2);
+			[ "title" => $title, "content" => $content ] = $_POST;
+			if($title && $content){
+				$insert = new Post($title, $content, 2);
 				$insert->setTableName($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
@@ -60,15 +60,10 @@ class PostController{
 	public function manageArticlesAction($site){
 		$postObj = new Post();
 		$postObj->setTableName($site['prefix']);
-		$postcontents = $postObj->findAll();
+		$posts = $postObj->findAll();
 		$postList = [];
 
 		foreach($posts as $item){
-			$pageObj = new Page(null, $site['prefix']);
-			$pageObj->setId($item['page']);
-			$page = $pageObj->findOne();
-			$item['page'] = $page['name']??'None';
-
 			$userObj = new User();
 			$userObj->setId($item['publisher']);
 			$user = $userObj->findOne();
@@ -97,7 +92,7 @@ class PostController{
 			$pagesArr[$data['id']] = $data['name'];
 		}
 
-		$contentObj = new Post(null);
+		$contentObj = new Post();
 		$contentObj->setTableName($site['prefix']);
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
@@ -117,13 +112,12 @@ class PostController{
 		$view->assign('pageTitle', "Edit an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
-			if($title && $content && $page){
+			[ "title" => $title, "content" => $content] = $_POST;
+			if($title && $content ){
 				/*$insert = new Content($title, $content, $page, 2);
 				$insert->setTableName($site['prefix']);*/
 				$contentObj->setTitle($title);
 				$contentObj->setContent($content);
-				$contentObj->setPage($page);
 				$adding = $contentObj->save();
 				if($adding){
 					$message ='Article successfully updated!';
@@ -136,6 +130,9 @@ class PostController{
 		}
 	}
 
+	/*
+	* Front vizualization
+	*/
 	public function render($site, $filter = null){
 		$contentObj = new Post(null, null, null, null);
         $contentObj->setTableName($site->getPrefix());
