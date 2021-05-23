@@ -7,6 +7,7 @@ class Database
 
 	private $pdo;
 	private $table;
+	private $rawPrefix; 
 
 	public function __construct($tablePrefix = null){
 		try{
@@ -24,6 +25,8 @@ class Database
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
 		if($tablePrefix){
 			$this->table = $tablePrefix.end($getCalledClassExploded);
+			$this->rawPrefix = str_replace('_','', $tablePrefix);
+
 		}else{
 			$this->table = DBPREFIXE.end($getCalledClassExploded);
 		}
@@ -32,6 +35,15 @@ class Database
 	protected function setTableName($prefix){
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
 		$this->table = $prefix.end($getCalledClassExploded);
+		$this->rawPrefix = str_replace('_','', $prefix);
+	}
+
+	protected function getTableName(){
+		return $this->table;
+	}
+
+	protected function getPrefix(){
+		return $this->rawPrefix;
 	}
 
 	public function save(){
@@ -75,7 +87,7 @@ class Database
 			$query->execute($columns);
 			return true;
 		}catch(\Exception $e){
-			//echo $e->getMessage();
+			echo $e->getMessage();
 			return false;
 		}
 	}

@@ -54,6 +54,11 @@ class Action extends Database
         $this->method = $method;
     }
 
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
 }
 
 
