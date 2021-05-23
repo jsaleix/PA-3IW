@@ -36,7 +36,7 @@ class SiteController{
 
 		$form = $siteObj->formEdit($site);
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar((array)$site), 'back');
+		$view->assign("navbar", navbarBuilder::renderNavbar((array)$site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
 
