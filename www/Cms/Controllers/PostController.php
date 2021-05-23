@@ -134,7 +134,7 @@ class PostController{
 	* Front vizualization
 	* returns html for pageRenderer
 	*/
-	public function render($site, $filter = null){
+	public function renderList($site, $filter = null){
 		$contentObj = new Post(null, null, null, null);
         $contentObj->setTableName($site->getPrefix());
         $contents = $contentObj->findAll();
@@ -146,12 +146,12 @@ class PostController{
 
         foreach($contents as $content){
             $contentObj = new Post($content['title'], $content['content'], $content['publisher']);
-			$html .= $this->renderPost($contentObj->returnData());
+			$html .= $this->renderPostItem($contentObj->returnData());
         }
 		return $html;
 	}
 
-	public function renderPost($content){
+	public function renderPostItem($content){
         $publisherData = new User();
         extract($content);
 		if(!empty($publisher))
@@ -169,6 +169,24 @@ class PostController{
 		$html .= '<hr>';
 
         return $html;
+	}
+
+	public function renderPost($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			return 'article not set ';
+		}
+
+		$postObj = new Post(null, null, null, null);
+        $postObj->setTableName($site->getPrefix());
+		$postObj->setId($_GET['id']);
+        $post = $postObj->findOne();
+        if(!$post){
+            return 'No content found :/';
+        }
+
+        $html = "";
+        var_dump($post);
+		return $html;
 	}
 
 }
