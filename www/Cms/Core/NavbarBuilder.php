@@ -28,7 +28,7 @@ class NavbarBuilder
 		$html .= "<li><a href='/site/${url}/admin/'>Media library</a></li>";
 		$html .= "<li><a href='/site/${url}/admin/'>Roles</a></li>";
 		$html .= "<li><a href='/site/${url}/admin/'>Mailing</a></li>";
-		$html .= "<li><a href='/site/${url}/admin/'>Advanced</a></li>";
+		$html .= "<li><a href='/site/${url}/admin/settings'>Settings</a></li>";
 		$html .= "</ul></nav>";
 		return $html;
 	}

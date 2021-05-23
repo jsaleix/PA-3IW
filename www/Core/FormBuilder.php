@@ -57,6 +57,7 @@ class FormBuilder
 
 
 	public static function renderInput($name, $configInput){
+		echo $configInput["editable"]??"";
 		return "<input 
 						name=\"".$name."\" 
 						type=\"".($configInput["type"]??"text")."\" 
@@ -64,7 +65,8 @@ class FormBuilder
 						class=\"".($configInput["class"]??"")."\" 
 						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
 						(!empty($configInput["required"])?"required=\"required\"":"") .
-						"value=\"" . ($configInput["value"]??"") . "\" />";
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
 	}
 
 	public static function renderCheckBox($name, $configInput){
