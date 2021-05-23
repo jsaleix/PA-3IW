@@ -5,6 +5,10 @@ use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
 
+use CMS\Core\View;
+use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
+
 use CMS\Models\Page;
 use CMS\Models\Post;
 use CMS\Models\Content;
@@ -72,8 +76,6 @@ class PageRenderer
             return;
         }
 
-        $this->renderNavigation();
-
         if($this->error){
             echo $this->error;
             return;
@@ -86,7 +88,8 @@ class PageRenderer
         $c = $action['controller'];
         $a = $action['method'];
         $f = $this->content['filter'];
-        echo $a . ' ' . $c . ' ' . $f . '<br>';
+        $debug = 'debug: ' . $a . ' ' . $c . ' ' . $f . '<br>';
+        $content = "action not working";
 
         if( file_exists("Cms/Controllers/".$c.".php")){
             include "Cms/Controllers/".$c.".php";
@@ -94,17 +97,23 @@ class PageRenderer
             if(class_exists($c)){
                 $cObjet = new $c();
                 if(method_exists($cObjet, $a)){
-                    $cObjet->$a($this->site, $f);
+                    $content = $cObjet->$a($this->site, $f);
                 }else{
-                    die("L'action' : ".$a." n'existe pas");
+                    //die("L'action' : ".$a." n'existe pas");
                 }
             }else{
-                die("La classe controller : ".$c." n'existe pas");
+                //die("La classe controller : ".$c." n'existe pas");
             }
         }else{
-            die("Le fichier controller : ".$c." n'existe pas");
+            //die("Le fichier controller : ".$c." n'existe pas");
         }
-        
+        $content .= $debug;
+
+        $view = new View('cms', 'front');
+        $view->assign("pageTitle", ($this->site->getName())??'Page');
+        $view->assign("navbar", NavbarBuilder::renderNavbar($this->site->returnData(), 'front'));
+        $view->assign("style", StyleBuilder::renderStyle($this->site->returnData()));
+        $view->assign("content", $content);
     }
 
     public function renderNavigation(){
@@ -120,7 +129,7 @@ class PageRenderer
         $html .= '</ul>';
         $html .= "</header>";
 
-        echo $html;
+        return $html;
     }
 
 

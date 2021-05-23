@@ -148,7 +148,85 @@ class Site extends Database
         }catch(\Exception $e){
             return false;
         }
+    }
 
+    public function returnData() : array{
+		return get_object_vars($this);
+	}
+
+    public function formEdit($content){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input-content",
+                    "placeholder"=>"New article",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
+					"value"=> $content['name']
+                ],
+				"description"=>[ 
+					"type"=>"text",
+					"label"=>"Description",
+					"id"=>"description",
+					"class"=>"input-content",
+                    "error"=>"The description cannot be empty!",
+					"required"=> false,
+					"value"=> $content['description']
+                ],
+				"image"=>[ 
+					"type"=>"file",
+					"label"=>"image",
+					"id"=>"image",
+					"class"=>"input-file",
+                    "error"=>"",
+					"required"=> false,
+					"value"=> $content['image']
+                ],
+                "subDomain"=>[ 
+					"type"=>"text",
+					"label"=>"subDomain",
+					"id"=>"subDomain",
+					"class"=>"input-content",
+                    "error"=>"The subDomain cannot be empty!",
+					"required"=> false,
+					"value"=> $content['subDomain'],
+                    "disabled" => true
+                ],
+                "type"=>[ 
+					"type"=>"text",
+					"label"=>"type",
+					"id"=>"type",
+					"class"=>"input-content",
+                    "error"=>"The type cannot be empty!",
+					"required"=> false,
+					"value"=> $content['type'],
+                ],
+                "creationDate"=>[ 
+					"type"=>"text",
+					"label"=>"creationDate",
+					"id"=>"creationDate",
+					"class"=>"input-content",
+                    "error"=>"The creationDate cannot be empty!",
+					"required"=> false,
+					"value"=> $content['creationDate'],
+                    "disabled" => true
+                ],
+            ]
+        ];
     }
 
 }

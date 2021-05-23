@@ -30,3 +30,7 @@
 /editpage:
   controller: pagecontroller
   action: editpage
+
+/settings:
+  controller: sitecontroller
+  action: editsite

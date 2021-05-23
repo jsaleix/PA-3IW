@@ -42,7 +42,7 @@ class ManageSite{
                 $site = new Site();
                 $site->setName($name);
                 $site->setDescription($description);
-                $site->setCreator(1);
+                $site->setCreator(2);
                 $site->setSubDomain($subDomain);
                 $site->setPrefix($prefix);
                 $site->setType($type);
