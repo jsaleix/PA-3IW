@@ -19,7 +19,7 @@ class PageController{
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
 		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site));
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -58,7 +58,7 @@ class PageController{
 		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site));
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("content", $createPageBtn);
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
@@ -79,7 +79,7 @@ class PageController{
 		$form = $pageObj->formAddContent($actionArr);
 
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site));
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
 
@@ -150,7 +150,7 @@ class PageController{
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr);
 
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site));
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
 

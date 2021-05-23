@@ -1,6 +1,7 @@
 <?php
 
 namespace CMS\Core;
+use CMS\Models\Page;
 
 class NavbarBuilder
 {
@@ -8,7 +9,20 @@ class NavbarBuilder
 	public function __construct(){
 	}
 
-    public static function renderNavbar($site){
+	/* Backoffice navBar */
+	/*
+	* $site array
+	* $type String
+	*/
+    public static function renderNavbar($site, $type = 'front'){
+		if($type === 'front'){
+			return self::renderFrontNavbar($site);
+		}else{
+			return self::renderBackNavbar($site);
+		}
+	}
+
+	public static function renderBackNavbar($site){
 		$url = $site['subDomain'];
 		$html = '<nav><ul>';
 		$html .= "<li><a href='/site/${url}/admin/'>Dashboard</a></li>";
@@ -32,6 +46,20 @@ class NavbarBuilder
 		$html .= "</ul></nav>";
 		return $html;
 	}
+
+	public function renderFrontNavbar($site){
+        $pageObj = new Page(null, $site['prefix']);
+        $pageObj->setCategory('IS NULL');
+        $pagesToShow = $pageObj->findAll();
+        $html = "<h1>" . $site['name'] . "'s restaurant</h1>";
+        $html .= '<nav><ul>';
+        foreach($pagesToShow as $tab){
+            $html .= '<li><a href="/site/' . $site['subDomain'] . '/' . $tab['name'] . '"/>' . $tab['name'] . '</a></li>';
+        }
+        $html .= '</ul></nav>';
+
+        return $html;
+    }
 
 }
 

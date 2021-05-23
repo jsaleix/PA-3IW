@@ -18,7 +18,7 @@ class SiteController{
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
 		$view = new View('admin', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site));
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -36,7 +36,7 @@ class SiteController{
 
 		$form = $siteObj->formEdit($site);
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar((array)$site));
+		$view->assign("navbar", navbarBuilder::renderNavBar((array)$site), 'back');
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
 
@@ -63,6 +63,7 @@ class SiteController{
 
 	/*
 	* Front vizualization
+	* returns html for pageRenderer
 	*/
 	public function render($siteObj, $filter = null){
 		$siteData = $siteObj->returnData();
@@ -85,7 +86,7 @@ class SiteController{
 		$html .= '*****';
 		$html .= '<p id='. $creator['id'] .' >Created by ' . $creatorName . ' </p>';
 
-        echo $html;
+        return $html;
 	}
 
 }
