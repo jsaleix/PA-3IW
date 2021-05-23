@@ -3,6 +3,8 @@
 namespace CMS\Models;
 use App\Core\Database;
 
+use CMS\Models\Content;
+
 class Page extends Database
 {
 
@@ -10,6 +12,7 @@ class Page extends Database
 	protected $name;
 	protected $category = null;
     protected $creationDate = null;
+    private $action = null;
 
 	public function __construct( $name, $tablePrefix, $category = null ){
         parent::__construct($tablePrefix.'_');
@@ -71,7 +74,52 @@ class Page extends Database
         $this->category = $category;
     }
 
-    public function formAddContent($categories){
+    public function setAction($action){
+        $this->action = $action;
+    }
+
+    public function getAction(){
+        return $this->action;
+    }
+
+    public function save(){
+        if($this->action){
+            //Verify if action exists
+        }else{
+            $this->action = 1;
+        }
+
+        $page =  parent::save();
+        $content = true;
+
+        if(empty($this->id)){
+            $pageObj = new self($this->name, parent::getPrefix() );
+            $page = $pageObj->findOne();
+
+            $contentObj = new Content();
+            $contentObj->setTableName(parent::getPrefix());
+            $contentObj->setPage($page['id']);
+            $contentObj->setMethod($this->action);
+            $content = $contentObj->save();
+        }else{
+            $contentObj = new Content();
+            $contentObj->setTableName(parent::getPrefix());
+            $contentObj->setPage($this->id);
+
+            $contentId = $contentObj->findOne();
+            $contentObj->setId($contentId['id']);
+            $contentObj->setMethod($this->action);
+            $content = $contentObj->save();
+        }
+
+        if($page && $content){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function formAddContent($actionArr){
         return [
 
             "config"=>[
@@ -94,14 +142,14 @@ class Page extends Database
                     "error"=>"The title cannot be empty!",
                     "required"=>true,
                 ],
-				"category"=>[ 
+				"action"=>[ 
 					"type"=>"select",
-					"label"=>"Page associated",
+					"label"=>"action associated",
 					"id"=>"page",
 					"class"=>"input-page_select",
-					"error"=>"A page needs to be associated with your article!",
+					"error"=>"An action needs to be associated with your page!",
 					"required"=>true,
-					"options" => $categories
+					"options" => $actionArr
 					]
                 ]
         ];
@@ -135,11 +183,15 @@ class Page extends Database
                     "type"=>"text",
                     "value" => $pageData['creationDate']
                 ],
+                "action" => [
+                    "type" => "text",
+                    "value" => $pageData['action']??'Action unknown'
+                ]
             ]
         ];
     }
 
-    public function formEditContent($content, $dataArr){
+    public function formEditContent($content, $dataArr, $actionArr = null){
         return [
 
             "config"=>[
@@ -167,12 +219,22 @@ class Page extends Database
 					"type"=>"select",
 					"label"=>"Page associated",
 					"id"=>"page",
-					"class"=>"input-page_select",
+					"class"=>"input-page-select",
 					"error"=>"A page needs to be associated with your article!",
 					"required"=>true,
 					"options" => $dataArr,
 					"value"=> $content['category']
-					]
+                ],
+                empty($actionArr) ? null :"action"=>[
+                    "type"=>"select",
+					"label"=>"Action associated",
+					"id"=>"action",
+					"class"=>"input-action-select",
+					"error"=>"An action needs to be associated with your page!",
+					"required"=>true,
+					"options" => $actionArr,
+					"value"=> $content['action']
+                ]
             ]
         ];
     }

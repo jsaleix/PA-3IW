@@ -84,9 +84,12 @@ class FormBuilder
 		$html = "<select name='".$name."' id='".($configInput["id"]??"")."'
 						class='".($configInput["class"]??"")."'>";
 
-
 		foreach ($configInput["options"] as $key => $value) {
-			$html .= "<option value='".$key."'>".$value."</option>";
+			if(!empty($configInput['value']) && $key === $configInput['value']){
+				$html .= "<option value='".$key."' selected='selected'>".$value."</option>";
+			}else{
+				$html .= "<option value='".$key."'>".$value."</option>";
+			}
 		}
 
 		$html .= "</select><br>";

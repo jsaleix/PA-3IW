@@ -3,22 +3,25 @@ namespace CMS\Controller;
 use App\Core\Database as db;
 use App\Models\User;
 use App\Models\Site;
+use App\Models\Action;
 
 use CMS\Models\Page;
+use CMS\Models\Post;
 use CMS\Models\Content;
 
 class PageRenderer 
 {
     private $site;
     private $page;
+    private $content;
     private $category = null;
     private $path;
     private $error = null;
+    private $exist = true;
 
 	public function __construct($url){
         $this->path     = $url;
         $this->domain   = $url[0];
-        if(empty($url[1])){ $url[1] = 'home'; }
         $this->setParams($url);
 	}
 
@@ -27,7 +30,7 @@ class PageRenderer
         $siteData->setSubDomain($this->domain);
         $site = $siteData->findOne();
         if(empty($site['id'])){
-            $this->error = 'This website does not exist :/';
+            $this->exist = false;
             return;
         }
 
@@ -41,15 +44,11 @@ class PageRenderer
         $siteData->setType($site['type']);
         $this->site = $siteData;
 
-        $pageName = $url[1];
-        /*$category = [];
-        while( count($url) > 1 ){
-            $removed = array_shift($url);
-            if($removed){
-                $category[] = $removed;
-            }
+        if(empty($url[1])){ 
+            //Verify what is the default page of the site
+            $url[1] = 'home';
         }
-        $this->category = $category;*/
+        $pageName = $url[1]??'home';
         $page = new Page($pageName, $this->site->getPrefix());
         $pageData = $page->findOne();
         if(empty($pageData['id'])){
@@ -58,29 +57,21 @@ class PageRenderer
         }
         $page->setId($pageData['id']);
         $this->page = $page;
+
+        $contentObj = new Content();
+        $contentObj->setTableName($site['prefix']);
+        $contentObj->setPage($pageData['id']);
+        $content = $contentObj->findOne();
+        $this->content = $content;
+
     }
 
-    public function renderContent($content){
-        $publisherData = new User();
-        extract($content);
-        $publisherData->setId($publisher);
-        $publisher = $publisherData->findOne();
-        
-		switch($type){
-			case 'article':
-				$html = '<h2>' . $title . '</h2>';
-				$html .= '<p id='. $publisher['id'] .' >By ' . $publisher['firstname'] . ' ' .  $publisher['lastname'] . '</p>';
-				$html .= '<p>' . $content . '</p>';
-				$html .= '<hr>';
-				break;
-
-			default: 
-			    return;
-		}
-        echo $html;
-	}
-
     public function renderPage(){
+        if(!$this->exist){
+            echo 'This website does not exist :/';
+            return;
+        }
+
         $this->renderNavigation();
 
         if($this->error){
@@ -88,24 +79,34 @@ class PageRenderer
             return;
         }
 
-        $contentObj = new Content(null, null, null, null);
-        $contentObj->setTableName($this->site->getPrefix());
-        $contentObj->setPage($this->page->getId());
-        $contents = $contentObj->findAll();
-
+        $actionObj = new Action();
+        $actionObj->setId($this->content['method']);
+        $action = $actionObj->findOne();
         
-        if(!$contents || count($contents) === 0){
-            echo 'No content found :/';
-            return;
-        }
+        $c = $action['controller'];
+        $a = $action['method'];
+        $f = $this->content['filter'];
+        echo $a . ' ' . $c . ' ' . $f . '<br>';
 
-        foreach($contents as $content){
-            $contentObj = new Content($content['title'], $content['content'], $content['page'], $content['publisher']);
-            $this->renderContent($contentObj->returnData());
+        if( file_exists("Cms/Controllers/".$c.".php")){
+            include "Cms/Controllers/".$c.".php";
+            $c = "CMS\\Controller\\".$c;
+            if(class_exists($c)){
+                $cObjet = new $c();
+                if(method_exists($cObjet, $a)){
+                    $cObjet->$a($this->site, $f);
+                }else{
+                    die("L'action' : ".$a." n'existe pas");
+                }
+            }else{
+                die("La classe controller : ".$c." n'existe pas");
+            }
+        }else{
+            die("Le fichier controller : ".$c." n'existe pas");
         }
         
     }
-    
+
     public function renderNavigation(){
         $pageObj = new Page(null, $this->site->getPrefix());
         $pageObj->setCategory('IS NULL');

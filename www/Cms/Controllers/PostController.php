@@ -4,14 +4,14 @@ namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
 
-use CMS\Models\Content;
+use CMS\Models\Post;
 use CMS\Models\Page;
 use CMS\Models\Category;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
 
-class ContentController{
+class PostController{
 
 
 	public function defaultAction($site){
@@ -24,7 +24,7 @@ class ContentController{
 	}
 
 	public function createArticleAction($site){
-		$content = new Content(null, null, null, null);
+		$postObj = new Post(null, null, null, null);
 
 		$page = new Page(null, $site['prefix']);
 		$pages = $page->findAll();
@@ -33,7 +33,7 @@ class ContentController{
 			$pagesArr[$data['id']] = $data['name'];
 		}
 
-		$form = $content->formAddContent($pagesArr);
+		$form = $postObj->formAddContent($pagesArr);
 
 		$view = new View('admin.create', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site));
@@ -41,9 +41,9 @@ class ContentController{
 		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
-			if($title && $content && $page){
-				$insert = new Content($title, $content, $page, 2);
+			[ "title" => $title, "content" => $content ] = $_POST;
+			if($title && $content){
+				$insert = new Post($title, $content, 2);
 				$insert->setTableName($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
@@ -58,30 +58,25 @@ class ContentController{
 	}
 
 	public function manageArticlesAction($site){
-		$contentObj = new content();
-		$contentObj->setTableName($site['prefix']);
-		$contents = $contentObj->findAll();
-		$contentList = [];
+		$postObj = new Post();
+		$postObj->setTableName($site['prefix']);
+		$posts = $postObj->findAll();
+		$postList = [];
 
-		foreach($contents as $item){
-			$pageObj = new Page(null, $site['prefix']);
-			$pageObj->setId($item['page']);
-			$page = $pageObj->findOne();
-			$item['page'] = $page['name']??'None';
-
+		foreach($posts as $item){
 			$userObj = new User();
 			$userObj->setId($item['publisher']);
 			$user = $userObj->findOne();
 
 			$item['publisher'] = ("by " . $user['firstname'])??'None';
-			$contentList[] = $contentObj->listFormalize($item);
+			$postList[] = $postObj->listFormalize($item);
 		}
 		$createArticleBtn = '<a href="createarticle"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site));
 		$view->assign("content", $createArticleBtn);
-		$view->assign("list", $contentList);
+		$view->assign("list", $postList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
 
@@ -97,7 +92,7 @@ class ContentController{
 			$pagesArr[$data['id']] = $data['name'];
 		}
 
-		$contentObj = new Content(null);
+		$contentObj = new Post();
 		$contentObj->setTableName($site['prefix']);
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
@@ -117,13 +112,12 @@ class ContentController{
 		$view->assign('pageTitle', "Edit an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
-			if($title && $content && $page){
+			[ "title" => $title, "content" => $content] = $_POST;
+			if($title && $content ){
 				/*$insert = new Content($title, $content, $page, 2);
 				$insert->setTableName($site['prefix']);*/
 				$contentObj->setTitle($title);
 				$contentObj->setContent($content);
-				$contentObj->setPage($page);
 				$adding = $contentObj->save();
 				if($adding){
 					$message ='Article successfully updated!';
@@ -134,6 +128,45 @@ class ContentController{
 				}
 			}
 		}
+	}
+
+	/*
+	* Front vizualization
+	*/
+	public function render($site, $filter = null){
+		$contentObj = new Post(null, null, null, null);
+        $contentObj->setTableName($site->getPrefix());
+        $contents = $contentObj->findAll();
+        
+        if(!$contents || count($contents) === 0){
+            echo 'No content found :/';
+            return;
+        }
+
+        foreach($contents as $content){
+            $contentObj = new Post($content['title'], $content['content'], $content['publisher']);
+            $this->renderPost($contentObj->returnData());
+        }
+	}
+
+	public function renderPost($content){
+        $publisherData = new User();
+        extract($content);
+		if(!empty($publisher))
+        {
+			$publisherData->setId($publisher);
+        	$publisher = $publisherData->findOne();
+			$name = $publisher['firstname'] . " " . $publisher['lastname'];
+		}else{
+			$name = 'Unknown';
+		}
+        
+		$html = '<h2>' . $title . '</h2>';
+		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
+		$html .= '<p>' . $content . '</p>';
+		$html .= '<hr>';
+
+        echo $html;
 	}
 
 }

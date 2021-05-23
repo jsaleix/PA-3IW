@@ -3,6 +3,7 @@
 namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
+use App\Models\Action;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
@@ -29,10 +30,15 @@ class PageController{
 		$pages = $pageObj->findAll();
 		$pagesList = [];
 
+		$contentObj = new Content();
+		$contentObj->setTableName($site['prefix']);
+		$actionObj = new Action();
+
 		$categoryObj = new Category();
+		$categoryObj->setTableName($site['prefix']);
+
 		foreach($pages as $item){
 			if($item['category'] !== NULL){
-				$categoryObj->setTableName($site['prefix']);
 				$categoryObj->setId($item['category']);
 				$category = $categoryObj->findOne();
 				$item['category'] = $category['name']??'Unknown';
@@ -40,6 +46,13 @@ class PageController{
 			}else{
 				$item['category'] = $item['category']??'Unknown';
 			}
+
+			$contentObj->setPage($item['id']);
+			$methodId = $contentObj->findOne();
+			$actionObj->setId($methodId['method']);
+			$actionName = $actionObj->findOne();
+			$item['action'] = $actionName['name'];
+
 			$pagesList[] = $pageObj->listFormalize($item);
 		}
 		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
@@ -52,17 +65,18 @@ class PageController{
 	}
 
 	public function createPageAction($site){
-		$categoryObj = new Category();
-		$categoryObj->setTableName($site['prefix']);
-		$category = $categoryObj->findAll();
-		$categoryArr = array();
-		$categoryArr[] = 'None';
+		$pageObj = new Page(null, $site['prefix']);
 
-		foreach($category as $data){
-			$categoryArr[$data['id']] = $data['name'];
+		$actionObj = new Action();
+		$actions = $actionObj->findAll();
+		$actionArr = [];
+		if(!empty($actions)){
+			foreach($actions as $action){
+				$actionArr[$action['id']] = $action['name'];
+			}
 		}
-		$page = new Page(null, $site['prefix']);
-		$form = $page->formAddContent($categoryArr);
+
+		$form = $pageObj->formAddContent($actionArr);
 
 		$view = new View('admin.create', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site));
@@ -71,18 +85,13 @@ class PageController{
 
 		if(!empty($_POST) ) {
 			$erros = [];
-			[ "name" => $title, "category" => $category ] = $_POST;
-			if( $title ){
-				$insert = new Page($title, $site['prefix']);
-				if( !empty($category) && $category !== '0'){
-					$categoryObj->setId($category);
-					$checkCategory = $categoryObj->findOne();
-					if(!$checkCategory){
-						$errors[] = "The requested category does not exist";
-					}
-					$insert->setCategory($category);
+			[ "name" => $name, "action" => $action ] = $_POST;
+			if( $name ){
+				if( !empty($action) && $action !== '0'){
+					$pageObj->setAction($action);
 				}
-				$adding = $insert->save();
+				$pageObj->setName($name);
+				$adding = $pageObj->save();
 				if($adding){
 					$message ='Page successfully published!';
 					$view->assign("message", $message);
@@ -98,15 +107,28 @@ class PageController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'page not set ';
 			header("Location: managepages");
-
 		}
 
 		$pageObj = new Page(null, $site['prefix']);
-		//$pageObj->setTableName($site['prefix']);
+		$pageObj->setTableName($site['prefix']);
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
 			header("Location: managepages");
+		}
+
+		$contentObj = new Content();
+		$contentObj->setTableName($site['prefix']);
+		$contentObj->setPage($_GET['id']);
+		$content = $contentObj->findOne();
+
+		$actionObj = new Action();
+		$actions = $actionObj->findAll();
+		$actionArr = [];
+		if(!empty($actions)){
+			foreach($actions as $action){
+				$actionArr[$action['id']] = $action['name'];
+			}
 		}
 
 		$categoryObj = new Category();
@@ -114,11 +136,18 @@ class PageController{
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
-
-		foreach($category as $data){
-			$categoryArr[$data['id']] = $data['name'];
+		if(!empty($category)){
+			foreach($category as $data){
+				$categoryArr[$data['id']] = $data['name'];
+			}
 		}
-		$form = $pageObj->formEditContent((array)$page, $categoryArr);
+		
+		$pageArr = (array)$page;
+		$contentArr = (array)$content;
+		$contentArr = [ 'action' => $contentArr['method'] ];		
+		$pageArr = array_merge((array)$page, $contentArr);
+
+		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr);
 
 		$view = new View('admin.create', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site));
@@ -126,11 +155,13 @@ class PageController{
 		$view->assign('pageTitle', "Edit a page");
 
 		if(!empty($_POST) ) {
-			[ "name" => $name, "category" => $category] = $_POST;
-			if($name && $category ){
+			[ "name" => $name, "category" => $category, "action" => $action] = $_POST;
+			if( $name ){
 				$pageObj->setName($name);
-				$pageObj->setCategory($category);
+				$pageObj->setCategory($category??null);
+				$pageObj->setAction($action??null);
 				$adding = $pageObj->save();
+
 				if($adding){
 					$message ='Page successfully updated!';
 					$view->assign("message", $message);
