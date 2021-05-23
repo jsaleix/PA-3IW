@@ -17,11 +17,11 @@ class PageRenderer
     private $category = null;
     private $path;
     private $error = null;
+    private $exist = true;
 
 	public function __construct($url){
         $this->path     = $url;
         $this->domain   = $url[0];
-        if(empty($url[1])){ $url[1] = 'home'; }
         $this->setParams($url);
 	}
 
@@ -30,7 +30,7 @@ class PageRenderer
         $siteData->setSubDomain($this->domain);
         $site = $siteData->findOne();
         if(empty($site['id'])){
-            $this->error = 'This website does not exist :/';
+            $this->exist = false;
             return;
         }
 
@@ -44,7 +44,11 @@ class PageRenderer
         $siteData->setType($site['type']);
         $this->site = $siteData;
 
-        $pageName = $url[1];
+        if(empty($url[1])){ 
+            //Verify what is the default page of the site
+            $url[1] = 'home';
+        }
+        $pageName = $url[1]??'home';
         $page = new Page($pageName, $this->site->getPrefix());
         $pageData = $page->findOne();
         if(empty($pageData['id'])){
@@ -63,6 +67,12 @@ class PageRenderer
     }
 
     public function renderPage(){
+        if(!$this->exist){
+            echo 'This website does not exist :/';
+            return;
+        }
+
+        $this->renderNavigation();
 
         if($this->error){
             echo $this->error;
@@ -75,8 +85,8 @@ class PageRenderer
         
         $c = $action['controller'];
         $a = $action['method'];
-        echo $a . ' ' . $c;
-        $this->renderNavigation();
+        $f = $this->content['filter'];
+        echo $a . ' ' . $c . ' ' . $f . '<br>';
 
         if( file_exists("Cms/Controllers/".$c.".php")){
             include "Cms/Controllers/".$c.".php";
@@ -84,7 +94,7 @@ class PageRenderer
             if(class_exists($c)){
                 $cObjet = new $c();
                 if(method_exists($cObjet, $a)){
-                    $cObjet->$a($this->site);
+                    $cObjet->$a($this->site, $f);
                 }else{
                     die("L'action' : ".$a." n'existe pas");
                 }
@@ -94,9 +104,6 @@ class PageRenderer
         }else{
             die("Le fichier controller : ".$c." n'existe pas");
         }
-        
-
-
         
     }
 
