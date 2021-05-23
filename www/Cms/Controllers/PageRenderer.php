@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
 
+use CMS\Core\View;
 use CMS\Models\Page;
 use CMS\Models\Post;
 use CMS\Models\Content;
