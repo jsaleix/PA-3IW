@@ -12,5 +12,4 @@
 
 <main class="main-container">
     <?php if(!empty($content)){ echo $content;}?>
-    <?php !empty($list) && App\Core\ListBuilder::render($list)?>
 </main>

@@ -7,7 +7,9 @@ use App\Models\Site;
 use CMS\Models\Content;
 use CMS\Models\Page;
 use CMS\Models\Category;
+
 use CMS\Core\View;
+use CMS\Core\NavbarBuilder;
 
 class Admin{
 
@@ -16,13 +18,13 @@ class Admin{
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
 		$view = new View('admin', 'back');
-		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
 	}
 
-	public function createArticleAction($site){
+	/*public function createArticleAction($site){
 		$content = new Content(null, null, null, null);
 
 		$page = new Page(null, $site['prefix']);
@@ -64,9 +66,11 @@ class Admin{
 		foreach($pages as $item){
 			$pagesList[] = $pageObj->listFormalize($item);
 		}
+		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("content", $createPageBtn);
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
 	}
@@ -90,9 +94,11 @@ class Admin{
 			$item['publisher'] = ("by " . $user['firstname'])??'None';
 			$contentList[] = $contentObj->listFormalize($item);
 		}
+		$createArticleBtn = '<a href="createarticle"><button>Create</button></a>';
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", $this->renderNavBar($site));
+		$view->assign("content", $createArticleBtn);
 		$view->assign("list", $contentList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
@@ -131,8 +137,6 @@ class Admin{
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content, "page" => $page ] = $_POST;
 			if($title && $content && $page){
-				/*$insert = new Content($title, $content, $page, 2);
-				$insert->setTableName($site['prefix']);*/
 				$contentObj->setTitle($title);
 				$contentObj->setContent($content);
 				$contentObj->setPage($page);
@@ -191,7 +195,7 @@ class Admin{
 		}
 	}
 
-	public function renderNavBar($site){
+	public static function renderNavBar($site){
 		$url = $site['subDomain'];
 		$html = '<nav><ul>';
 		$html .= "<li><a href='/site/${url}/admin/'>Dashboard</a></li>";
@@ -207,6 +211,6 @@ class Admin{
 		$html .= "<li><a href='/'>Advanced</a></li>";
 		$html .= "</ul></nav>";
 		return $html;
-	}
+	}*/
 
 }

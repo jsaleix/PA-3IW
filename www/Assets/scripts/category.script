@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Category` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL UNIQUE,
   `description` VARCHAR(255) NULL,
   `creator` INT NULL,
   `creationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

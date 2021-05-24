@@ -57,14 +57,19 @@ class FormBuilder
 
 
 	public static function renderInput($name, $configInput){
-		return "<input 
+		$html =  "<input 
 						name=\"".$name."\" 
 						type=\"".($configInput["type"]??"text")."\" 
 						id=\"".($configInput["id"]??"")."\" 
 						class=\"".($configInput["class"]??"")."\" 
 						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
 						(!empty($configInput["required"])?"required=\"required\"":"") .
-						"value=\"" . ($configInput["value"]??"") . "\" />";
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
+		if(!empty($configInput["type"]) && $configInput["type"] === 'file' && !empty($configInput["value"])){
+			$html .= "<image src=". $configInput["value"] ." alt='file viewer' height='100' width: '100'/>";
+		}
+		return $html;
 	}
 
 	public static function renderCheckBox($name, $configInput){
@@ -84,9 +89,12 @@ class FormBuilder
 		$html = "<select name='".$name."' id='".($configInput["id"]??"")."'
 						class='".($configInput["class"]??"")."'>";
 
-
 		foreach ($configInput["options"] as $key => $value) {
-			$html .= "<option value='".$key."'>".$value."</option>";
+			if(!empty($configInput['value']) && $key === $configInput['value']){
+				$html .= "<option value='".$key."' selected='selected'>".$value."</option>";
+			}else{
+				$html .= "<option value='".$key."'>".$value."</option>";
+			}
 		}
 
 		$html .= "</select><br>";

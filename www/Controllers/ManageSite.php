@@ -42,7 +42,7 @@ class ManageSite{
                 $site = new Site();
                 $site->setName($name);
                 $site->setDescription($description);
-                $site->setCreator(1);
+                $site->setCreator(2);
                 $site->setSubDomain($subDomain);
                 $site->setPrefix($prefix);
                 $site->setType($type);
@@ -59,11 +59,11 @@ class ManageSite{
                 $prefix = random_bytes(4);
                 $prefix = bin2hex($prefix);
                 $site = new Site();
-                $site->setName('carina');
+                $site->setName('jedusor');
                 $site->setDescription('description');
                 $site->setImage('rien');
                 $site->setCreator(1);
-                $site->setSubDomain('carina');
+                $site->setSubDomain('jedusor');
                 $site->setPrefix($prefix);
                 $site->setType('type default');
                 $creation = $site->initializeSite();
