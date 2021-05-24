@@ -50,7 +50,8 @@ class Security{
 		$user->setToken($token);
 		$user->save();
 
-		session_start();
+		if ( session_status() === PHP_SESSION_NONE )
+			session_start();
 		$_SESSION['token'] = $token;
 		return true;
 	}
