@@ -123,19 +123,24 @@ class Site extends Database
                 $create = $this->createTable(str_replace($toReplace, $replaceBy, $table));
                 if(!$create){ echo $table; return false; }
             }
-            $insert = new Page('home', $this->prefix);
+            $insert = new Page();
+            $insert->setName('home');
+            $insert->setPrefix($this->prefix);
             $insert->save();
             echo 'Page created';
 
             $contentObj = new Content();
-            $contentObj->setTableName($this->prefix);
+            $contentObj->setPrefix($this->prefix);
             $contentObj->setPage(1);
             $contentObj->setMethod(1);
             $contentObj->save();
             echo 'Content created';
 
-            $postObj = new Post('Welcome', 'This is your first article on your new website.', 2);
-            $postObj->setTableName($this->prefix);
+            $postObj = new Post();
+            $postObj->setTitle('Welcome');
+            $postObj->setContent('This is your first article on your new website.');
+            $postObj->setPublisher(2);
+            $postObj->setPrefix($this->prefix);
             $postObj->save();
             echo 'Post created';
 

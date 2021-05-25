@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Content` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `page` INT NOT NULL,
+  `page` INT NOT NULL UNIQUE,
   `method` INT NOT NULL,
   `filter` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),

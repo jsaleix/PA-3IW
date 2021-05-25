@@ -34,3 +34,7 @@
 /settings:
   controller: sitecontroller
   action: editsite
+
+/ent/post:
+  controller: postcontroller
+  action: renderpost

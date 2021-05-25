@@ -15,7 +15,7 @@ class Content extends Database
         parent::__construct();
 	}
 
-    public function setTableName($prefix){
+    public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}
 
