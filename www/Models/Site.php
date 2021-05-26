@@ -36,7 +36,7 @@ class Site extends Database
     
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = htmlspecialchars($name);
     }
 
     public function getName()
@@ -46,7 +46,7 @@ class Site extends Database
 
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = htmlspecialchars($description);
     }
 
     public function getImage()
@@ -76,7 +76,7 @@ class Site extends Database
 
     public function setSubDomain($subDomain)
     {
-        $this->subDomain = $subDomain;
+        $this->subDomain = trim(mb_strtolower($subDomain));
     }
 
     public function getPrefix(): string
@@ -96,7 +96,7 @@ class Site extends Database
 
     public function setType(string $type)
     {
-        $this->type = $type;
+        $this->type = htmlspecialchars($type);
     }
 
     public function initializeSite(){

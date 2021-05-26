@@ -29,6 +29,7 @@
         let category    = document.getElementById ('category').value;
         let type        = document.getElementById ('type').value;
         let subDomain   = document.getElementById ('url').value;
+        subDomain = subDomain.replace(/\s+/g, '');
         let currentData = localStorage.getItem('siteData');
         currentData = JSON.parse(currentData);
         let { name, description } = currentData;
