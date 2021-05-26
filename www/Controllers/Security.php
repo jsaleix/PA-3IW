@@ -57,6 +57,8 @@ class Security{
 	}
 	
 	public function verifyToken(){
+		if ( session_status() === PHP_SESSION_NONE )
+			return true;
 		$user = new User();
 		$user->setToken($_SESSION['token']);
 		$result = $user->findOne();

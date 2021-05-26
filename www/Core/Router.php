@@ -17,7 +17,7 @@ class Router
 			$this->routes = yaml_parse_file($this->routesPath);
 
 			if( !empty($this->routes[$this->uri]) && $this->routes[$this->uri]["controller"] && $this->routes[$this->uri]["action"]){
-
+			
 				$this->setController($this->routes[$this->uri]["controller"]);
 				$this->setAction($this->routes[$this->uri]["action"]);
 			}else{
