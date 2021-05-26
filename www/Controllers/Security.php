@@ -16,7 +16,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class Security{
 
-
 	public function defaultAction(){
 		echo "Controller security action default";
 	}
@@ -58,7 +57,7 @@ class Security{
 	
 	public function verifyToken(){
 		if ( session_status() === PHP_SESSION_NONE )
-			return true;
+			return false;
 		$user = new User();
 		$user->setToken($_SESSION['token']);
 		$result = $user->findOne();
@@ -66,7 +65,16 @@ class Security{
 			echo "error";
 			return false;
 		}
-		$this->createToken($result);
+		$this->createToken($result, $user);
+	}
+
+	public function getCurrentUser(){
+		if ( session_status() === PHP_SESSION_NONE )
+			return false;
+		$user = new User();
+		$user->setToken($_SESSION['token']);
+		$result = $user->findOne();
+		return $result['id'];
 	}
 
 	public function registerAction(){
