@@ -23,13 +23,14 @@ class Database
 		}
 
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
-		if($tablePrefix){
+		/*if($tablePrefix){
 			$this->table = $tablePrefix.end($getCalledClassExploded);
 			$this->rawPrefix = str_replace('_','', $tablePrefix);
 
 		}else{
-			$this->table = DBPREFIXE.end($getCalledClassExploded);
-		}
+		}*/
+		$this->table = DBPREFIXE.end($getCalledClassExploded);
+
 	}
 
 	protected function setTableName($prefix){
@@ -145,9 +146,13 @@ class Database
 
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
-
+		/*echo "SELECT * FROM ".$this->table." WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? <br>";
+		echo implode('-', $columns) . '<br><br>';
+		var_dump($result);
+		echo '<br><br>';*/
 		return !isset($result[0]) ? false : $result;
 	}
 

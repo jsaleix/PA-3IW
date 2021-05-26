@@ -24,9 +24,10 @@ class PostController{
 	}
 
 	public function createArticleAction($site){
-		$postObj = new Post(null, null, null, null);
+		$postObj = new Post();
 
-		$page = new Page(null, $site['prefix']);
+		$page = new Page();
+		$page->setPrefix($site['prefix']);
 		$pages = $page->findAll();
 		$pagesArr = array();
 		foreach($pages as $data){
@@ -43,8 +44,11 @@ class PostController{
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content ] = $_POST;
 			if($title && $content){
-				$insert = new Post($title, $content, 2);
-				$insert->setTableName($site['prefix']);
+				$insert = new Post();
+				$insert->setTitle($title);
+				$insert->setContent($content);
+				$insert->setPublisher(2);
+				$insert->setPrefix($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
 					$message ='Article successfully published!';
@@ -59,7 +63,7 @@ class PostController{
 
 	public function manageArticlesAction($site){
 		$postObj = new Post();
-		$postObj->setTableName($site['prefix']);
+		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
 		$postList = [];
 
@@ -85,7 +89,8 @@ class PostController{
 			echo 'article not set ';
 		}
 
-		$page = new Page(null, $site['prefix']);
+		$page = new Page();
+		$page->setPrefix($site['prefix']);
 		$pages = $page->findAll();
 		$pagesArr = array();
 		foreach($pages as $data){
@@ -93,7 +98,7 @@ class PostController{
 		}
 
 		$contentObj = new Post();
-		$contentObj->setTableName($site['prefix']);
+		$contentObj->setPrefix($site['prefix']);
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
 		if(!$content){
@@ -135,9 +140,9 @@ class PostController{
 	* returns html for pageRenderer
 	*/
 	public function renderList($site, $filter = null){
-		$contentObj = new Post(null, null, null, null);
-        $contentObj->setTableName($site->getPrefix());
-        $contents = $contentObj->findAll();
+		$postObj = new Post();
+        $postObj->setPrefix($site->getPrefix());
+        $contents = $postObj->findAll();
         $html = "";
         if(!$contents || count($contents) === 0){
             $html .= 'No content found :/';
@@ -145,8 +150,12 @@ class PostController{
         }
 
         foreach($contents as $content){
-            $contentObj = new Post($content['title'], $content['content'], $content['publisher']);
-			$html .= $this->renderPostItem($contentObj->returnData());
+            $postObj = new Post();
+			$postObj->setTitle($content['title']);
+			$postObj->setContent($content['content']);
+			$postObj->setPublisher($content['publisher']);
+			$postObj->setId($content['id']);
+			$html .= $this->renderPostItem($postObj->returnData());
         }
 		return $html;
 	}
@@ -163,7 +172,7 @@ class PostController{
 			$name = 'Unknown';
 		}
         
-		$html = '<h2>' . $title . '</h2>';
+		$html = '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
 		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
 		$html .= '<p>' . $content . '</p>';
 		$html .= '<hr>';
@@ -171,21 +180,38 @@ class PostController{
         return $html;
 	}
 
-	public function renderPost($site){
+	//$site is an instance of Site
+	public function renderPostAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'article not set ';
 		}
 
-		$postObj = new Post(null, null, null, null);
-        $postObj->setTableName($site->getPrefix());
+		$postObj = new Post();
+        $postObj->setPrefix($site->getPrefix());
 		$postObj->setId($_GET['id']);
         $post = $postObj->findOne();
         if(!$post){
             return 'No content found :/';
         }
+        $publisherData = new User();
+		if(!empty($publisher))
+        {
+			$publisherData->setId($publisher);
+        	$publisher = $publisherData->findOne();
+			$name = $publisher['firstname'] . " " . $publisher['lastname'];
+		}else{
+			$name = 'Unknown';
+		}
+
+        extract($post);
 
         $html = "";
-        var_dump($post);
+		$html = '<h2>' . $title . '</h2>';
+		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
+		$html .= '<p>' . $content . '</p>';
+		$html .= '<hr>';
+		$html .= '<p>Ajouter un commentaire</p>';
+
 		return $html;
 	}
 

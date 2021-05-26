@@ -1,9 +1,11 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
-
 use CMS\Models\Content;
+
+use App\Core\Database;
+use App\Models\Action;
+
 
 class Page extends Database
 {
@@ -14,13 +16,11 @@ class Page extends Database
     protected $creationDate = null;
     private $action = null;
 
-	public function __construct( $name, $tablePrefix, $category = null ){
-        parent::__construct($tablePrefix.'_');
-		$this->setName($name);
-        $this->setCategory($category);
+	public function __construct(){
+        parent::__construct();
 	}
 
-    public function setTableName($prefix){
+    public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}
 
@@ -85,6 +85,12 @@ class Page extends Database
     public function save(){
         if($this->action){
             //Verify if action exists
+            $actionObj = new Action();
+            $actionObj->setId($this->action);
+            $checkAction = $actionObj->findOne();
+            if(!$checkAction){
+                return false;
+            }
         }else{
             $this->action = 1;
         }
@@ -93,17 +99,19 @@ class Page extends Database
         $content = true;
 
         if(empty($this->id)){
-            $pageObj = new self($this->name, parent::getPrefix() );
+            $pageObj = new self();
+            $pageObj->setName($this->name);
+            $pageObj->setPrefix(parent::getPrefix());
             $page = $pageObj->findOne();
 
             $contentObj = new Content();
-            $contentObj->setTableName(parent::getPrefix());
+            $contentObj->setPrefix(parent::getPrefix());
             $contentObj->setPage($page['id']);
             $contentObj->setMethod($this->action);
             $content = $contentObj->save();
         }else{
             $contentObj = new Content();
-            $contentObj->setTableName(parent::getPrefix());
+            $contentObj->setPrefix(parent::getPrefix());
             $contentObj->setPage($this->id);
 
             $contentId = $contentObj->findOne();

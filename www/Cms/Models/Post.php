@@ -13,14 +13,11 @@ class Post extends Database
 	protected $type = 'article';
 	protected $publicationDate;
 
-	public function __construct ($title = null, $content = null, $publisher = null ){
+	public function __construct (){
 		parent::__construct();
-		$this->setTitle($title);
-		$this->setContent($content);
-		$this->setPublisher($publisher);
 	}
 
-	public function setTableName($prefix){
+	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}
 

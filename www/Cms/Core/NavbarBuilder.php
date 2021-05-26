@@ -48,7 +48,8 @@ class NavbarBuilder
 	}
 
 	public function renderFrontNavbar($site){
-        $pageObj = new Page(null, $site['prefix']);
+        $pageObj = new Page();
+		$pageObj->setPrefix($site['prefix']);
         $pageObj->setCategory('IS NULL');
         $pagesToShow = $pageObj->findAll();
         $html = "<h1>" . $site['name'] . "'s restaurant</h1>";

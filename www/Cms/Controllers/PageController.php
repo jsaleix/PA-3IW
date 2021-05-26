@@ -26,16 +26,17 @@ class PageController{
 	}
 
 	public function managePagesAction($site){
-		$pageObj = new Page(null, $site['prefix']);
+		$pageObj = new Page();
+		$pageObj->setPrefix($site['prefix']);
 		$pages = $pageObj->findAll();
 		$pagesList = [];
 
 		$contentObj = new Content();
-		$contentObj->setTableName($site['prefix']);
+		$contentObj->setPrefix($site['prefix']);
 		$actionObj = new Action();
 
 		$categoryObj = new Category();
-		$categoryObj->setTableName($site['prefix']);
+		$categoryObj->setPrefix($site['prefix']);
 
 		foreach($pages as $item){
 			if($item['category'] !== NULL){
@@ -49,6 +50,9 @@ class PageController{
 
 			$contentObj->setPage($item['id']);
 			$methodId = $contentObj->findOne();
+			if(!$methodId['method']){
+				break;
+			}
 			$actionObj->setId($methodId['method']);
 			$actionName = $actionObj->findOne();
 			$item['action'] = $actionName['name'];
@@ -65,8 +69,8 @@ class PageController{
 	}
 
 	public function createPageAction($site){
-		$pageObj = new Page(null, $site['prefix']);
-
+		$pageObj = new Page();
+		$pageObj->setPrefix($site['prefix']);
 		$actionObj = new Action();
 		$actions = $actionObj->findAll();
 		$actionArr = [];
@@ -109,8 +113,10 @@ class PageController{
 			header("Location: managepages");
 		}
 
-		$pageObj = new Page(null, $site['prefix']);
-		$pageObj->setTableName($site['prefix']);
+		$pageObj = new Page();
+		$pageObj->setPrefix($site['prefix']);
+
+		$pageObj->setPrefix($site['prefix']);
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
@@ -118,7 +124,7 @@ class PageController{
 		}
 
 		$contentObj = new Content();
-		$contentObj->setTableName($site['prefix']);
+		$contentObj->setPrefix($site['prefix']);
 		$contentObj->setPage($_GET['id']);
 		$content = $contentObj->findOne();
 
@@ -132,7 +138,7 @@ class PageController{
 		}
 
 		$categoryObj = new Category();
-		$categoryObj->setTableName($site['prefix']);
+		$categoryObj->setPrefix($site['prefix']);
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
