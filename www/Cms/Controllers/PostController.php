@@ -75,11 +75,11 @@ class PostController{
 			$item['publisher'] = ("by " . $user['firstname'])??'None';
 			$postList[] = $postObj->listFormalize($item);
 		}
-		$createArticleBtn = '<a href="createarticle"><button>Create</button></a>';
+		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
 
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("content", $createArticleBtn);
+		$view->assign("button", $createArticleBtn);
 		$view->assign("list", $postList);
 		$view->assign('pageTitle', "Manage the articles");
 	}
