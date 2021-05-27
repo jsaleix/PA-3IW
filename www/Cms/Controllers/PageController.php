@@ -59,11 +59,11 @@ class PageController{
 
 			$pagesList[] = $pageObj->listFormalize($item);
 		}
-		$createPageBtn = '<a href="createpage"><button>Create</button></a>';
-
+		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
+		
 		$view = new View('admin.list', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("content", $createPageBtn);
+		$view->assign("button", $createPageBtn);
 		$view->assign("list", $pagesList);
 		$view->assign('pageTitle', "Manage the pages");
 	}

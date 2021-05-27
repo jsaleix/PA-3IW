@@ -30,8 +30,12 @@
 </head>
 <body>
 	<?=$navbar??''?>
-	<h1><?= $pageTitle?></h1>
-	<?php include $this->view ;?>
 
+	<div class="container">
+		<?php include $this->view ;?>
+	</div>
+	</main>
 </body>
+<script src="/Assets/js/backcms.js"></script>
+
 </html>
