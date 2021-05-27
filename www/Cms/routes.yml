@@ -31,6 +31,18 @@
   controller: pagecontroller
   action: editpage
 
+/createdish:
+  controller: dishController
+  action: createdish
+
+/managedishes:
+  controller: dishController
+  action: managedishes
+
+/editdish:
+  controller: dishController
+  action: editdish
+
 /settings:
   controller: sitecontroller
   action: editsite
