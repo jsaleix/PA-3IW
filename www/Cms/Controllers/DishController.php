@@ -102,7 +102,7 @@ class DishController{
 	public function editDishAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
-			header("Location: managepages");
+			header("Location: managedishes");
 		}
 
 		$dishObj = new Dish();

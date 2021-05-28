@@ -129,12 +129,12 @@ class Site extends Database
             $insert->save();
             echo 'Page created';
 
-            $contentObj = new Content();
+            /*$contentObj = new Content();
             $contentObj->setPrefix($this->prefix);
             $contentObj->setPage(1);
             $contentObj->setMethod(1);
             $contentObj->save();
-            echo 'Content created';
+            echo 'Content created';*/
 
             $postObj = new Post();
             $postObj->setTitle('Welcome');

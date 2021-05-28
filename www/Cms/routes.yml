@@ -43,6 +43,18 @@
   controller: dishController
   action: editdish
 
+/createdishcategory:
+  controller: dishCategoryController
+  action: createdishCategory
+
+/managedishcategories:
+  controller: dishCategoryController
+  action: managedishcategories
+
+/editdishcategory:
+  controller: dishCategoryController
+  action: editdishcategory
+
 /settings:
   controller: sitecontroller
   action: editsite
