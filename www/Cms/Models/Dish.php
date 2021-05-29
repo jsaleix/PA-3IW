@@ -143,7 +143,7 @@ class Dish extends Database
                     "label"=>"image",
                     "id"=>"image",
                     "class"=>"input-file",
-                    "required"=>false,
+                    "required"=>true,
                 ],
 				"description"=>[ 
 					"type"=>"text",
@@ -273,15 +273,15 @@ class Dish extends Database
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "fields"=>[
+				"image"=>[ 
+					"type"=>"image",
+                    "value" => $data['image']??'image',
+					"name" => $data['image']
+                ],
                 "name"=>[ 
                     "type"=>"text",
                     "value" => $data['name'],
 					"name" => $data['name']
-                ],
-				"image"=>[ 
-					"type"=>"text",
-                    "value" => $data['image']??'image',
-					"name" => $data['image']
                 ],
                 "description"=>[ 
                     "type"=>"text",

@@ -3,6 +3,7 @@
 namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
+use App\Core\FileUploader;
 
 use CMS\Models\Post;
 use CMS\Models\Page;
@@ -41,8 +42,22 @@ class SiteController{
 		$view->assign('pageTitle', "Edit the site informations");
 
 		if(!empty($_POST) ) {
-			[ "name" => $name, "description" => $description, "image" => $image, "type" => $type] = $_POST;
-			if($name || $description || $image || $type ){
+			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
+			[ "image" => $image ] = $_FILES;
+
+			if($name || $description || $type ){
+				if(isset($image)){
+					$imgDir = "/uploads/cms/" . $site['subDomain'] . '/';
+					$imgName = 'banner';
+					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+					if($isUploaded != false){
+						$image = $isUploaded;
+					}else{
+						$image = null;
+					}
+				}else{
+					$image = null;
+				}
 
 				$siteObj->setName($name);
 				$siteObj->setDescription($description);
@@ -70,6 +85,7 @@ class SiteController{
         $creatorData = new User();
         extract($siteData);
 
+		$image = strpos($image, 'http') !== false ? $image : DOMAIN . '/' . $image ;
 		if(!empty($creator))
         {
 			$creatorData->setId($creator);

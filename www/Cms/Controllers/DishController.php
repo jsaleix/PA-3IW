@@ -4,6 +4,7 @@ namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
+use App\Core\FileUploader;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
@@ -89,10 +90,23 @@ class DishController{
 
 		if(!empty($_POST) ) {
 			$errors = [];
-			[ "name" => $name, "image" => $image, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-			
+			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
+			[ "image" => $image ] = $_FILES;
+
 			if( $name ){
 				//Verify the dishCategor submitted
+				if(isset($image)){
+					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
+					$imgName = $site['subDomain'].'_'. trim($name);
+					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+					if($isUploaded != false){
+						$image = $isUploaded;
+					}else{
+						$image = null;
+					}
+				}else{
+					$image = null;
+				}
 				$dishObj->setName($name);
 				$dishObj->setImage($image);
 				$dishObj->setDescription($description);
@@ -103,6 +117,7 @@ class DishController{
 				$dishObj->setIsActive($isActive??1);
 
 				$adding = $dishObj->save();
+				$adding = true;
 				if($adding){
 					$message ='Dish successfully added!';
 					$view->assign("message", $message);
@@ -150,9 +165,22 @@ class DishController{
 
 		if(!empty($_POST) ) {
 			$errors = [];
-			[ "name" => $name, "image" => $image, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-			
+			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
+			[ "image" => $image ] = $_FILES;
+
 			if( $name ){
+				if(isset($image)){
+					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
+					$imgName = $site['subDomain'].'_'. $_GET['id'];
+					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+					if($isUploaded != false){
+						$image = $isUploaded;
+					}else{
+						$image = null;
+					}
+				}else{
+					$image = null;
+				}
 				//Verify the dishCategor submitted
 				$dishObj->setName($name);
 				$dishObj->setImage($image);

@@ -25,7 +25,9 @@ class ListBuilder
                         self::renderCheckBox($field, $config);
                 }else if($config["type"] == "input"){
                         $html .= self::renderInput($field, $config);
-                }else{
+                }else if($config["type"] == "image"){
+						$html .= '<img src="'. DOMAIN . '/'. $config['value'] .'" height="100"  />';
+				}else{
                         $html .= '<p id=' . '>' . $config['value'] . '</p>';
                 }
 

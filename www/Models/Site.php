@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\FileUploader;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
@@ -127,14 +128,8 @@ class Site extends Database
             $insert->setName('home');
             $insert->setPrefix($this->prefix);
             $insert->save();
-            echo 'Page created';
 
-            /*$contentObj = new Content();
-            $contentObj->setPrefix($this->prefix);
-            $contentObj->setPage(1);
-            $contentObj->setMethod(1);
-            $contentObj->save();
-            echo 'Content created';*/
+            FileUploader::createCMSDirs($this->subDomain);
 
             $postObj = new Post();
             $postObj->setTitle('Welcome');
@@ -142,12 +137,6 @@ class Site extends Database
             $postObj->setPublisher(2);
             $postObj->setPrefix($this->prefix);
             $postObj->save();
-            echo 'Post created';
-
-            /*$insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
-            $insert->setTableName($this->prefix);
-            $insert->save();
-            echo 'Content created';*/
 
             return true;
         }catch(\Exception $e){
@@ -168,7 +157,8 @@ class Site extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[ 
