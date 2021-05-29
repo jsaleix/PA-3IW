@@ -9,6 +9,7 @@ use CMS\Models\Content;
 use CMS\Models\Page;
 use CMS\Models\Category;
 use CMS\Models\Dish;
+use CMS\Models\DishCategory;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
@@ -33,8 +34,20 @@ class DishController{
 		$dishesList = [];
 		$content = "";
 
+		$dishCatObj = new DishCategory();
+		$dishCatObj->setPrefix($site['prefix']);
+
 		if($dishes){
 			foreach($dishes as $item){
+				if($item['category']){
+					$dishCatObj->setId($item['category']);
+					$dishCat = $dishCatObj->findOne();
+					if($dishCat){
+						$item['category'] = $dishCat['name'];
+					}
+				}else{
+					$item['category'] = 'No category';
+				}
 				$dishesList[] = $dishObj->listFormalize($item);
 			}
 		}else{
@@ -54,17 +67,19 @@ class DishController{
 	public function createDishAction($site){
 		$dishObj = new Dish();
 		$dishObj->setPrefix($site['prefix']);
+
+		$dishCatObj = new DishCategory();
+		$dishCatObj->setPrefix($site['prefix']);
+		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		$dishCatArr[0] = 'None';
-		/*$dishCatObj = new DishCategory();
-		$dishCategories = $dishCatObj->findAll();
-		if(!empty($actions)){
+		
+		if($dishCategories){
 			foreach($dishCategories as $item){
 				$dishCatArr[$item['id']] = $item['name'];
 			}
-		}*/
+		}
 
-		//$form = $dishObj->formAdd($dishCatArr);
 		$form = $dishObj->formAdd($dishCatArr);
 
 		$view = new View('admin.create', 'back');
@@ -113,9 +128,18 @@ class DishController{
 			header("Location: managedishes");
 		}
 
+		$dishCatObj = new DishCategory();
+		$dishCatObj->setPrefix($site['prefix']);
+		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		$dishCatArr[0] = 'None';
 		
+		if($dishCategories){
+			foreach($dishCategories as $item){
+				$dishCatArr[$item['id']] = $item['name'];
+			}
+		}
+
 		$dishArr = (array)$dish;
 		$form = $dishObj->formEdit($dishArr, $dishCatArr);
 

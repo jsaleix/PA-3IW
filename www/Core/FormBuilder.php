@@ -11,7 +11,10 @@ class FormBuilder
 				method='".($form["config"]["method"]??"GET")."' 
 				id='".($form["config"]["id"]??"")."' 
 				class='".($form["config"]["class"]??"")."' 
-				action='".($form["config"]["action"]??"")."'>";
+				action='".($form["config"]["action"]??"") . "'";
+
+		$html .= !empty($form["config"]['enctype'])? ("enctype='" . $form["config"]['enctype'] . "'" ) : "";
+		$html .= ">";
 		
 		if($form["config"]["class"] === "form-auth"){
 			if($form["config"]["id"] === "form_register")

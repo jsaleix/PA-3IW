@@ -123,7 +123,8 @@ class Dish extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Add",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+				"enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[ 
@@ -192,7 +193,8 @@ class Dish extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+				"enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[ 
