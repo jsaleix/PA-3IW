@@ -135,7 +135,59 @@ class DishCategoryController{
 				}
 			}
 		}
-
 	}
+
+	/*
+	* Front vizualization
+	* returns html for pageRenderer
+	*/
+
+	private function renderItem($content){
+		$html = '';
+		$html .= '<img src="' . DOMAIN . '/' . $content['image'] . '"/>';
+		$html .= '<h4>' . $content['name'] . '</h4>';
+		$html .= '<p>' . $content['description'] . '</p>';
+		return $html;
+	}
+
+	public function renderList($site, $filter = null){
+		$dishCatObj = new DishCategory();
+        $dishCatObj->setPrefix($site->getPrefix());
+		$dishCatList = $dishCatObj->findAll();
+
+		$dishObj = new Dish();
+		$dishObj->setPrefix($site->getPrefix());
+
+        $html = "";
+        if(!$dishCatList || count($dishCatList) === 0){
+            $html .= 'No Category found :/';
+        }else{
+			foreach($dishCatList as $category){
+				$dishObj->setCategory($category['id']);
+				$dishes = $dishObj->findAll();
+				if($dishes){
+					$html .= '<h2>' . $category['name'] . '</h2>';
+					foreach($dishes as $dish){
+						$html .= $this->renderItem($dish);
+					}
+				}
+			}
+
+		}
+		$dishObj->setCategory('IS NULL');
+		$dishes = $dishObj->findAll();
+
+		if($dishes){
+			$html .= '<h2>unclassified</h2>';
+			foreach($dishes as $dish){
+				$html .= $this->renderItem($dish);
+			}
+		}
+
+		return $html;
+	}
+
+		
+
 
 }

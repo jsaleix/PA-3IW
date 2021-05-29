@@ -65,7 +65,7 @@ class Dish extends Database
 	}
 
 	public function setCategory($category){
-        if($category == 0){ $category = null; }
+        if($category == 0){ $category = 'IS NULL'; }
 		$this->category = $category;
 	}
 
@@ -127,6 +127,13 @@ class Dish extends Database
 				"enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
+				"image"=>[ 
+                    "type"=>"file",
+                    "label"=>"image",
+                    "id"=>"image",
+                    "class"=>"input-file",
+                    "required"=>true,
+                ],
                 "name"=>[ 
                     "type"=>"text",
                     "label"=>"Name",
@@ -136,13 +143,6 @@ class Dish extends Database
                     "class"=>"input-content",
                     "placeholder"=>"New dish",
                     "error"=>"The title cannot be empty!",
-                    "required"=>true,
-                ],
-                "image"=>[ 
-                    "type"=>"file",
-                    "label"=>"image",
-                    "id"=>"image",
-                    "class"=>"input-file",
                     "required"=>true,
                 ],
 				"description"=>[ 
@@ -197,6 +197,14 @@ class Dish extends Database
 				"enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
+				"image"=>[ 
+                    "type"=>"file",
+                    "label"=>"image",
+                    "id"=>"image",
+                    "class"=>"input-file",
+                    "required"=>false,
+					"value"=> $content['image']
+                ],
                 "name"=>[ 
                     "type"=>"text",
                     "label"=>"Name",
@@ -209,14 +217,7 @@ class Dish extends Database
                     "required"=>true,
 					"value"=> $content['name']
                 ],
-                "image"=>[ 
-                    "type"=>"file",
-                    "label"=>"image",
-                    "id"=>"image",
-                    "class"=>"input-file",
-                    "required"=>false,
-					"value"=> $content['image']
-                ],
+                
 				"description"=>[ 
 					"type"=>"text",
 					"label"=>"Description",
@@ -316,6 +317,10 @@ class Dish extends Database
             ]
         ];
     }
+
+	public function returnData() : array{
+		return get_object_vars($this);
+	}
 	
 }
 

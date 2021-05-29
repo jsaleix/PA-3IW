@@ -169,7 +169,7 @@ class DishController{
 			[ "image" => $image ] = $_FILES;
 
 			if( $name ){
-				if(isset($image)){
+				if(isset($image) && !empty($image) && $image['size'] > 0){
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
 					$imgName = $site['subDomain'].'_'. $_GET['id'];
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);

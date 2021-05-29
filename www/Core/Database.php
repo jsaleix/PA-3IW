@@ -73,6 +73,10 @@ class Database
 				foreach($columns as $key => $col){
 					if( empty($col))
 						unset($columns[$key]);
+
+					if($col == 'IS NULL'){
+							$columns[$key] = NULL;
+						}
 				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
@@ -101,9 +105,6 @@ class Database
 		foreach($columns as $key => $col){
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
-
-			if($col == 'NULL')
-				$columns[$key] = 'IS NULL';
 		}
 
 		$req = "SELECT * FROM ".$this->table;
