@@ -59,6 +59,10 @@
   controller: sitecontroller
   action: editsite
 
+/medialibrary:
+  controller: mediacontroller
+  action: listMedias
+
 /ent/post:
   controller: postcontroller
   action: renderpost

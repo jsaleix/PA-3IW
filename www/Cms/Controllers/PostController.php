@@ -36,11 +36,6 @@ class PostController{
 
 		$form = $postObj->formAddContent($pagesArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Add an article");
-
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content ] = $_POST;
 			if($title && $content){
@@ -59,6 +54,11 @@ class PostController{
 				}
 			}
 		}
+
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add an article");
 	}
 
 	public function manageArticlesAction($site){
@@ -111,10 +111,6 @@ class PostController{
 
 		$form = $contentObj->formEditContent((array)$content, $pagesArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit an article");
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content] = $_POST;
@@ -133,6 +129,12 @@ class PostController{
 				}
 			}
 		}
+
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit an article");
+
 	}
 
 	/*
