@@ -17,7 +17,7 @@ class Admin{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
+		$view = new View('back/dashboard', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
