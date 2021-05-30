@@ -13,9 +13,7 @@ class FileUploader
 	}
 
 	public static function uploadImage($file, $name, $dir){
-		var_dump($file);
 		if(!isset($file)){ 	
-			echo 'not set';		
 			return false;
 		}
 		
@@ -25,7 +23,6 @@ class FileUploader
 
 		$check = getimagesize($file['tmp_name']);
 		if(!$check) {
-			echo 'check false';		
 			return false;
 		} 
 

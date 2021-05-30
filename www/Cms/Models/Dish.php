@@ -65,7 +65,7 @@ class Dish extends Database
 	}
 
 	public function setCategory($category){
-        if($category == 0){ $category = 'IS NULL'; }
+        if($category === '0'){ $category = 'IS NULL'; }
 		$this->category = $category;
 	}
 

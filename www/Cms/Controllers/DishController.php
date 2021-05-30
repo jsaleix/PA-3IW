@@ -107,6 +107,8 @@ class DishController{
 				}else{
 					$image = null;
 				}
+
+				$dishCat = ($dishCat == 0) ? null : $dishCat ; 		
 				$dishObj->setName($name);
 				$dishObj->setImage($image);
 				$dishObj->setDescription($description);
@@ -201,7 +203,37 @@ class DishController{
 				}
 			}
 		}
+	}
 
+	/*
+	* Front vizualization
+	* returns html for pageRenderer
+	*/
+
+	//$site is an instance of Site
+	public function renderDishAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			return 'dish id not set ';
+		}
+
+		$dishObj = new Dish();
+        $dishObj->setPrefix($site->getPrefix());
+		$dishObj->setId($_GET['id']);
+		$dishObj->setIsActive(1);
+        $dish = $dishObj->findOne();
+        if(!$dish){
+            return 'No content found :/';
+        }
+        
+		$html = '';
+		$html .= '<img src="' . DOMAIN . '/' . $dish['image'] . '"/>';
+		$html .= '<h4>' . $dish['name'] . '</h4>';
+		$html .= '<p>' . $dish['description'] . '</p>';
+		$html .= '<p>' . $dish['notes'] . '</p>';
+		$html .= '<p>' . $dish['allergens'] . '</p>';
+		$html .= '<p>' . $dish['price'] . '</p>';
+
+		return $html;
 	}
 
 }

@@ -143,10 +143,11 @@ class DishCategoryController{
 	*/
 
 	private function renderItem($content){
-		$html = '';
+		$html = '<a <a href="ent/dish?id='. $content['id'] . '">';
 		$html .= '<img src="' . DOMAIN . '/' . $content['image'] . '"/>';
 		$html .= '<h4>' . $content['name'] . '</h4>';
 		$html .= '<p>' . $content['description'] . '</p>';
+		$html .= '</a>';
 		return $html;
 	}
 

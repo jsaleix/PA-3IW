@@ -62,3 +62,7 @@
 /ent/post:
   controller: postcontroller
   action: renderpost
+
+/ent/dish:
+  controller: dishController
+  action: renderdish
