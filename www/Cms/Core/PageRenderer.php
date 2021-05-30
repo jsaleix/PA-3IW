@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Controller;
+namespace CMS\Core;
 use App\Core\Database as db;
 use App\Models\User;
 use App\Models\Site;
