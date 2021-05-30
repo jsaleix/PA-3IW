@@ -34,6 +34,7 @@ class DishController{
 		$dishes = $dishObj->findAll();
 		$dishesList = [];
 		$content = "";
+		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit' ];
 
 		$dishCatObj = new DishCategory();
 		$dishCatObj->setPrefix($site['prefix']);
@@ -49,19 +50,21 @@ class DishController{
 				}else{
 					$item['category'] = 'No category';
 				}
-				$dishesList[] = $dishObj->listFormalize($item);
+
+				$button = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
+				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
+				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $button . "'";
+				$datas[] = $formalized;
 			}
-		}else{
-			$content = "No dish yet";
 		}
 
 		$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
-		$view = new View('admin.list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("button", $addDishButton);
-		$view->assign("list", $dishesList);
-		$view->assign("content", $content);
+		$view = new View('back/list', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("createButton", $addDishButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the dishes");
 	}
 

@@ -27,6 +27,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href=<?php echo STYLES ?>>
 		<link rel="icon" href="/Assets/images/logo.png" />
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">=
+		<script src="/Assets/js/backcms.js"></script>
+		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 </head>
 <body>
 	<header>
@@ -55,6 +58,5 @@
 	</div>
 	</main>
 </body>
-<script src="/Assets/js/backcms.js"></script>
 
 </html>

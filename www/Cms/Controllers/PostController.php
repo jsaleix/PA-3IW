@@ -35,6 +35,10 @@ class PostController{
 		}
 
 		$form = $postObj->formAddContent($pagesArr);
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content ] = $_POST;
@@ -55,32 +59,31 @@ class PostController{
 			}
 		}
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Add an article");
+
 	}
 
 	public function manageArticlesAction($site){
 		$postObj = new Post();
 		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
-		$postList = [];
+		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit' ];
 
 		foreach($posts as $item){
 			$userObj = new User();
 			$userObj->setId($item['publisher']);
 			$user = $userObj->findOne();
 
-			$item['publisher'] = ("by " . $user['firstname'])??'None';
-			$postList[] = $postObj->listFormalize($item);
+			$item['publisher'] = $user['firstname']??'None';
+			$button = '<a href="editArticle?id=' . $item['id'] . '">Go</a>';
+			$formalized = "'" . $item['id'] . "','" . $item['title'] . "','" . $item['content'] . "','" . $item['publisher'] .  "','" . $item['publicationDate'] . "','" . $button . "'";
+			$datas[] = $formalized;
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
-
-		$view = new View('admin.list', 'back');
+		$view = new View('back/list', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("button", $createArticleBtn);
-		$view->assign("list", $postList);
+		$view->assign("createButton", $createArticleBtn);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the articles");
 	}
 
@@ -111,6 +114,11 @@ class PostController{
 
 		$form = $contentObj->formEditContent((array)$content, $pagesArr);
 
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit an article");
+
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content] = $_POST;
@@ -130,10 +138,6 @@ class PostController{
 			}
 		}
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit an article");
 
 	}
 

@@ -27,7 +27,7 @@
                 <div class="col-inner">
                     <div class="darkSection">
                         <?php if(isset($image)):?>
-                            <img src="<?=$image?>" />
+                            <img src="<?=$image?>" style="width: 100%;" />
                             <label>Change image</label>
                         <?php else:?>
                             <label>Set Image</label>
