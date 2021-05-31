@@ -34,6 +34,7 @@ class DishController{
 		$dishes = $dishObj->findAll();
 		$dishesList = [];
 		$content = "";
+		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit' ];
 
 		$dishCatObj = new DishCategory();
 		$dishCatObj->setPrefix($site['prefix']);
@@ -49,19 +50,21 @@ class DishController{
 				}else{
 					$item['category'] = 'No category';
 				}
-				$dishesList[] = $dishObj->listFormalize($item);
+
+				$button = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
+				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
+				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $button . "'";
+				$datas[] = $formalized;
 			}
-		}else{
-			$content = "No dish yet";
 		}
 
 		$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
-		$view = new View('admin.list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("button", $addDishButton);
-		$view->assign("list", $dishesList);
-		$view->assign("content", $content);
+		$view = new View('back/list', 'back');
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("createButton", $addDishButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the dishes");
 	}
 
@@ -73,7 +76,6 @@ class DishController{
 		$dishCatObj->setPrefix($site['prefix']);
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
-		$dishCatArr[0] = 'None';
 		
 		if($dishCategories){
 			foreach($dishCategories as $item){
@@ -81,11 +83,11 @@ class DishController{
 			}
 		}
 
-		$form = $dishObj->formAdd($dishCatArr);
-
-		$view = new View('admin.create', 'back');
+		//$form = $dishObj->formAdd($dishCatArr);
+		$view = new View('/back/createDish', 'back');
+		//$view = new View('admin.create', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
+		$view->assign("categories", $dishCatArr);
 		$view->assign('pageTitle', "Add a dish");
 
 		if(!empty($_POST) ) {
@@ -129,6 +131,7 @@ class DishController{
 				}
 			}
 		}
+
 	}
 
 	public function editDishAction($site){
@@ -149,7 +152,6 @@ class DishController{
 		$dishCatObj->setPrefix($site['prefix']);
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
-		$dishCatArr[0] = 'None';
 		
 		if($dishCategories){
 			foreach($dishCategories as $item){
@@ -157,13 +159,21 @@ class DishController{
 			}
 		}
 
-		$dishArr = (array)$dish;
+		/*$dishArr = (array)$dish;
 		$form = $dishObj->formEdit($dishArr, $dishCatArr);
+		$form = $dishObj->formAdd($dishCatArr);*/
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit a dish");
+		$view = new View('/back/createDish', 'back');
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("categories", $dishCatArr);
+		$view->assign("name", $dish['name']);
+		$view->assign("image", (DOMAIN . '/' . $dish['image']));
+		$view->assign("notes", $dish['notes']);
+		$view->assign("allergens", $dish['name']);
+		$view->assign("description", $dish['description']);
+		$view->assign("price", $dish['price']);
+		$view->assign("category", $dish['category']);
+		$view->assign('pageTitle', "Add a dish");
 
 		if(!empty($_POST) ) {
 			$errors = [];
