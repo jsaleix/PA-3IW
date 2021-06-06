@@ -91,16 +91,16 @@ class PageRenderer
         }
 
         if($this->type == 'dynamic'){
-            $content = $this->renderDynamic();
+            $this->renderDynamic();
         }else{
-            $content = $this->renderEntity();
+            $this->renderEntity();
         }
 
-        $view = new View('cms', 'front');
+        /*$view = new View('cms', 'front');
         $view->assign("pageTitle", ($this->site->getName())??'Page');
         $view->assign("navbar", NavbarBuilder::renderNavbar($this->site->returnData(), 'front'));
         $view->assign("style", StyleBuilder::renderStyle($this->site->returnData()));
-        $view->assign("content", $content);
+        $view->assign("content", $content);*/
     }
 
     public function renderDynamic(){

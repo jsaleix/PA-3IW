@@ -11,6 +11,7 @@ use CMS\Models\Category;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
 
 class SiteController{
 
@@ -95,6 +96,8 @@ class SiteController{
 			$creatorName = 'Unknown';
 		}
         
+
+
 		$html = '<h2>' . $name . '\'s restaurant</h2>';
 		$html .= "<image src=${image} alt='${name}image'/>";
 		$html .= '<p>' . $description . '</p>';
@@ -102,7 +105,12 @@ class SiteController{
 		$html .= '*****';
 		$html .= '<p id='. $creator['id'] .' >Created by ' . $creatorName . ' </p>';
 
-        return $html;
+		$view = new View('cms', 'front');
+		$view->assign('pageTitle', 'Restaurant informations');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($siteObj->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));
+		$view->assign('content', $html);
+
 	}
 
 }

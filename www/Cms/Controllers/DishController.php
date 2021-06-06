@@ -14,6 +14,7 @@ use CMS\Models\DishCategory;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
 
 class DishController{
 
@@ -234,16 +235,12 @@ class DishController{
         if(!$dish){
             return 'No content found :/';
         }
-        
-		$html = '';
-		$html .= '<img src="' . DOMAIN . '/' . $dish['image'] . '"/>';
-		$html .= '<h4>' . $dish['name'] . '</h4>';
-		$html .= '<p>' . $dish['description'] . '</p>';
-		$html .= '<p>' . $dish['notes'] . '</p>';
-		$html .= '<p>' . $dish['allergens'] . '</p>';
-		$html .= '<p>' . $dish['price'] . '</p>';
 
-		return $html;
+		$view = new View('front/dish', 'front');
+		$view->assign('pageTitle', 'Dishes available');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		$view->assign('dish', $dish);
 	}
 
 }

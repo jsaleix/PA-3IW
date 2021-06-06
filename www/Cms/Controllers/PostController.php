@@ -7,9 +7,11 @@ use App\Models\Site;
 use CMS\Models\Post;
 use CMS\Models\Page;
 use CMS\Models\Category;
+use CMS\Models\Comment;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
 
 class PostController{
 
@@ -119,7 +121,6 @@ class PostController{
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 
-
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content] = $_POST;
 			if($title && $content ){
@@ -163,7 +164,12 @@ class PostController{
 			$postObj->setId($content['id']);
 			$html .= $this->renderPostItem($postObj->returnData());
         }
-		return $html;
+
+		$view = new View('cms', 'front');
+		$view->assign('pageTitle', 'Posts');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		$view->assign('content', $html);
 	}
 
 	public function renderPostItem($content){
@@ -191,6 +197,8 @@ class PostController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'article not set ';
 		}
+		$commentObj = new Comment();
+		$commentObj->setPrefix($site->getPrefix());
 
 		$postObj = new Post();
         $postObj->setPrefix($site->getPrefix());
@@ -199,6 +207,7 @@ class PostController{
         if(!$post){
             return 'No content found :/';
         }
+
         $publisherData = new User();
 		if(!empty($publisher))
         {
@@ -208,17 +217,29 @@ class PostController{
 		}else{
 			$name = 'Unknown';
 		}
+		$commentObj->setIdPost($_GET['id']);
+		$comments = $commentObj->findAll();
 
-        extract($post);
+		$errors = [];
+		if(isset($_POST['message']) && !empty($_POST['message']) /*&& isconnected*/){
+			$commentObj->setMessage($_POST['message']);
+			$commentObj->setIdUser(2);
+			$commentPublished = $commentObj->save();
+			if(!$commentPublished){
+				$errors[] = 'Your comment could not be published';
+			}
+		}
 
-        $html = "";
-		$html = '<h2>' . $title . '</h2>';
-		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
-		$html .= '<p>' . $content . '</p>';
-		$html .= '<hr>';
-		$html .= '<p>Ajouter un commentaire</p>';
+		$view = new View('front/post', 'front');
+		$view->assign('pageTitle', $post['title']);
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("errors", $errors);
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		$view->assign('post', $post);
+		$view->assign('name', $name);
+		$view->assign('canPostComment', true);
+		$view->assign('comments', $comments);
 
-		return $html;
 	}
 
 }

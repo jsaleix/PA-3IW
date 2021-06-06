@@ -13,6 +13,7 @@ use CMS\Models\DishCategory;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
 
 class DishCategoryController{
 
@@ -190,7 +191,12 @@ class DishCategoryController{
 			}
 		}
 
-		return $html;
+		$view = new View('cms', 'front');
+		$view->assign('pageTitle', 'Dish page');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		$view->assign('content', $html);
+
 	}
 
 		
