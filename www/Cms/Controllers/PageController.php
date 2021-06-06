@@ -53,7 +53,8 @@ class PageController{
 
 			$contentObj->setPage($item['id']);
 			$methodId = $contentObj->findOne();
-			if(!$methodId['method']){
+
+			if($methodId['method'] !== NULL){
 				$actionObj->setId($methodId['method']);
 				$actionName = $actionObj->findOne();
 				$item['action'] = $actionName['name'];
