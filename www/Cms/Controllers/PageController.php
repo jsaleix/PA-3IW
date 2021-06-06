@@ -29,11 +29,14 @@ class PageController{
 		$pageObj = new Page();
 		$pageObj->setPrefix($site['prefix']);
 		$pages = $pageObj->findAll();
-		$pagesList = [];
+		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'edit'];
+		$datas = [];
 
 		$contentObj = new Content();
 		$contentObj->setPrefix($site['prefix']);
+
 		$actionObj = new Action();
+		$userObj = new User();
 
 		$categoryObj = new Category();
 		$categoryObj->setPrefix($site['prefix']);
@@ -51,20 +54,31 @@ class PageController{
 			$contentObj->setPage($item['id']);
 			$methodId = $contentObj->findOne();
 			if(!$methodId['method']){
-				break;
+				$actionObj->setId($methodId['method']);
+				$actionName = $actionObj->findOne();
+				$item['action'] = $actionName['name'];
+			}else{
+				$item['action'] = 'Unknown action';
 			}
-			$actionObj->setId($methodId['method']);
-			$actionName = $actionObj->findOne();
-			$item['action'] = $actionName['name'];
 
-			$pagesList[] = $pageObj->listFormalize($item);
+			if($item['creator'] !== NULL){
+				$userObj->setId($item['creator']);
+				$user = $userObj->findOne();
+				$item['creator'] = $user['firstname'] . ' ' . $user['lastname'];
+			}
+
+
+			$button = '<a href="editPage?id=' . $item['id'] . '">Go</a>';
+			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $button . "'";
+
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
-		
-		$view = new View('admin.list', 'back');
+
+		$view = new View('back/list', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("button", $createPageBtn);
-		$view->assign("list", $pagesList);
+		$view->assign("createButton", $createPageBtn);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the pages");
 	}
 

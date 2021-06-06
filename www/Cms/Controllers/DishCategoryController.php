@@ -33,10 +33,15 @@ class DishCategoryController{
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatList = [];
 		$content = "";
+		$fields = [ 'id', 'name', 'description', 'notes', 'edit'];
+		$datas = [];
 
 		if($dishCategories){
 			foreach($dishCategories as $item){
-				$dishCatList[] = $dishCatObj->listFormalize($item);
+				//$dishCatList[] = $dishCatObj->listFormalize($item);
+				$button = '<a href="editdishcategory?id=' . $item['id'] . '">Go</a>';
+				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $button . "'";
+
 			}
 		}else{
 			$content = "No dish category yet";
@@ -44,11 +49,11 @@ class DishCategoryController{
 
 		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'createdishcategory'];
 		
-		$view = new View('admin.list', 'back');
+		$view = new View('back/list', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("button", $addCatButton);
-		$view->assign("list", $dishCatList);
-		$view->assign("content", $content);
+		$view->assign("createButton", $addCatButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the dish categories");
 	}
 
