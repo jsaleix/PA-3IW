@@ -35,7 +35,7 @@ class DishController{
 		$dishesList = [];
 		$content = "";
 		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit' ];
-
+		$datas = [];
 		$dishCatObj = new DishCategory();
 		$dishCatObj->setPrefix($site['prefix']);
 
