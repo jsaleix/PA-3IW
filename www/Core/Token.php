@@ -27,6 +27,7 @@ class Token{
 			if ( session_status() === PHP_SESSION_NONE )
 				return 0;
 			$user = new User();
+			if(!isset($_SESSION['token'])) return 0;
 			$user->setToken($_SESSION['token']);
 			$result = $user->findOne();
 			if( !$result)
