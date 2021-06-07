@@ -16,7 +16,7 @@ function handleCMS($uri){
         $page->renderPage();
 
     }else{
-        if( Security::isConnected() == 0)
+        if( !Security::isConnected())
             header('Location: '.DOMAIN);
         $siteObj = new Site();
         $siteObj->setSubDomain($uri[0]);

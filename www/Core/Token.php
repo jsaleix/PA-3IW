@@ -44,6 +44,7 @@ class Token{
 			$user->setId($uid);
 			$user->setToken("IS NULL");
 			$user->save();
+			unset($_SESSION['token']);
 			return 1;
 		} catch ( Exception $e){
 			return 0;
