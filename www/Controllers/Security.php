@@ -6,10 +6,11 @@ use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
-
+use App\Core\Token;
 
 use App\Models\User;
 use App\Models\MailToken;
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -29,9 +30,11 @@ class Security{
 		if(!empty($_POST) && !empty($_POST['email'])){
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
-			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']))
+			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd'])){
+				Secu::connect($result);
+				echo Secu::getCurrentUser();
+			}else{
 				print_r($result);
-			else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
 			}
@@ -39,42 +42,6 @@ class Security{
 
 		$view->assign("form", $form);
 
-	}
-
-	public function createToken($userPDO){
-		$token = bin2hex(random_bytes(128));
-
-		$user = new User();
-		$user->setId($userPDO['id']);
-		$user->setToken($token);
-		$user->save();
-
-		if ( session_status() === PHP_SESSION_NONE )
-			session_start();
-		$_SESSION['token'] = $token;
-		return true;
-	}
-	
-	public function verifyToken(){
-		if ( session_status() === PHP_SESSION_NONE )
-			return false;
-		$user = new User();
-		$user->setToken($_SESSION['token']);
-		$result = $user->findOne();
-		if( !$result){
-			echo "error";
-			return false;
-		}
-		$this->createToken($result, $user);
-	}
-
-	public function getCurrentUser(){
-		if ( session_status() === PHP_SESSION_NONE )
-			return false;
-		$user = new User();
-		$user->setToken($_SESSION['token']);
-		$result = $user->findOne();
-		return $result['id'];
 	}
 
 	public function registerAction(){
