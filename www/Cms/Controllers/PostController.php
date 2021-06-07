@@ -13,6 +13,8 @@ use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
+use App\Core\Security;
+
 class PostController{
 
 
@@ -48,7 +50,7 @@ class PostController{
 				$insert = new Post();
 				$insert->setTitle($title);
 				$insert->setContent($content);
-				$insert->setPublisher(2);
+				$insert->setPublisher(Security::getUser());
 				$insert->setPrefix($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
@@ -223,7 +225,7 @@ class PostController{
 		$errors = [];
 		if(isset($_POST['message']) && !empty($_POST['message']) /*&& isconnected*/){
 			$commentObj->setMessage($_POST['message']);
-			$commentObj->setIdUser(2);
+			$commentObj->setIdUser(Security::getUser());
 			$commentPublished = $commentObj->save();
 			if(!$commentPublished){
 				$errors[] = 'Your comment could not be published';
@@ -237,7 +239,7 @@ class PostController{
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
 		$view->assign('name', $name);
-		$view->assign('canPostComment', true);
+		$view->assign('canPostComment', !Security::getUser() == 0 );
 		$view->assign('comments', $comments);
 
 	}

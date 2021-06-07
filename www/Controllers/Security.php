@@ -32,7 +32,7 @@ class Security{
 			$result = $user->findOne();
 			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']) && $result['isActive'] == 1){
 				Secu::connect($result);
-				echo Secu::isConnected();
+				header('Location: '.DOMAIN);
 			}else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
@@ -66,6 +66,7 @@ class Security{
 				$mail->setToken(bin2hex(random_bytes(128)));
 				$mail->save();
 				$mail->sendConfirmationMail($user->getEmail());
+				header('Location: '.DOMAIN);
 			}else{
 				$view->assign("errors", $errors);
 			}
@@ -76,14 +77,8 @@ class Security{
 	}
 
 	public function logoutAction(){
-
-		$security = new Secu();
-		if($security->isConnected()){
-			echo "OK";
-		}else{
-			echo "NOK";
-		}
-		
+		Secu::disconnect();
+		header('Location: '.DOMAIN);
 	}
 
 
