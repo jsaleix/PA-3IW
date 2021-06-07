@@ -30,9 +30,14 @@ class Security{
 		if(!empty($_POST) && !empty($_POST['email'])){
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
-			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']) && $result['isActive'] == 1){
-				Secu::connect($result);
-				header('Location: '.DOMAIN);
+			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd'])){
+				if( $result['isActive'] == 0){
+					$errors = ["Vous devez activer votre compte grâce au mail que nous vous avons envoyé avant de vous connecter"];
+					$view->assign("errors", $errors);
+				} else {
+					Secu::connect($result);
+					header('Location: '.DOMAIN);
+				}
 			}else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
