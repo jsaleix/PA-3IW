@@ -30,11 +30,10 @@ class Security{
 		if(!empty($_POST) && !empty($_POST['email'])){
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
-			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd'])){
+			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']) && $result['isActive'] == 1){
 				Secu::connect($result);
-				echo Secu::getCurrentUser();
+				echo Secu::isConnected();
 			}else{
-				print_r($result);
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
 			}

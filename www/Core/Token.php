@@ -30,10 +30,9 @@ class Token{
 			$user->setToken($_SESSION['token']);
 			$result = $user->findOne();
 			if( !$result){
-				echo "error";
 				return 0;
 			}
-			$this->createToken($result, $user);
+			return Token::createToken($result, $user);
 		} catch( Exception $e){
 			return 0;
 		}
