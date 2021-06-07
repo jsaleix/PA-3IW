@@ -55,7 +55,9 @@ class Page extends Database
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $name = htmlspecialchars($name);
+        $name = preg_replace("/\s+/", "", $name);
+        $this->name = htmlspecialchars($name);
     }
 
     /**

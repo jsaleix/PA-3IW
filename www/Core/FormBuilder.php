@@ -11,7 +11,10 @@ class FormBuilder
 				method='".($form["config"]["method"]??"GET")."' 
 				id='".($form["config"]["id"]??"")."' 
 				class='".($form["config"]["class"]??"")."' 
-				action='".($form["config"]["action"]??"")."'>";
+				action='".($form["config"]["action"]??"") . "'";
+
+		$html .= !empty($form["config"]['enctype'])? ("enctype='" . $form["config"]['enctype'] . "'" ) : "";
+		$html .= ">";
 		
 		if($form["config"]["class"] === "form-auth"){
 			if($form["config"]["id"] === "form_register")
@@ -67,7 +70,12 @@ class FormBuilder
 						(!empty($configInput["disabled"])?"disabled":"").
 						" value=\"" . ($configInput["value"]??"") . "\" />";
 		if(!empty($configInput["type"]) && $configInput["type"] === 'file' && !empty($configInput["value"])){
-			$html .= "<image src=". $configInput["value"] ." alt='file viewer' height='100' width: '100'/>";
+			if(strpos($configInput['value'], 'http') === false ){
+				$html .= '<img src="'. DOMAIN . '/'. $configInput['value'] .'" height="100"  />';
+			}else{
+				$html .= '<img src="'. $configInput['value'] .'" height="100"  />';
+
+			}
 		}
 		return $html;
 	}

@@ -59,11 +59,11 @@ class ManageSite{
                 $prefix = random_bytes(4);
                 $prefix = bin2hex($prefix);
                 $site = new Site();
-                $site->setName('jedusor');
+                $site->setName('comment');
                 $site->setDescription('description');
                 $site->setImage('rien');
                 $site->setCreator(1);
-                $site->setSubDomain('jedusor');
+                $site->setSubDomain('comment');
                 $site->setPrefix($prefix);
                 $site->setType('type default');
                 $creation = $site->initializeSite();

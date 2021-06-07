@@ -3,6 +3,7 @@
 namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
+use App\Core\FileUploader;
 
 use CMS\Models\Post;
 use CMS\Models\Page;
@@ -10,6 +11,7 @@ use CMS\Models\Category;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
 
 class SiteController{
 
@@ -41,8 +43,22 @@ class SiteController{
 		$view->assign('pageTitle', "Edit the site informations");
 
 		if(!empty($_POST) ) {
-			[ "name" => $name, "description" => $description, "image" => $image, "type" => $type] = $_POST;
-			if($name || $description || $image || $type ){
+			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
+			[ "image" => $image ] = $_FILES;
+
+			if($name || $description || $type ){
+				if(isset($image)){
+					$imgDir = "/uploads/cms/" . $site['subDomain'] . '/';
+					$imgName = 'banner';
+					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+					if($isUploaded != false){
+						$image = $isUploaded;
+					}else{
+						$image = null;
+					}
+				}else{
+					$image = null;
+				}
 
 				$siteObj->setName($name);
 				$siteObj->setDescription($description);
@@ -70,6 +86,7 @@ class SiteController{
         $creatorData = new User();
         extract($siteData);
 
+		$image = strpos($image, 'http') !== false ? $image : DOMAIN . '/' . $image ;
 		if(!empty($creator))
         {
 			$creatorData->setId($creator);
@@ -79,6 +96,8 @@ class SiteController{
 			$creatorName = 'Unknown';
 		}
         
+
+
 		$html = '<h2>' . $name . '\'s restaurant</h2>';
 		$html .= "<image src=${image} alt='${name}image'/>";
 		$html .= '<p>' . $description . '</p>';
@@ -86,7 +105,12 @@ class SiteController{
 		$html .= '*****';
 		$html .= '<p id='. $creator['id'] .' >Created by ' . $creatorName . ' </p>';
 
-        return $html;
+		$view = new View('cms', 'front');
+		$view->assign('pageTitle', 'Restaurant informations');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($siteObj->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));
+		$view->assign('content', $html);
+
 	}
 
 }

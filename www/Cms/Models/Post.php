@@ -73,6 +73,10 @@ class Post extends Database
 		return get_object_vars($this);
 	}
 
+	public function getFields() : array{
+		return array_keys(get_class_vars(get_class($this)));
+	}
+
 	public function renderContent(){
 		switch($this->type){
 			case 'article':

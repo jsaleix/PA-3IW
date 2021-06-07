@@ -31,10 +31,46 @@
   controller: pagecontroller
   action: editpage
 
+/createdish:
+  controller: dishController
+  action: createdish
+
+/managedishes:
+  controller: dishController
+  action: managedishes
+
+/editdish:
+  controller: dishController
+  action: editdish
+
+/createdishcategory:
+  controller: dishCategoryController
+  action: createdishCategory
+
+/managedishcategories:
+  controller: dishCategoryController
+  action: managedishcategories
+
+/editdishcategory:
+  controller: dishCategoryController
+  action: editdishcategory
+
+/managecomments:
+  controller: commentController
+  action: managecomments
+
 /settings:
   controller: sitecontroller
   action: editsite
 
+/medialibrary:
+  controller: mediacontroller
+  action: listMedias
+
 /ent/post:
   controller: postcontroller
   action: renderpost
+
+/ent/dish:
+  controller: dishController
+  action: renderdish

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\FileUploader;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
@@ -36,7 +37,7 @@ class Site extends Database
     
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = htmlspecialchars($name);
     }
 
     public function getName()
@@ -46,7 +47,7 @@ class Site extends Database
 
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = htmlspecialchars($description);
     }
 
     public function getImage()
@@ -76,7 +77,7 @@ class Site extends Database
 
     public function setSubDomain($subDomain)
     {
-        $this->subDomain = $subDomain;
+        $this->subDomain = trim(mb_strtolower($subDomain));
     }
 
     public function getPrefix(): string
@@ -96,7 +97,7 @@ class Site extends Database
 
     public function setType(string $type)
     {
-        $this->type = $type;
+        $this->type = htmlspecialchars($type);
     }
 
     public function initializeSite(){
@@ -108,7 +109,7 @@ class Site extends Database
 
         clearstatcache();
         if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
-            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') )
+            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') || !file_exists($dir . '/comment.script'))
         {
 			die("Missing required file");
             return false;
@@ -116,7 +117,7 @@ class Site extends Database
 
         $toReplace = [':X', ':prefix'];
         $replaceBy = [$this->prefix, DBPREFIXE];
-        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/post.script', '/content.script'];
+        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/post.script', '/content.script', '/comment.script'];
         try{
             foreach( $tableToCreate as $table){
                 $table = file_get_contents($dir . $table);
@@ -127,14 +128,8 @@ class Site extends Database
             $insert->setName('home');
             $insert->setPrefix($this->prefix);
             $insert->save();
-            echo 'Page created';
 
-            $contentObj = new Content();
-            $contentObj->setPrefix($this->prefix);
-            $contentObj->setPage(1);
-            $contentObj->setMethod(1);
-            $contentObj->save();
-            echo 'Content created';
+            FileUploader::createCMSDirs($this->subDomain);
 
             $postObj = new Post();
             $postObj->setTitle('Welcome');
@@ -142,12 +137,6 @@ class Site extends Database
             $postObj->setPublisher(2);
             $postObj->setPrefix($this->prefix);
             $postObj->save();
-            echo 'Post created';
-
-            /*$insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
-            $insert->setTableName($this->prefix);
-            $insert->save();
-            echo 'Content created';*/
 
             return true;
         }catch(\Exception $e){
@@ -168,7 +157,8 @@ class Site extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[ 
