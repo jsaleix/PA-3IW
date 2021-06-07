@@ -59,6 +59,10 @@
   controller: commentController
   action: managecomments
 
+/events:
+  controller: eventController
+  action: manageevents
+
 /settings:
   controller: sitecontroller
   action: editsite
