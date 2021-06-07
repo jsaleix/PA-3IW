@@ -10,6 +10,21 @@
     <h3> <?=$message?> </h3>
 <?php endif;?>
 
-<main class="main-container">
-    <?php App\Core\ListBuilder::render($list)?>
-</main>
+    <div class="row" >
+        <div class="col-12 col-sm-12 col-md-12 col-xl-12">
+            <div class="col-inner">
+                <div class="pageTitle">
+                    <h2 style="font-weight: lighter;"><?=$pageTitle??''?></h2>
+                    <?php if(isset($button)):?>
+                        <a href="<?= $button['link']?>"><button class="cta-green"><?=$button['label']?></button></a>
+                    <?php endif;?>
+                    <!--<button class="cta-green">Ajouter un nouveau fichier</button>-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <?php if(!empty($content)){ echo $content;}?>
+    <?php if(!empty($list)){ App\Core\ListBuilder::render($list); }?>
+    <!---- END VIEW ------->

@@ -227,7 +227,7 @@ body {
   width: 100%;
   margin: 0;
   font-family: "Roboto", sans-serif;
-  background-color: white;
+  background-color: #FAF9FA;
   overflow: auto;
 }
 
@@ -244,6 +244,7 @@ h1 {
 h2 {
   font-size: 1.125rem;
 }
+
 
 @media screen and (max-width: 768px) {
   h2 {

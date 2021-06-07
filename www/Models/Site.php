@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Core\Database;
+use App\Core\FileUploader;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
+use CMS\Models\Post;
 
 class Site extends Database
 {
@@ -35,7 +37,7 @@ class Site extends Database
     
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = htmlspecialchars($name);
     }
 
     public function getName()
@@ -45,7 +47,7 @@ class Site extends Database
 
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = htmlspecialchars($description);
     }
 
     public function getImage()
@@ -75,7 +77,7 @@ class Site extends Database
 
     public function setSubDomain($subDomain)
     {
-        $this->subDomain = $subDomain;
+        $this->subDomain = trim(mb_strtolower($subDomain));
     }
 
     public function getPrefix(): string
@@ -95,7 +97,7 @@ class Site extends Database
 
     public function setType(string $type)
     {
-        $this->type = $type;
+        $this->type = htmlspecialchars($type);
     }
 
     public function initializeSite(){
@@ -107,7 +109,7 @@ class Site extends Database
 
         clearstatcache();
         if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
-            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') )
+            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') || !file_exists($dir . '/comment.script'))
         {
 			die("Missing required file");
             return false;
@@ -115,27 +117,111 @@ class Site extends Database
 
         $toReplace = [':X', ':prefix'];
         $replaceBy = [$this->prefix, DBPREFIXE];
-        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/content.script'];
+        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/post.script', '/content.script', '/comment.script'];
         try{
             foreach( $tableToCreate as $table){
                 $table = file_get_contents($dir . $table);
                 $create = $this->createTable(str_replace($toReplace, $replaceBy, $table));
-                if(!$create){ return false; }
+                if(!$create){ echo $table; return false; }
             }
-            $insert = new Page('home', $this->prefix);
+            $insert = new Page();
+            $insert->setName('home');
+            $insert->setPrefix($this->prefix);
             $insert->save();
-            echo 'Page created';
 
-            $insert = new Content('Welcome', 'This is your first article on your new website.', 1, 2);
-            $insert->setTableName($this->prefix);
-            $insert->save();
-            echo 'Content created';
+            FileUploader::createCMSDirs($this->subDomain);
+
+            $postObj = new Post();
+            $postObj->setTitle('Welcome');
+            $postObj->setContent('This is your first article on your new website.');
+            $postObj->setPublisher(2);
+            $postObj->setPrefix($this->prefix);
+            $postObj->save();
 
             return true;
         }catch(\Exception $e){
             return false;
         }
+    }
 
+    public function returnData() : array{
+		return get_object_vars($this);
+	}
+
+    public function formEdit($content){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype"=>"multipart/form-data"
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input-content",
+                    "placeholder"=>"New article",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
+					"value"=> $content['name']
+                ],
+				"description"=>[ 
+					"type"=>"text",
+					"label"=>"Description",
+					"id"=>"description",
+					"class"=>"input-content",
+                    "error"=>"The description cannot be empty!",
+					"required"=> false,
+					"value"=> $content['description']
+                ],
+				"image"=>[ 
+					"type"=>"file",
+					"label"=>"image",
+					"id"=>"image",
+					"class"=>"input-file",
+                    "error"=>"",
+					"required"=> false,
+					"value"=> $content['image']
+                ],
+                "subDomain"=>[ 
+					"type"=>"text",
+					"label"=>"subDomain",
+					"id"=>"subDomain",
+					"class"=>"input-content",
+                    "error"=>"The subDomain cannot be empty!",
+					"required"=> false,
+					"value"=> $content['subDomain'],
+                    "disabled" => true
+                ],
+                "type"=>[ 
+					"type"=>"text",
+					"label"=>"type",
+					"id"=>"type",
+					"class"=>"input-content",
+                    "error"=>"The type cannot be empty!",
+					"required"=> false,
+					"value"=> $content['type'],
+                ],
+                "creationDate"=>[ 
+					"type"=>"text",
+					"label"=>"creationDate",
+					"id"=>"creationDate",
+					"class"=>"input-content",
+                    "error"=>"The creationDate cannot be empty!",
+					"required"=> false,
+					"value"=> $content['creationDate'],
+                    "disabled" => true
+                ],
+            ]
+        ];
     }
 
 }

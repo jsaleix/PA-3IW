@@ -38,7 +38,7 @@ class MailToken extends Database
         $mailing->Body = '
             <h1>Bonjour et merci de vous être inscrit chez nous ! </h1>
             <h2>Avant de pouvoir entièrement utiliser notre site vous devrez d\'abord confirmer votre email.</h2>
-                <a href="'.URI.'/mailconfirm?token='.$this->token.'">Pour ce faire, cliquez ici ! </a>';
+                <a href="'.URL.'/mailconfirm?token='.$this->token.'">Pour ce faire, cliquez ici ! </a>';
 		if(!$mailing->send())
             echo "error";
     }

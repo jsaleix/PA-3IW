@@ -7,6 +7,7 @@ class Database
 
 	private $pdo;
 	private $table;
+	private $rawPrefix; 
 
 	public function __construct($tablePrefix = null){
 		try{
@@ -22,16 +23,28 @@ class Database
 		}
 
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
-		if($tablePrefix){
+		/*if($tablePrefix){
 			$this->table = $tablePrefix.end($getCalledClassExploded);
+			$this->rawPrefix = str_replace('_','', $tablePrefix);
+
 		}else{
-			$this->table = DBPREFIXE.end($getCalledClassExploded);
-		}
+		}*/
+		$this->table = DBPREFIXE.end($getCalledClassExploded);
+
 	}
 
 	protected function setTableName($prefix){
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
 		$this->table = $prefix.end($getCalledClassExploded);
+		$this->rawPrefix = str_replace('_','', $prefix);
+	}
+
+	protected function getTableName(){
+		return $this->table;
+	}
+
+	protected function getPrefix(){
+		return $this->rawPrefix;
 	}
 
 	public function save(){
@@ -60,6 +73,10 @@ class Database
 				foreach($columns as $key => $col){
 					if( empty($col))
 						unset($columns[$key]);
+
+					if($col == 'IS NULL'){
+							$columns[$key] = NULL;
+						}
 				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
@@ -88,9 +105,6 @@ class Database
 		foreach($columns as $key => $col){
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
-
-			if($col == 'NULL')
-				$columns[$key] = 'IS NULL';
 		}
 
 		$req = "SELECT * FROM ".$this->table;
@@ -118,7 +132,7 @@ class Database
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
 
-		return $result;
+		return !isset($result[0]) ? false : $result;
 	}
 	
 	public function findOne(){
@@ -133,9 +147,14 @@ class Database
 
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
+
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
-		return $result;
+		/*echo "SELECT * FROM ".$this->table." WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? <br>";
+		echo implode('-', $columns) . '<br><br>';
+		var_dump($result);
+		echo '<br><br>';*/
+		return !isset($result[0]) ? false : $result;
 	}
 
 	public function createTable($req){

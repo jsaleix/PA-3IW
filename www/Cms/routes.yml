@@ -8,18 +8,73 @@
   action: default
 
 /createarticle:
-  controller: admin
+  controller: postcontroller
   action: createArticle
 
-/managepages:
-  controller: admin
-  action: managepages
-
 /managearticles:
-  controller: admin
+  controller: postcontroller
   action: managearticles
 
 /editarticle:
-  controller: admin
+  controller: postcontroller
   action: editarticle
 
+/createpage:
+  controller: pagecontroller
+  action: createpage
+
+/managepages:
+  controller: pagecontroller
+  action: managepages
+
+/editpage:
+  controller: pagecontroller
+  action: editpage
+
+/createdish:
+  controller: dishController
+  action: createdish
+
+/managedishes:
+  controller: dishController
+  action: managedishes
+
+/editdish:
+  controller: dishController
+  action: editdish
+
+/createdishcategory:
+  controller: dishCategoryController
+  action: createdishCategory
+
+/managedishcategories:
+  controller: dishCategoryController
+  action: managedishcategories
+
+/editdishcategory:
+  controller: dishCategoryController
+  action: editdishcategory
+
+/managecomments:
+  controller: commentController
+  action: managecomments
+
+/events:
+  controller: eventController
+  action: manageevents
+
+/settings:
+  controller: sitecontroller
+  action: editsite
+
+/medialibrary:
+  controller: mediacontroller
+  action: listMedias
+
+/ent/post:
+  controller: postcontroller
+  action: renderpost
+
+/ent/dish:
+  controller: dishController
+  action: renderdish

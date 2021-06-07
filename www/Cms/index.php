@@ -3,7 +3,7 @@ namespace CMS;
 
 use App\Core\Router;
 use App\Models\Site;
-use CMS\Controller\PageRenderer;
+use CMS\Core\PageRenderer;
 
 function handleCMS($uri){
     if(!$uri){ throw new InvalidArgumentException ('Missing uri parameter');}
@@ -11,16 +11,14 @@ function handleCMS($uri){
     $uri = array_slice($uri, 2);
 
     if(empty($uri[1]) || $uri[1] !== 'admin'){
-        include "Cms/Controllers/PageRenderer.php";
-        $pageRenderer = "CMS\\Controller\\PageRenderer";
-        $page = new $pageRenderer($uri);
+        $page = new PageRenderer($uri);
         $page->renderPage();
 
     }else{
-        $siteData = new Site();
-        $siteData->setSubDomain($uri[0]);
-        $site = $siteData->findOne();
-        if(empty($site['id'])){
+        $siteObj = new Site();
+        $siteObj->setSubDomain($uri[0]);
+        $site = $siteObj->findOne();
+        if(!$site || empty($site['id'])){
             echo 'This site does not exist <br>';
             return;
         }

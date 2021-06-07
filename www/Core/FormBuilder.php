@@ -11,7 +11,10 @@ class FormBuilder
 				method='".($form["config"]["method"]??"GET")."' 
 				id='".($form["config"]["id"]??"")."' 
 				class='".($form["config"]["class"]??"")."' 
-				action='".($form["config"]["action"]??"")."'>";
+				action='".($form["config"]["action"]??"") . "'";
+
+		$html .= !empty($form["config"]['enctype'])? ("enctype='" . $form["config"]['enctype'] . "'" ) : "";
+		$html .= ">";
 		
 		if($form["config"]["class"] === "form-auth"){
 			if($form["config"]["id"] === "form_register")
@@ -57,14 +60,24 @@ class FormBuilder
 
 
 	public static function renderInput($name, $configInput){
-		return "<input 
-						name='".$name."' 
-						type='".($configInput["type"]??"text")."'
-						id='".($configInput["id"]??"")."'
-						class='".($configInput["class"]??"")."'
-						placeholder='".($configInput["placeholder"]??"")."'". 
-						(!empty($configInput["required"])?"required='required'":"") .
-						"value='" . ($configInput["value"]??"") . "'/>";
+		$html =  "<input 
+						name=\"".$name."\" 
+						type=\"".($configInput["type"]??"text")."\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
+		if(!empty($configInput["type"]) && $configInput["type"] === 'file' && !empty($configInput["value"])){
+			if(strpos($configInput['value'], 'http') === false ){
+				$html .= '<img src="'. DOMAIN . '/'. $configInput['value'] .'" height="100"  />';
+			}else{
+				$html .= '<img src="'. $configInput['value'] .'" height="100"  />';
+
+			}
+		}
+		return $html;
 	}
 
 	public static function renderCheckBox($name, $configInput){
@@ -84,9 +97,12 @@ class FormBuilder
 		$html = "<select name='".$name."' id='".($configInput["id"]??"")."'
 						class='".($configInput["class"]??"")."'>";
 
-
 		foreach ($configInput["options"] as $key => $value) {
-			$html .= "<option value='".$key."'>".$value."</option>";
+			if(!empty($configInput['value']) && $key === $configInput['value']){
+				$html .= "<option value='".$key."' selected='selected'>".$value."</option>";
+			}else{
+				$html .= "<option value='".$key."'>".$value."</option>";
+			}
 		}
 
 		$html .= "</select><br>";

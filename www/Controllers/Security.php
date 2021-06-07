@@ -6,16 +6,16 @@ use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
-
+use App\Core\Token;
 
 use App\Models\User;
 use App\Models\MailToken;
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class Security{
-
 
 	public function defaultAction(){
 		echo "Controller security action default";
@@ -30,9 +30,10 @@ class Security{
 		if(!empty($_POST) && !empty($_POST['email'])){
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
-			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']))
-				print_r($result);
-			else{
+			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']) && $result['isActive'] == 1){
+				Secu::connect($result);
+				echo Secu::isConnected();
+			}else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
 			}
