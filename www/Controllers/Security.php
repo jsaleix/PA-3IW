@@ -24,6 +24,7 @@ class Security{
 	public function loginAction(){
 		if( Secu::isConnected()){
 			header('Location: '.DOMAIN);
+			return;
 		}
 		$user = new User();
 		$view = new View("login");
@@ -54,6 +55,7 @@ class Security{
 	public function registerAction(){
 		if( Secu::isConnected()){
 			header('Location: '.DOMAIN);
+			return;
 		}
 		$user = new User();
 		$view = new View("register");
@@ -87,20 +89,14 @@ class Security{
 	}
 
 	public function logoutAction(){
-		if(!Secu::isConnected())
+		if(!Secu::isConnected()){
 			header('Location: '.DOMAIN);
+			return;
+		}
 		Secu::disconnect();
 		header('Location: '.DOMAIN.'/login');
 	}
 
-
-	public function updateAction(){
-		$user = new User();
-		$user->setId(2);
-		$user->setEmail("testAjaha");
-		$user->save();
-	}
-	
 	public function mailconfirmAction(){
 		$token = new MailToken();
 		$token->setToken($_GET['token']);

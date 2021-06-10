@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Database;
 use App\Core\FileUploader;
+use App\Core\Security;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
@@ -136,7 +137,7 @@ class Site extends Database
             $postObj = new Post();
             $postObj->setTitle('Welcome');
             $postObj->setContent('This is your first article on your new website.');
-            $postObj->setPublisher(2);
+            $postObj->setPublisher(Security::getUser());
             $postObj->setPrefix($this->prefix);
             $postObj->save();
 

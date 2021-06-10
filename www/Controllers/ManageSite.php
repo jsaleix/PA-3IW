@@ -16,8 +16,8 @@ class ManageSite{
             header('Status: 301 Moved Permanently', false, 301);      
             header('Location: /?error=not_connected'); 
         }
-
         $step = $_GET['step']??1;
+
         switch($step)
         {
             case '2':
@@ -38,14 +38,27 @@ class ManageSite{
                     self::returnJson($return['status'], $return['code']);
                     exit;
                 }
-                $prefix = random_bytes(4);
-                $prefix = bin2hex($prefix);
+                $prefix = bin2hex(random_bytes(4));
                 $site = new Site();
+                $site->setSubDomain($subDomain);
+                $result = $site->findOne();
+                if( $result )
+                    self::returnJson("subDomain", 460);
+                $site->setSubDomain(null);
+                $site->setName($name);
+                $result = $site->findOne();
+                if( $result )
+                    self::returnJson("name", 461);
+                $site->setName(null);
+                do{
+                    $prefix = bin2hex(random_bytes(4));
+                    $site->setPrefix($prefix);
+                    $result = $site->findOne();
+                } while( $result );
                 $site->setName($name);
                 $site->setDescription($description);
                 $site->setCreator($user);
                 $site->setSubDomain($subDomain);
-                $site->setPrefix($prefix);
                 $site->setType($type);
                 $creation = $site->initializeSite();
                 if(!$creation){
@@ -57,23 +70,31 @@ class ManageSite{
                 exit;
                
             case 'test':
-                $prefix = random_bytes(4);
-                $prefix = bin2hex($prefix);
                 $site = new Site();
-                $site->setName('test');
+                $site->setSubDomain('fadi');
+                $result = $site->findOne();
+                if( $result )
+                    self::returnJson("subDomain", 460);
+                $site->setSubDomain(null);
+                $site->setName('fado');
+                $result = $site->findOne();
+                if( $result )
+                    self::returnJson("name", 461);
+                $site->setName(null);
+                do{
+                    $prefix = bin2hex(random_bytes(4));
+                    $site->setPrefix($prefix);
+                    $result = $site->findOne();
+                } while( $result );
+                $site->setName('fadasse');
                 $site->setDescription('description');
                 $site->setImage('rien');
                 $site->setCreator($user);
-                $site->setSubDomain('test');
+                $site->setSubDomain('fadasseee');
                 $site->setPrefix($prefix);
                 $site->setType('type default');
                 $creation = $site->initializeSite();
-                if(!$creation){
-                    $return=array("status" => "Unsuccessful", "code" => 500);
-                }else{
-                    $return=array("status" => "Successfully created", "code" => 201);
-                }
-                self::returnJson($return['status'], $return['code']);
+                !$creation ? self::returnJson("Unsuccessful", 500) : self::returnJson("Successfully created", 201);
                 exit;
 
             default:
