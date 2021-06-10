@@ -83,20 +83,20 @@ class SiteController{
 	*/
 	public function render($siteObj, $filter = null){
 		$siteData = $siteObj->returnData();
-        $creatorData = new User();
         extract($siteData);
 
-		$image = strpos($image, 'http') !== false ? $image : DOMAIN . '/' . $image ;
+		$image = strpos($image, 'http') !== false ? $image : (DOMAIN . '/' . $image) ;
+
 		if(!empty($creator))
         {
-			$creatorData->setId($creator);
-        	$creator = $creatorData->findOne();
+			$userObj = new User();
+			$userObj->setId($creator);
+        	$creator = $userObj->findOne();
 			$creatorName = $creator['firstname'] . " " . $creator['lastname'];
 		}else{
 			$creatorName = 'Unknown';
 		}
         
-
 
 		$html = '<h2>' . $name . '\'s restaurant</h2>';
 		$html .= "<image src=${image} alt='${name}image'/>";

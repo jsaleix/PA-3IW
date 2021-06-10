@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Core\Security;
 
 use App\Models\Site;
 
 class ManageSite{
 
 	public function createAction(){
-        $connected = $_SESSION['connected']??false;
-		if(false && !$connected)
+		$user = Security::getUser();
+		if(!$user)
         {
             header('Status: 301 Moved Permanently', false, 301);      
             header('Location: /?error=not_connected'); 
@@ -42,7 +43,7 @@ class ManageSite{
                 $site = new Site();
                 $site->setName($name);
                 $site->setDescription($description);
-                $site->setCreator(2);
+                $site->setCreator($user);
                 $site->setSubDomain($subDomain);
                 $site->setPrefix($prefix);
                 $site->setType($type);
@@ -59,11 +60,11 @@ class ManageSite{
                 $prefix = random_bytes(4);
                 $prefix = bin2hex($prefix);
                 $site = new Site();
-                $site->setName('comment');
+                $site->setName('test');
                 $site->setDescription('description');
                 $site->setImage('rien');
-                $site->setCreator(1);
-                $site->setSubDomain('comment');
+                $site->setCreator($user);
+                $site->setSubDomain('test');
                 $site->setPrefix($prefix);
                 $site->setType('type default');
                 $creation = $site->initializeSite();

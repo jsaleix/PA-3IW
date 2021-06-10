@@ -231,6 +231,9 @@ class PostController{
 			$userObj->setId($comment['idUser']);
 			$commentAuthor = $userObj->findOne();
 			$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
+
+			$date = new \DateTime($comment['date']);
+			$comment['date'] =  $date->format('d/m/y H:i:s');
 			$commentsTmp[] = $comment;
 		}
 
