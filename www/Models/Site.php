@@ -8,6 +8,8 @@ use App\Core\FileUploader;
 use CMS\Models\Page;
 use CMS\Models\Content;
 use CMS\Models\Post;
+use CMS\Models\DishCategory;
+
 
 class Site extends Database
 {
@@ -137,6 +139,14 @@ class Site extends Database
             $postObj->setPublisher(2);
             $postObj->setPrefix($this->prefix);
             $postObj->save();
+
+            $dishCatObj = new DishCategory();
+            $dishCatObj->setPrefix($this->prefix);
+            $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
+            foreach($dishCatArr as $cat){
+                $dishCatObj->setName($cat);
+                $dishCatObj->save();
+            }
 
             return true;
         }catch(\Exception $e){
