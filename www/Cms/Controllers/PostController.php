@@ -71,16 +71,16 @@ class PostController{
 		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
 		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit' ];
-
+		$datas = [];
 		foreach($posts as $item){
 			$userObj = new User();
 			$userObj->setId($item['publisher']);
 			$user = $userObj->findOne();
 
 			$item['publisher'] = $user['firstname']??'None';
-			$button = '<a href="editArticle?id=' . $item['id'] . '">Go</a>';
-			$formalized = "'" . $item['id'] . "','" . $item['title'] . "','" . $item['content'] . "','" . $item['publisher'] .  "','" . $item['publicationDate'] . "','" . $button . "'";
-			$datas[] = $formalized;
+			$button = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
+			//$item['content'] = 
+			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $button . "\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
 		$view = new View('back/list', 'back');

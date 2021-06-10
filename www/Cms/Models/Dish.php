@@ -180,8 +180,13 @@ class Dish extends Database
 					"id"=>"allergens",
 					"class"=>"input-allergens",
                     "placeholder"=>"Allergens",
-                ]
-            ]
+                	]
+				]
+				/*, 
+				"render" => [
+					"block1" => [ "price", "category" ]
+				]*/
+
         ];
     }
 
