@@ -49,7 +49,7 @@
                         <input name="name" type="text" placeholder="Nom" value="<?=$name??''?>"/>
                         <input  name="description"  class="longInput" type="text" placeholder="Description" value="<?=$description??''?>"/>
                         <div class="alignedInputs">
-                            <input name="price" type="number" placeholder="Price" value="<?=$price?>"/>
+                            <input name="price" type="number" placeholder="Price" step="0.1" value="<?=$price?>"/>
                             <select name="category">
                                 <option value="0">None</option>
                                     <?php foreach ($categories as $key => $value):?>

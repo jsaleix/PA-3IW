@@ -199,6 +199,9 @@ class PostController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'article not set ';
 		}
+		$user = Security::getUser();
+        $userObj = new User();
+
 		$commentObj = new Comment();
 		$commentObj->setPrefix($site->getPrefix());
 
@@ -209,23 +212,35 @@ class PostController{
         if(!$post){
             return 'No content found :/';
         }
-
-        $publisherData = new User();
-		if(!empty($publisher))
+		
+		/* Retrieve post author */
+		if(!empty($post['publisher']))
         {
-			$publisherData->setId($publisher);
-        	$publisher = $publisherData->findOne();
-			$name = $publisher['firstname'] . " " . $publisher['lastname'];
+			$userObj->setId($post['publisher']);
+        	$publisher = $userObj->findOne();
+			$post['author'] = $publisher['firstname'] . " " . $publisher['lastname'];
 		}else{
-			$name = 'Unknown';
+			$post['author'] = 'Unknown';
 		}
+
 		$commentObj->setIdPost($_GET['id']);
 		$comments = $commentObj->findAll();
+		$commentsTmp = [];
+		foreach($comments as $comment)
+		{
+			$userObj->setId($comment['idUser']);
+			$commentAuthor = $userObj->findOne();
+			$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
+			$commentsTmp[] = $comment;
+		}
 
+		$comments = $commentsTmp;
 		$errors = [];
-		if(isset($_POST['message']) && !empty($_POST['message']) /*&& isconnected*/){
+
+		if(isset($_POST['message']) && !empty($_POST['message']) && $user)
+		{
 			$commentObj->setMessage($_POST['message']);
-			$commentObj->setIdUser(Security::getUser());
+			$commentObj->setIdUser($user);
 			$commentPublished = $commentObj->save();
 			if(!$commentPublished){
 				$errors[] = 'Your comment could not be published';
@@ -238,7 +253,6 @@ class PostController{
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
-		$view->assign('name', $name);
 		$view->assign('canPostComment', !Security::getUser() == 0 );
 		$view->assign('comments', $comments);
 
