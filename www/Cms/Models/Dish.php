@@ -33,7 +33,11 @@ class Dish extends Database
 	}
 
 	public function setName($name){
-		$this->name = $name;
+		$name = htmlspecialchars($name);
+        //$name = preg_replace("/\s+/", "", $name);//removes spaces
+        $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
+
+        $this->name = $name;
 	}
 
 	public function getName(){

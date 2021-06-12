@@ -84,9 +84,7 @@ class DishController{
 			}
 		}
 
-		//$form = $dishObj->formAdd($dishCatArr);
 		$view = new View('/back/createDish', 'back');
-		//$view = new View('admin.create', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("categories", $dishCatArr);
 		$view->assign('pageTitle', "Add a dish");
@@ -95,10 +93,9 @@ class DishController{
 			$errors = [];
 			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
 			[ "image" => $image ] = $_FILES;
-
 			if( $name ){
 				//Verify the dishCategor submitted
-				if(isset($image)){
+				if(isset($image) && !empty($image) && $image['size'] != 0){
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
 					$imgName = $site['subDomain'].'_'. trim($name);
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);

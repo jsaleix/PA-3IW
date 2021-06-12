@@ -30,7 +30,10 @@ class Post extends Database
 	}
 
 	public function setTitle($title){
-		$this->title = htmlspecialchars($title);
+		$title = htmlspecialchars($title);
+		$title = preg_replace("/[^A-Za-z0-9]+/", "", $title);//keeps letters and digits
+
+		$this->title = $title;
 	}
 
 	public function getTitle(){

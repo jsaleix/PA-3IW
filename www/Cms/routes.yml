@@ -67,6 +67,10 @@
   controller: menuController
   action: editMenus
 
+/menus/create:
+  controller: menuController
+  action: createMenu
+
 /events:
   controller: eventController
   action: manageevents

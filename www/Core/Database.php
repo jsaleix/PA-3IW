@@ -168,6 +168,10 @@ class Database
 		}
 	}
 
+	public function getLastId(){
+		return $this->pdo->lastInsertId();
+	}
+
 }
 
 
