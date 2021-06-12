@@ -7,6 +7,8 @@ use App\Models\Action;
 
 use CMS\Models\Dish;
 use CMS\Models\Menu;
+use CMS\Models\DishCategory;
+use CMS\Models\Menu_dish_association;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
@@ -53,33 +55,99 @@ class MenuController{
 			header("Location: /");
 		}
 		
-		$form = $menuObj->formEdit((array)$menu);
+        $dishCatObj = new DishCategory();
+        $dishCatObj->setPrefix($site['prefix']);
+        $dishCatArr = $dishCatObj->findAll();
+        $selectDishCat = [];
 
-		$view = new View('admin.create', 'back');
+        if($dishCatArr){
+            foreach($dishCatArr as $item){
+                $selectDishCat[$item['id']] = $item['name'];
+            }
+        }
+
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj->setMenu($menu['id']);
+        $dishes = $dishMenuAssocObj->findAll();
+        $dishesArr = [];
+        if($dishes){
+            foreach($dishes as $item){
+                $dishObj = new Dish();
+                $dishObj->setPrefix($site['prefix']);
+                $dishObj->setId($item['dish']);
+                $dish = $dishObj->findOne();
+                if($dish){
+                    $dishesArr[] = array(
+                        'id' => $item['id'], 'image' =>  DOMAIN . '/' . $dish['image'], 'name' => $dish['name']
+                    );
+                }
+            }
+        }
+
+		//$form = $menuObj->formEdit((array)$menu);
+
+		$view = new View('back/menu', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit a dish catergory");
+		//$view->assign("form", $form);
+        $view->assign("name", $menu['name']);
+        $view->assign("description", $menu['description']);
+        $view->assign("notes", $menu['notes']);
+        $view->assign("categories", $selectDishCat);
+		$view->assign('pageTitle', "Edit your menu");
+        $view->assign('subDomain', $site['subDomain']);
+        $view->assign('dishes', $dishesArr);
 
-		if(!empty($_POST) ) {
-			$errors = [];
-			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
+		if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ) {
+            $action = $_POST['action'];
+            $errors = [];
+
+            switch($action)
+            {
+                case 'apply':
+                    [ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
+
+                    if( $name ){
+                        //Verify the dishCategor submitted
+                        $menuObj->setName($name);
+                        $menuObj->setDescription($description);
+                        $menuObj->setNotes($notes);
+                        $menuObj->setIsActive($isActive??1);
+        
+                        $adding = $menuObj->save();
+                        if($adding){
+                            $message ='Menu successfully updated!';
+                            $view->assign("message", $message);
+                        }else{
+                            $errors[] = "Cannot update this menu";
+                            $view->assign("errors", $errors);
+                        }
+                    }
+                    break;
+
+                case 'add_dish':
+                    var_dump($_POST);
+                    [ "menu" => $menu, "dish" => $dish] = $_POST;
+                    $dishMenuAssocObj->setPrefix($site['prefix']);
+                    $dishMenuAssocObj->setMenu($menu);
+                    $dishMenuAssocObj->setDish($dish);
+                    $dishMenuId = $dishMenuAssocObj->findOne();
+                    if($dishMenuId !== false){ return; }
+                    $adding = $dishMenuAssocObj->save();
+                    if($adding){
+                        $message ='Menu successfully updated!';
+                        $view->assign("message", $message);
+                    }else{
+                        $errors[] = "Cannot update this menu";
+                        $view->assign("errors", $errors);
+                    }
+                    break;
+
+                case 'remove_dish':
+                    break;
+
+            }
 			
-			if( $name ){
-				//Verify the dishCategor submitted
-				$menuObj->setName($name);
-				$menuObj->setDescription($description);
-				$menuObj->setNotes($notes);
-				$menuObj->setIsActive($isActive??1);
-
-				$adding = $menuObj->save();
-				if($adding){
-					$message ='Menu successfully updated!';
-					$view->assign("message", $message);
-				}else{
-					$errors[] = "Cannot update this menu";
-					$view->assign("errors", $errors);
-				}
-			}
 		}
     }
 

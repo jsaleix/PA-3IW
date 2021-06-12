@@ -31,6 +31,10 @@
   controller: pagecontroller
   action: editpage
 
+/searchdish:
+  controller: dishController
+  action: getDish
+
 /createdish:
   controller: dishController
   action: createdish

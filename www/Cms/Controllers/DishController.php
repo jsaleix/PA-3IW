@@ -213,6 +213,34 @@ class DishController{
 		}
 	}
 
+	public function getDishAction($site){
+		$category = $_GET['category']??'';
+		$dishObj = new Dish();
+		$dishObj->setPrefix($site['prefix']);
+		if(isset($category)){
+			$dishObj->setCategory($category);
+		}
+
+		$dishes = $dishObj->findAll();
+		$dishArr = [];
+		if(!$dishes){ 
+			$code = 404;
+		}else{
+			$code = 200;
+			foreach($dishes as $dish){
+				$dishArr[] = array(
+					'id' => $dish['id'],
+					'name' => $dish['name'],
+					'image' => DOMAIN . '/' . $dish['image'],
+					'price' => $dish['price']
+				);
+			}
+		}
+
+		http_response_code($code);
+        echo json_encode(array('code' => $code, 'dishes' => ($dishArr)));
+	}
+
 	/*
 	* Front vizualization
 	* returns html for pageRenderer
