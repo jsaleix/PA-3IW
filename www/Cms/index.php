@@ -26,11 +26,7 @@ function handleCMS($uri){
             return;
         }
         $uri = array_slice($uri, 2);
-        if(empty($uri[0])){
-            $uri[0] = '/';
-        }else{
-            $uri[0] = '/' . $uri[0];
-        }
+        $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
         $uri = implode($uri, '/');
         $router = new Router($uri, "Cms/routes.yml");
         $c = $router->getController();

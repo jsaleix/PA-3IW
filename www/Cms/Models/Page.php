@@ -55,6 +55,7 @@ class Page extends Database
      */
     public function setName($name)
     {
+        if($name === 'admin' || $name === 'ent') $name.='_';
         $name = htmlspecialchars($name);
         $name = preg_replace("/\s+/", "", $name);
         $this->name = htmlspecialchars($name);
