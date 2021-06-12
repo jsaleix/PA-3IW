@@ -79,7 +79,7 @@ class MenuController{
                 $dish = $dishObj->findOne();
                 if($dish){
                     $dishesArr[] = array(
-                        'id' => $item['id'], 'image' =>  DOMAIN . '/' . $dish['image'], 'name' => $dish['name']
+                        'id' => $dish['id'], 'image' =>  DOMAIN . '/' . $dish['image'], 'name' => $dish['name']
                     );
                 }
             }
@@ -107,7 +107,7 @@ class MenuController{
                 case 'apply':
                     [ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
 
-                    if( $name ){
+                    if( $name){
                         //Verify the dishCategor submitted
                         $menuObj->setName($name);
                         $menuObj->setDescription($description);
@@ -126,7 +126,6 @@ class MenuController{
                     break;
 
                 case 'add_dish':
-                    var_dump($_POST);
                     [ "menu" => $menu, "dish" => $dish] = $_POST;
                     $dishMenuAssocObj->setPrefix($site['prefix']);
                     $dishMenuAssocObj->setMenu($menu);
@@ -144,6 +143,16 @@ class MenuController{
                     break;
 
                 case 'remove_dish':
+                    [ "dish" => $dish] = $_POST;
+                    [ "id" => $menu] = $_GET;
+
+                    $dishMenuAssocObj->setPrefix($site['prefix']);
+                    $dishMenuAssocObj->setMenu($menu);
+                    $dishMenuAssocObj->setDish($dish);
+                    $dishMenuId = $dishMenuAssocObj->findOne();
+                    if($dishMenuId === false) return ;
+                    $dishMenuAssocObj->setId($dishMenuId['id']);
+                    $dishMenuAssocObj->delete();
                     break;
 
             }

@@ -63,7 +63,7 @@
                         </div>
                         <input class="longInput" name="notes" type="text" placeholder="Notes" value="<?=$notes??''?>"/>
                         <div class="validateRow">
-                            <button type="submit" class="cta-white" >Ajouter</button>
+                            <button type="submit" class="cta-white" >Add</button>
                         </div>
                     </div>
                 </div>
