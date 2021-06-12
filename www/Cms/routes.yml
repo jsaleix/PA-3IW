@@ -59,6 +59,10 @@
   controller: commentController
   action: managecomments
 
+/managemenus:
+  controller: menuController
+  action: manageMenus
+
 /events:
   controller: eventController
   action: manageevents

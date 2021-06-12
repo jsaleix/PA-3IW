@@ -71,7 +71,7 @@ class ManageSite{
                
             case 'test':
                 $site = new Site();
-                $site->setSubDomain('fadi');
+                $site->setSubDomain('menu');
                 $result = $site->findOne();
                 if( $result )
                     self::returnJson("subDomain", 460);
@@ -86,11 +86,11 @@ class ManageSite{
                     $site->setPrefix($prefix);
                     $result = $site->findOne();
                 } while( $result );
-                $site->setName('fadasse');
+                $site->setName('menu');
                 $site->setDescription('description');
                 $site->setImage('rien');
                 $site->setCreator($user);
-                $site->setSubDomain('fadasseee');
+                $site->setSubDomain('menu');
                 $site->setPrefix($prefix);
                 $site->setType('type default');
                 $creation = $site->initializeSite();

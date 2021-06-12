@@ -17,7 +17,7 @@ function handleCMS($uri){
 
     }else{
         if( !Security::isConnected())
-            header('Location: '.DOMAIN);
+            header('Location: '.DOMAIN . '/login');
         $siteObj = new Site();
         $siteObj->setSubDomain($uri[0]);
         $site = $siteObj->findOne();
