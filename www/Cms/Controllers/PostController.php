@@ -225,20 +225,23 @@ class PostController{
 
 		$commentObj->setIdPost($_GET['id']);
 		$comments = $commentObj->findAll();
-		$commentsTmp = [];
-		foreach($comments as $comment)
-		{
-			$userObj->setId($comment['idUser']);
-			$commentAuthor = $userObj->findOne();
-			$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
+		if( $comments ){
+			$commentsTmp = [];
+			foreach($comments as $comment)
+			{
+				$userObj->setId($comment['idUser']);
+				$commentAuthor = $userObj->findOne();
+				$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
 
-			$date = new \DateTime($comment['date']);
-			$comment['date'] =  $date->format('d/m/y H:i:s');
-			$commentsTmp[] = $comment;
-		}
-
-		$comments = $commentsTmp;
+				$date = new \DateTime($comment['date']);
+				$comment['date'] =  $date->format('d/m/y H:i:s');
+				$commentsTmp[] = $comment;
+			}
+			$comments = $commentsTmp;
+		} 
+		
 		$errors = [];
+
 
 		if(isset($_POST['message']) && !empty($_POST['message']) && $user)
 		{
