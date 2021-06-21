@@ -47,6 +47,15 @@ class MenuController{
 			header("Location: /");
 		}
 
+        $view = new View('back/menu', 'back');
+
+        if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ){
+            $action = $_POST['action'];
+            $errors = [];
+
+            $this->manageDishInMenu($action, $site, $view, $_POST, $_GET);
+		}
+
 		$menuObj = new Menu();
 		$menuObj->setPrefix($site['prefix']);
 		$menuObj->setId($_GET['id']??0);
@@ -86,8 +95,6 @@ class MenuController{
         }
 
 		//$form = $menuObj->formEdit((array)$menu);
-
-		$view = new View('back/menu', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		//$view->assign("form", $form);
         $view->assign("name", $menu['name']);
@@ -98,66 +105,78 @@ class MenuController{
         $view->assign('subDomain', $site['subDomain']);
         $view->assign('dishes', $dishesArr);
 
-		if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ) {
-            $action = $_POST['action'];
-            $errors = [];
 
-            switch($action)
-            {
-                case 'apply':
-                    [ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
 
-                    if( $name){
-                        //Verify the dishCategor submitted
-                        $menuObj->setName($name);
-                        $menuObj->setDescription($description);
-                        $menuObj->setNotes($notes);
-                        $menuObj->setIsActive($isActive??1);
+    }
+
+    public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
+        $menuObj = new Menu();
+		$menuObj->setPrefix($site['prefix']);
+		$menuObj->setId($_GET['id']??0);
+		$menu = $menuObj->findOne();
         
-                        $adding = $menuObj->save();
-                        if($adding){
-                            $message ='Menu successfully updated!';
-                            $view->assign("message", $message);
-                        }else{
-                            $errors[] = "Cannot update this menu";
-                            $view->assign("errors", $errors);
-                        }
-                    }
-                    break;
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj->setMenu($menu['id']);
 
-                case 'add_dish':
-                    [ "menu" => $menu, "dish" => $dish] = $_POST;
-                    $dishMenuAssocObj->setPrefix($site['prefix']);
-                    $dishMenuAssocObj->setMenu($menu);
-                    $dishMenuAssocObj->setDish($dish);
-                    $dishMenuId = $dishMenuAssocObj->findOne();
-                    if($dishMenuId !== false){ return; }
-                    $adding = $dishMenuAssocObj->save();
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj->setMenu($menu['id']);
+
+        switch($action)
+        {
+            case 'apply':
+                [ "name" => $name, "description" => $description, "notes" => $notes ] = $_postFields;
+
+                if( $name){
+                    //Verify the dishCategor submitted
+                    $menuObj->setName($name);
+                    $menuObj->setDescription($description);
+                    $menuObj->setNotes($notes);
+                    $menuObj->setIsActive($isActive??1);
+    
+                    $adding = $menuObj->save();
                     if($adding){
                         $message ='Menu successfully updated!';
-                        $view->assign("message", $message);
+                        $viewObj->assign("message", $message);
                     }else{
                         $errors[] = "Cannot update this menu";
-                        $view->assign("errors", $errors);
+                        $viewObj->assign("errors", $errors);
                     }
-                    break;
+                }
+                break;
 
-                case 'remove_dish':
-                    [ "dish" => $dish] = $_POST;
-                    [ "id" => $menu] = $_GET;
+            case 'add_dish':
+                [ "menu" => $menu, "dish" => $dish] = $_postFields;
+                $dishMenuAssocObj->setPrefix($site['prefix']);
+                $dishMenuAssocObj->setMenu($menu);
+                $dishMenuAssocObj->setDish($dish);
+                $dishMenuId = $dishMenuAssocObj->findOne();
+                if($dishMenuId !== false){ return; }
+                $adding = $dishMenuAssocObj->save();
+                if($adding){
+                    $message ='Dish successfully added!';
+                    $viewObj->assign("message", $message);
+                }else{
+                    $errors[] = "Cannot update this menu";
+                    $viewObj->assign("errors", $errors);
+                }
+                break;
 
-                    $dishMenuAssocObj->setPrefix($site['prefix']);
-                    $dishMenuAssocObj->setMenu($menu);
-                    $dishMenuAssocObj->setDish($dish);
-                    $dishMenuId = $dishMenuAssocObj->findOne();
-                    if($dishMenuId === false) return ;
-                    $dishMenuAssocObj->setId($dishMenuId['id']);
-                    $dishMenuAssocObj->delete();
-                    break;
+            case 'remove_dish':
+                [ "dish" => $dish] = $_postFields;
+                [ "id" => $menu] = $_getFields;
 
-            }
-			
-		}
+                $dishMenuAssocObj->setPrefix($site['prefix']);
+                $dishMenuAssocObj->setMenu($menu);
+                $dishMenuAssocObj->setDish($dish);
+                $dishMenuId = $dishMenuAssocObj->findOne();
+                if($dishMenuId === false) return ;
+                $dishMenuAssocObj->setId($dishMenuId['id']);
+                $dishMenuAssocObj->delete();
+                break;
+        }
+		
     }
 
     public function createMenuAction($site){
