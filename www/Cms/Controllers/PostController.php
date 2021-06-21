@@ -224,6 +224,20 @@ class PostController{
 		}
 
 		$commentObj->setIdPost($_GET['id']);
+
+		if(isset($_POST['message']) && !empty($_POST['message']) && $user)
+		{
+			$commentObj->setMessage($_POST['message']);
+			$commentObj->setIdUser($user);
+			$commentPublished = $commentObj->save();
+			if(!$commentPublished){
+				$errors[] = 'Your comment could not be published';
+			} else {
+				$commentObj->setMessage(null);
+				$commentObj->setIdUser(null);
+			}
+		}
+
 		$comments = $commentObj->findAll();
 		if( $comments ){
 			$commentsTmp = [];
@@ -242,16 +256,6 @@ class PostController{
 		
 		$errors = [];
 
-
-		if(isset($_POST['message']) && !empty($_POST['message']) && $user)
-		{
-			$commentObj->setMessage($_POST['message']);
-			$commentObj->setIdUser($user);
-			$commentPublished = $commentObj->save();
-			if(!$commentPublished){
-				$errors[] = 'Your comment could not be published';
-			}
-		}
 
 		$view = new View('front/post', 'front');
 		$view->assign('pageTitle', $post['title']);
