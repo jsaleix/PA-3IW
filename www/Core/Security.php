@@ -26,7 +26,7 @@ class Security
 	}
 
 	public function getUser(){
-		if ( session_status() === PHP_SESSION_NONE )
+		if ( session_status() === PHP_SESSION_NONE || !isset($_SESSION['token']) )
 			return 0;
 		$user = new User();
 		$user->setToken($_SESSION['token']);

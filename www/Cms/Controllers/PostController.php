@@ -224,9 +224,6 @@ class PostController{
 		}
 
 		$commentObj->setIdPost($_GET['id']);
-		$comments = $commentObj->findAll();
-		
-		$errors = [];
 
 		if(isset($_POST['message']) && !empty($_POST['message']) && $user)
 		{
@@ -235,22 +232,30 @@ class PostController{
 			$commentPublished = $commentObj->save();
 			if(!$commentPublished){
 				$errors[] = 'Your comment could not be published';
+			} else {
+				$commentObj->setMessage(null);
+				$commentObj->setIdUser(null);
 			}
 		}
 
-		$commentsTmp = [];
-		foreach($comments as $comment)
-		{
-			$userObj->setId($comment['idUser']);
-			$commentAuthor = $userObj->findOne();
-			$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
+		$comments = $commentObj->findAll();
+		if( $comments ){
+			$commentsTmp = [];
+			foreach($comments as $comment)
+			{
+				$userObj->setId($comment['idUser']);
+				$commentAuthor = $userObj->findOne();
+				$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
 
-			$date = new \DateTime($comment['date']);
-			$comment['date'] =  $date->format('d/m/y H:i:s');
-			$commentsTmp[] = $comment;
-		}
+				$date = new \DateTime($comment['date']);
+				$comment['date'] =  $date->format('d/m/y H:i:s');
+				$commentsTmp[] = $comment;
+			}
+			$comments = $commentsTmp;
+		} 
+		
+		$errors = [];
 
-		$comments = $commentsTmp;
 
 		$view = new View('front/post', 'front');
 		$view->assign('pageTitle', $post['title']);

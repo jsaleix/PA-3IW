@@ -107,7 +107,7 @@ class DishController{
 				}else{
 					$image = null;
 				}
-
+				echo $dishCat;
 				$dishCat = ($dishCat == 0) ? null : $dishCat ; 		
 				$dishObj->setName($name);
 				$dishObj->setImage($image);
