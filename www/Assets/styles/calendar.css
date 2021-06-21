@@ -7422,7 +7422,8 @@ h1, h2, h3, h4, h5,
   font-size: 28px; }
 
 .form-container {
-  margin-top: 25%; }
+  margin-bottom: 25%;
+}
 
 .form-label {
   text-transform: uppercase;

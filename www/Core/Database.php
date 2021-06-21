@@ -97,6 +97,50 @@ class Database
 		}
 	}
 
+	public function delete(){
+		try{
+			$columns = array_diff_key (
+							get_object_vars($this),
+							get_class_vars(get_class())
+						);
+
+			unset($columns["id"]);
+			foreach($columns as $key => $col){
+				if( empty($col))
+					unset($columns[$key]);
+
+				if($col == 'IS NULL'){
+						$columns[$key] = NULL;
+					}
+			}
+			$setCmd = [];
+			foreach( array_keys($columns) as $field )
+			{
+				if(!is_null($this->$field) && !empty($this->$field))
+				{
+					array_push($setCmd, $field . " =:" . $field . "");
+				}
+			}
+			$req = "DELETE FROM " . $this->table . ' WHERE ';
+			if(count($setCmd) > 0){
+				$req .= implode(' AND ', $setCmd) ;
+			}
+
+			if($this->getId()){
+				if(count($setCmd) > 0) $req .= ' AND ';
+				$req .= ' id = ' . $this->getId();
+			}
+
+			echo $req;
+			$query 	= $this->pdo->prepare($req);
+			$query->execute($columns);
+			return true;
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			return false;
+		}
+	}
+
 	public function findAll(){
 		$columns = array_diff_key (
 			get_object_vars($this),

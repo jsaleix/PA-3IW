@@ -26,6 +26,7 @@
             <div class="col-4 col-sm-12 col-md-12 col-xl-4">
                 <div class="col-inner">
                     <div class="darkSection">
+                    <form methode="POST" action="">
                         <input 
                             name="name" 
                             type="text" 
@@ -38,11 +39,20 @@
                             placeholder="Description" 
                             value="<?=$description??''?>"/>
                         <input 
-                            name="description"  
+                            name="notes"  
                             class="longInput" 
                             type="text" 
                             placeholder="Notes" 
                             value="<?=$notes??''?>"/>
+                        <input 
+                            name="action"  
+                            class="longInput" 
+                            type="hidden" 
+                            value="apply"/>
+                        <div class="validateRow">
+                            <button type="submit" class="cta-white" >Apply</button>
+                        </div>
+                        </form>
                     </div>
                 </div>
 
@@ -50,6 +60,29 @@
             </div>
 
             <div class="col-8 col-sm-12 col-md-12 col-xl-8">
+
+                <?php if(isset($dishes) && !empty($dishes)): ?>
+                    <div class="col-inner">
+                        <div class="darkSection">
+                            <div class="dish-list">
+                                <?php foreach($dishes as $dish): ?>
+                                    <div class="dish-data no-pointer">
+                                    <form action="" method="POST">
+                                        <img src="<?=$dish['image']?>"/>
+                                        <p><?=$dish['name']?></p>
+                                        <input type="hidden" name="action" value="remove_dish"/>
+                                        <input type="hidden" name="dish" value="<?=$dish['id']?>"/>
+                                        <button class="remove-btn" type="submit" >
+                                            <img src="/Assets/images/icons/remove.png"  alt="delete"/>
+                                        </button>
+                                    </form>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="col-inner">
                     <div class="darkSection">
                         <h2>Add product in your menu </h2>
@@ -63,21 +96,6 @@
                         <div id="add-section" class="dish-list"></div>
                     </div>
                 </div>
-
-                <?php if(isset($dishes) && !empty($dishes)): ?>
-                    <div class="col-inner">
-                        <div class="darkSection">
-                            <div class="dish-list">
-                                <?php foreach($dishes as $dish): ?>
-                                    <div class="dish-data">
-                                        <img src="<?=$dish['image']?>"/>
-                                        <p><?=$dish['name']?></p>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
 
             </div>
 
@@ -161,6 +179,10 @@
 
         form.submit();
     }
+
+    function removeDish(id){
+
+    }
 </script>
 
 <style>
@@ -179,6 +201,7 @@
         width: 25%;
         padding: 1%;
         border-radius: 5px;
+        position: relative;
     }
 
     .dish-data:hover{
@@ -188,5 +211,29 @@
 
     .dish-data img{
         width: 100%;
+    }
+
+    .remove-btn{
+        width: 3em ;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: 0.5s;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .remove-btn img{
+        width: 100%;
+    }
+
+    .remove-btn:hover{
+        transform: scale(0.8);
+    }
+
+    .no-pointer{
+        cursor: default !important;
     }
 </style>

@@ -66,12 +66,14 @@
                 <h2 class="dialog-header"> Add New Event </h2>
                 <form class="form" id="form">
                     <div class="form-container" align="center">
-                    <label class="form-label" id="valueFromMyButton" for="name">Event name</label>
-                    <input class="input" type="text" id="name" maxlength="36">
-                    <label class="form-label" id="valueFromMyButton" for="count">Number of people to invite</label>
-                    <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">
-                    <input type="button" value="Cancel" class="button" id="cancel-button">
-                    <input type="button" value="OK" class="button button-white" id="ok-button">
+                        <label class="form-label" id="valueFromMyButton" for="count">Time</label>
+                        <input class="input" type="time" id="time">
+                        <label class="form-label" id="valueFromMyButton" for="name">Informations</label>
+                        <input class="input" type="text" id="name" maxlength="36">
+                        <label class="form-label" id="valueFromMyButton" for="count">Number of people</label>
+                        <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">
+                        <input type="button" value="Cancel" class="button" id="cancel-button">
+                        <input type="button" value="OK" class="button button-white" id="ok-button">
                     </div>
                 </form>
             </div>
