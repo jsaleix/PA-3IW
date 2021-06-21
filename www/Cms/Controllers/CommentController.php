@@ -44,7 +44,7 @@ class CommentController{
                     $item['idUser'] = 'Unknown';
                 }
 
-				$formalized = "'" . $item['id'] . "','" . $item['message'] . "','" . $item['idPost'] .  "','" . $item['idUser'] . "','" . $item['date'] . "'";
+				$formalized = "\"" . $item['id'] . "\",\"" . $item['message'] . "\",\"" . $item['idPost'] .  "\",\"" . $item['idUser'] . "\",\"" . $item['date'] . "\"";
 				$datas[] = $formalized;
 			}
 		}
