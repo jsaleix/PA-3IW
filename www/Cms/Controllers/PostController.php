@@ -102,7 +102,6 @@ class PostController{
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
 			if($title && $postContent){
-				$allowComment = boolVal($allowComment) ? true : false;
 				$contentObj->setTitle($title);
 				$contentObj->setContent($postContent);
 				$contentObj->setAllowComment($allowComment);

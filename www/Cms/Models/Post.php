@@ -74,7 +74,7 @@ class Post extends Database
 	}
 
 	public function setAllowComment($allowComment){
-		$this->allowComment = $allowComment;
+		$this->allowComment = $allowComment == 0 ? 'IS FALSE' : 1;
 	}
 
 	public function getAllowComment(){
