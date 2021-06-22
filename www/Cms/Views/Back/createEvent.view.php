@@ -56,14 +56,14 @@
                     </tbody> 
                     </table>
                 </div> 
-                <button class="button" id="add-button">Add Event</button>
+                <button class="button" id="add-button">Add booking date</button>
                 </div>
             </div>
 
             <div class="events-container"></div>
 
             <div class="dialog" id="dialog">
-                <h2 class="dialog-header"> Add New Event </h2>
+                <h2 class="dialog-header"> Add a new date </h2>
                 <form class="form" id="form">
                     <div class="form-container" align="center">
                         <label class="form-label" id="valueFromMyButton" for="count">Time</label>
