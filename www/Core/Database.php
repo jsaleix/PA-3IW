@@ -88,6 +88,8 @@ class Database
 				}
 				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
 				$query 	= $this->pdo->prepare($req);
+				echo $req;
+				echo '<br>';
 			}
 			$query->execute($columns);
 			return true;

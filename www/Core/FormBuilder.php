@@ -25,11 +25,15 @@ class FormBuilder
 
 		foreach ($form["inputs"] as $name => $configInput) {
 
-			if($configInput["type"] == "select"){
-				$html .= self::renderSelect($name, $configInput);
-			}
-			else{
-				if($configInput["type"] == "checkbox"){
+			switch($configInput["type"]){
+				case "radio":
+					$html .= self::renderRadio($name, $configInput);
+					break;
+				case "select":
+					$html .= self::renderSelect($name, $configInput);
+					break;
+
+				case "checkbox":
 					if($form["config"]["class"] === "form-auth"){
 						$html .= '<legend style="width: 80%; margin-top:0;"><a href="#" id="forgotpwd">Mot de passe oublié ?</a></legend>';
 						$html .= '<div class="checkbox-container" style="width: 80%; margin-top: 5;">'.
@@ -38,10 +42,27 @@ class FormBuilder
 					}else{
 						self::renderCheckBox($name, $configInput);
 					}
-				}else
-					$html .= self::renderInput($name, $configInput);
-			}
+					break;
 
+				default:
+					$html .= self::renderInput($name, $configInput);
+
+
+			}
+			/*if($configInput["type"] == "select"){
+				$html .= self::renderSelect($name, $configInput);
+			}else if($configInput["type"] == "checkbox"){
+				if($form["config"]["class"] === "form-auth"){
+					$html .= '<legend style="width: 80%; margin-top:0;"><a href="#" id="forgotpwd">Mot de passe oublié ?</a></legend>';
+					$html .= '<div class="checkbox-container" style="width: 80%; margin-top: 5;">'.
+						self::renderCheckBox($name, $configInput)
+					.'</div>';
+				}else{
+					self::renderCheckBox($name, $configInput);
+				}
+			}else{
+				$html .= self::renderInput($name, $configInput);
+			}*/
 			
 		}
 
@@ -90,6 +111,20 @@ class FormBuilder
 			id="'.($configInput["id"]??"").'" 
 			>
     	<label class="'.($configInput["labelClass"]??"").'" for="'.($configInput["id"]??"").'">'.($configInput["label"]??"").'</label>';
+	}
+
+	public static function renderRadio($name, $configInput){
+		$html = '';
+		foreach($configInput['options'] as $key => $value)
+		{
+			if(isset($configInput['value']) && !is_null($configInput['value']) && ($key === $configInput['value'])){
+				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '" checked="checked"/>';
+			}else{
+				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '"/>';
+			}
+			$html .= '<label class="'.($configInput["labelClass"]??"").'" for="'.($configInput["id"]??"").'">'.($value).'</label>';
+		}
+		return $html;
 	}
 
 

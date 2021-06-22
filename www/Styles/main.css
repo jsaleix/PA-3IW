@@ -216,7 +216,7 @@
   }
 }
 
-* {
+*:not(input[type="radio"]) {
   box-sizing: border-box;
   -webkit-appearance: none;
 }
