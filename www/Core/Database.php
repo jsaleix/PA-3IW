@@ -77,6 +77,10 @@ class Database
 					if($col == 'IS NULL'){
 							$columns[$key] = NULL;
 						}
+					
+					if($col == 'IS FALSE'){
+						$columns[$key] = 0;
+					}
 				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
@@ -88,8 +92,6 @@ class Database
 				}
 				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
 				$query 	= $this->pdo->prepare($req);
-				echo $req;
-				echo '<br>';
 			}
 			$query->execute($columns);
 			return true;
