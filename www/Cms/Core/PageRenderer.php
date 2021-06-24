@@ -32,7 +32,10 @@ class PageRenderer
 	}
 
     private function setParams($url){
+        $pageObj = new Page();
         $siteObj = new Site();
+        $requestedPage = $url[1];
+
         $siteObj->setSubDomain($this->domain);
         $site = $siteObj->findOne();
         if(empty($site['id']) || !$site){
@@ -50,16 +53,19 @@ class PageRenderer
         $siteObj->setType($site['type']);
         $this->site = $siteObj;
 
-        if(empty($url[1])){ 
-            //To add: Verifying what is the default page of the site
-            $url[1] = 'home';
+        if(empty($requestedPage)){ 
+            //Verifying what is the default page of the site
+            $pageObj->setPrefix($site['prefix']);
+            $page = $pageObj->findAll();
+            $requestedPage = $page[0]['name'];
+            header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/' . $requestedPage);
+            return;
         }
-        $pageName = $url[1]??'home';
 
-        if($pageName != 'ent'){
+        if($requestedPage != 'ent')
+        {
             $this->type = 'dynamic';
-            $pageObj = new Page();
-            $pageObj->setName($pageName);
+            $pageObj->setName($requestedPage);
             $pageObj->setPrefix($this->site->getPrefix());
             $pageData = $pageObj->findOne();
             if(empty($pageData['id'])){
@@ -96,11 +102,6 @@ class PageRenderer
             $this->renderEntity();
         }
 
-        /*$view = new View('cms', 'front');
-        $view->assign("pageTitle", ($this->site->getName())??'Page');
-        $view->assign("navbar", NavbarBuilder::renderNavbar($this->site->returnData(), 'front'));
-        $view->assign("style", StyleBuilder::renderStyle($this->site->returnData()));
-        $view->assign("content", $content);*/
     }
 
     public function renderDynamic(){

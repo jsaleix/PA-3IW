@@ -192,16 +192,15 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
-
+		/*echo "SELECT * FROM ".$this->table." WHERE " .  implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		echo var_dump(array_values($columns));
+		echo '<br><br>';*/
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
-		/*echo "SELECT * FROM ".$this->table." WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? <br>";
-		echo implode('-', $columns) . '<br><br>';
-		var_dump($result);
-		echo '<br><br>';*/
+
 		return !isset($result[0]) ? false : $result;
 	}
 
