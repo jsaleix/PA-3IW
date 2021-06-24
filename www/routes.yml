@@ -3,12 +3,6 @@
   controller: Main
   action: default
 
-/admin:
-  controller: Security
-  action: default
-  auth: true
-  role: admin
-
 /register:
   controller: Security
   action: register
@@ -29,4 +23,14 @@
   controller: Security
   action: mailconfirm
 
+/admin:
+  controller: Admin
+  action: default
+  auth: true
+  role: admin
 
+/admin/sites:
+  controller: Admin
+  action: displaySites
+  auth: true
+  role: admin
