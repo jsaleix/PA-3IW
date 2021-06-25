@@ -28,8 +28,6 @@ class Admin{
         $userObj = new User();
         $siteObj = new Site();
 		$sites = $siteObj->findAll();
-		$siteList = [];
-		$content = "";
 		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
 		$datas = [];
 
@@ -51,6 +49,30 @@ class Admin{
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the sites");
+	}
+
+	public function displayUsersAction(){
+        $userObj = new User();
+		$users = $userObj->findAll();
+		$fields = [ 'avatar', 'id', 'name', 'mail', 'join date', 'role', 'see' ];
+		$datas = [];
+
+		if($users){
+			foreach($users as $item){
+				$name = $item['firstname'] . ' ' . $item['firstname'];
+				$img = '<img src=' . DOMAIN . '/' . $item['avatar'] . ' width=100 height=80/>';
+				$editBtn = '<a href="user?id=' . $item['id'] . '">Go</a>';
+
+				$formalized = "'" . $img . "','" . $item['id'] . "','" . $name . "','" .$item['email'] .  "','" . $item['joinDate'] . "','" . $item['role'] . "','". $editBtn . "'";
+				$datas[] = $formalized;
+			}
+		}
+		//$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
+		
+		$view = new View('back/list', 'back');
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
+		$view->assign('pageTitle', "Manage the users");
 	}
 
 }

@@ -34,3 +34,9 @@
   action: displaySites
   auth: true
   role: admin
+
+/admin/users:
+  controller: Admin
+  action: displayUsers
+  auth: true
+  role: admin
