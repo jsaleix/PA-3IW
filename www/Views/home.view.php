@@ -1,8 +1,12 @@
+<h1>Easy Meal</h1>
+<hr>
 <section>
-	<h2>Welcome <?= $pseudo;?></h2>
-	<small>Vous avez <?= $age;?> ans et votre email c'est <?= $email ?></small>
+	<?php if(isset($connected) && $connected):?>
+		<h2>Welcome <?= $pseudo;?></h2>
+		<a href="logout">Se deconnecter</a>
+	<?php else: ?>
+		<a href="login">Se connecter</a>
+	<?php endif;?>
 </section>
 
-<?php for ($i=0; $i < 10; $i++):?>
-	<b>test</b>
-<?php endfor;?>
+

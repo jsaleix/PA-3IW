@@ -265,6 +265,59 @@ class User extends Database
         ];
     }
 
+    public function formEdit($content){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"",
+                "class"=>"",
+                "submit"=>"Appliquer",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "firstname"=>[ 
+                    "type"=>"text",
+                    "label"=>"Votre prénom",
+                    "minLength"=>2,
+                    "maxLength"=>55,
+                    "id"=>"firstname",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Exemple: Yves",
+                    "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
+                    "required"=>true,
+                    "value"=> $content['firstname']
+                ],
+                "lastname"=>[ 
+                    "type"=>"text",
+                    "label"=>"Votre nom",
+                    "minLength"=>2,
+                    "maxLength"=>255,
+                    "id"=>"lastname",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Exemple: SKRZYPCZYK",
+                    "error"=>"Votre nom doit faire entre 2 et 255 caractères",
+                    "required"=>true,
+                    "value"=> $content['lastname']
+                ],
+                "email"=>[ 
+                    "type"=>"email",
+                    "label"=>"Votre email",
+                    "minLength"=>8,
+                    "maxLength"=>320,
+                    "id"=>"email",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "error"=>"Votre email doit faire entre 8 et 320 caractères",
+                    "required"=>true,
+                    "value"=> $content['email']
+                ],
+            ]
+
+        ];
+    }
+
 
 }
 

@@ -28,19 +28,7 @@ class SiteController{
 	public function editSiteAction($site){
 		$siteObj = new Site();
         $siteObj->setId($site['id']);
-        $siteObj->setName($site['name']);
-        $siteObj->setDescription($site['description']);
-        $siteObj->setImage($site['image']);
-        $siteObj->setCreator($site['creator']);
-        $siteObj->setSubDomain($site['subDomain']);
-        $siteObj->setPrefix($site['prefix']);
-        $siteObj->setType($site['type']);
-
-		$form = $siteObj->formEdit($site);
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavbar((array)$site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit the site informations");
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
@@ -74,6 +62,13 @@ class SiteController{
 				}
 			}
 		}
+
+		$form = $siteObj->formEdit($site);
+		$view->assign("navbar", navbarBuilder::renderNavbar((array)$site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit the site informations");
+
+		
 
 	}
 

@@ -7,6 +7,7 @@ use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
 use App\Core\Token;
+use App\Core\FileUploader;
 
 use App\Models\User;
 use App\Models\MailToken;
@@ -35,11 +36,11 @@ class Admin{
 			foreach($sites as $item){
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
-				
-				$editBtn = '<a href="site?id=' . $item['id'] . '">Go</a>';
+				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
+				$editBtn = '<a href="site?id=' . $item['id'] . '">Edit</a>';
                 $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" .$creatorBtn .  "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $item['name'] . "','" . $editBtn . "'";
+				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" .$creatorBtn .  "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $formalized;
 			}
 		}
@@ -49,6 +50,66 @@ class Admin{
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the sites");
+	}
+
+	public function displaySiteAction(){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			header("Location:" . DOMAIN . '/admin/sites');
+		}
+		$siteObj = new Site();
+		$siteObj->setId($_GET['id']);
+		$site = $siteObj->findOne();
+		if(!$siteObj){
+			header("Location:" . DOMAIN . '/admin/sites');
+		}
+		$form = $siteObj->formEdit($site);
+
+		$view = new View('back/form', 'back');
+		$view->assign('pageTitle', "Manage a site");
+		$view->assign("form", $form);
+	}
+
+	public function displayUserAction(){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			header("Location:" . DOMAIN . '/admin/users');
+		}
+		$userObj = new User();
+		$userObj->setId($_GET['id']);
+		$user = $userObj->findOne();
+		if(!$userObj){
+			header("Location:" . DOMAIN . '/admin/sites');
+		}
+		$siteObj = new Site();
+		$view = new View('back/form', 'back');
+
+		##########
+		/*update process here */
+		##########
+
+		$siteObj->setCreator($_GET['id']);
+		$sites = $siteObj->findAll();
+
+
+		if($sites){
+			$fields = [ 'img', 'version', 'name', 'creation date', 'visit','edit' ];
+			$datas = [];
+			foreach($sites as $item){
+				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
+				$editBtn = '<a href="site?id=' . $item['id'] . '">Edit</a>';
+				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
+				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/y H:i:s');
+				$formalized = "'" . $img . "','" . 0.0 . "','" . $item['name'] . "','" . $item['creationDate'] . "','" . $visitBtn . "','" . $editBtn . "'";
+				$datas[] = $formalized;
+			}
+			$view->assign("fields", $fields);
+			$view->assign("datas", $datas);
+			$view->assign("list", true);
+		}
+
+		$form = $userObj->formEdit($user);
+		$view->assign('pageTitle', "Manage a site");
+		$view->assign("form", $form);
+
 	}
 
 	public function displayUsersAction(){

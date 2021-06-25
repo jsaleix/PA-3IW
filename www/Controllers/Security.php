@@ -94,7 +94,7 @@ class Security{
 			return;
 		}
 		Secu::disconnect();
-		header('Location: '.DOMAIN.'/login');
+		header('Location: '.DOMAIN);
 	}
 
 	public function mailconfirmAction(){

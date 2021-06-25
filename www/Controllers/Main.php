@@ -2,19 +2,26 @@
 
 namespace App\Controller;
 
+use App\Core\Security;
 use App\Core\View;
+
+use App\Models\User;
 
 class Main{
 
 
 	public function defaultAction(){
 		
-		$pseudo = "Super Prof"; //Plus tard on le récupèrera depuis la bdd
-
+        $isConnected = Security::isConnected();
+		if($isConnected){
+			$userObj = new User();
+			$userObj->setId(Security::getUser());
+			$username = $userObj->findOne();
+			$username = $username['firstname'] . ' ' . $username['lastname'];
+		}
 		$view = new View("home");
-		$view->assign("pseudo", $pseudo);
-		$view->assign("age", 18);
-		$view->assign("email", "y.skrzypczyk@gmail.com");
+		$view->assign("connected", $isConnected);
+        $view->assign("pseudo", $isConnected ? $username : '');
 
 
 	}

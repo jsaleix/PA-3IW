@@ -35,8 +35,20 @@
   auth: true
   role: admin
 
+/admin/site:
+  controller: Admin
+  action: displaySite
+  auth: true
+  role: admin
+
 /admin/users:
   controller: Admin
   action: displayUsers
+  auth: true
+  role: admin
+
+/admin/user:
+  controller: Admin
+  action: displayUser
   auth: true
   role: admin
