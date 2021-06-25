@@ -59,7 +59,7 @@ class Admin{
 		$siteObj = new Site();
 		$siteObj->setId($_GET['id']);
 		$site = $siteObj->findOne();
-		if(!$siteObj){
+		if(!$site){
 			header("Location:" . DOMAIN . '/admin/sites');
 		}
 		$form = $siteObj->formEdit($site);
@@ -76,8 +76,8 @@ class Admin{
 		$userObj = new User();
 		$userObj->setId($_GET['id']);
 		$user = $userObj->findOne();
-		if(!$userObj){
-			header("Location:" . DOMAIN . '/admin/sites');
+		if(!$user){
+			header("Location:" . DOMAIN . '/admin/users');
 		}
 		$siteObj = new Site();
 		$view = new View('back/form', 'back');
