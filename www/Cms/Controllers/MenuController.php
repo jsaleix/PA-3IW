@@ -219,7 +219,57 @@ class MenuController{
     }
 
 
-		
+	//CMS FRONT
+    /*
+	* Front vizualization
+	* returns html for pageRenderer
+	*/
+    public function renderMenus($site, $filter = null){
+		$menuObj = new Menu();
+        $menuObj->setPrefix($site->getPrefix());
+        $menus = $menuObj->findAll();
+        $html = "";
+        if(!$menus || count($menus) === 0){
+            $html .= 'No menu found :/';
+            return;
+        }
+        foreach($menus as $menu)
+        {
+            $html .= '<h2><a href="ent/menu?id=' . $menu['name'] . '"/>##########MENU ' . $menu['name'] . '</a></h2>' ;
+            $dishMenuAssocObj = new Menu_dish_association();
+            $dishMenuAssocObj->setPrefix($site->getPrefix());
+            $dishMenuAssocObj->setMenu($menu['id']);
+            $dishes = $dishMenuAssocObj->findAll();
+            if($dishes){
+                foreach($dishes as $dish)
+                {
+                    $html .= $this->renderDishItem($dish['dish'], $site->getPrefix());
+                }
+            }
+            $html .= '<hr>';
+
+        }
+
+		$view = new View('cms', 'front');
+		$view->assign('pageTitle', 'Posts');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		$view->assign('content', $html);
+	}
+
+    public function renderDishItem($dishId, $sitePrefix){
+        $dishObj = new Dish();
+        $dishObj->setPrefix($sitePrefix);
+        $dishObj->setId($dishId);
+        $dish = $dishObj->findOne();
+        if(!$dish){ return; }
+
+		$html = '<h2><a href="ent/dish?id='. $dish['id'] . '">' . $dish['name'] . '</a></h2>';
+        $html .= '<img src=' . DOMAIN . '/' . $dish['image'] . ' width=100 height=80/>';
+		$html .= '<br>';
+
+        return $html;
+	}
 
 
 }
