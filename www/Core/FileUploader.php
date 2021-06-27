@@ -21,6 +21,10 @@ class FileUploader
 		$imageFileType = strtolower(pathinfo(($target_dir . basename($file["name"])),PATHINFO_EXTENSION));
 		$target_file = $target_dir . $name . '.' . $imageFileType;
 
+		if(!$file['tmp_name']){
+			return false;
+		}
+
 		$check = getimagesize($file['tmp_name']);
 		if(!$check) {
 			return false;
