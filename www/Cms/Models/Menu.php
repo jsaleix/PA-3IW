@@ -3,17 +3,13 @@
 namespace CMS\Models;
 use App\Core\Database;
 
-class Dish extends Database
+class Menu extends Database
 {
 
 	protected $id;
 	protected $name;
-	protected $image;
 	protected $description;
-	protected $price;
-	protected $category;
 	protected $notes;
-	protected $allergens;
 	protected $isActive;
 
 	public function __construct (){
@@ -33,8 +29,7 @@ class Dish extends Database
 	}
 
 	public function setName($name){
-		$name = htmlspecialchars($name);
-        //$name = preg_replace("/\s+/", "", $name);//removes spaces
+        $name = htmlspecialchars($name);
         $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
 
         $this->name = $name;
@@ -42,14 +37,6 @@ class Dish extends Database
 
 	public function getName(){
 		return $this->name;
-	}
-
-    public function setImage($image){
-		$this->image = $image;
-	}
-
-	public function getImage(){
-		return $this->image;
 	}
 
 	public function setDescription($description){
@@ -60,37 +47,12 @@ class Dish extends Database
 		return $this->description;
 	}
 
-	public function setPrice($price){
-		$this->price = $price;
-	}
-
-	public function getPrice(){
-		return $this->price;
-	}
-
-	public function setCategory($category){
-        if($category === '0'){ $category = 'IS NULL'; }
-		$this->category = $category;
-	}
-
-	public function getCategory(){
-		return $this->category;
-	}
-
     public function setNotes($notes){
 		$this->notes = $notes;
 	}
 
 	public function getNotes(){
 		return $this->notes;
-	}
-
-    public function setAllergens($allergens){
-		$this->allergens = $allergens;
-	}
-
-	public function getAllergens(){
-		return $this->allergens;
 	}
 
     public function setIsActive($isActive){
@@ -103,22 +65,7 @@ class Dish extends Database
 		return $this->isActive;
 	}
 
-	public function render(){
-		/*switch($this->type){
-			case 'article':
-				extract(get_object_vars($this));
-				echo '<h1>' . $title . '</h1>';
-				echo '<p>' . $publisher . '</p>';
-				echo '<p>' . $content . '</p>';
-				echo '<hr>';
-				break;
-
-			default: 
-			return;
-		}*/
-	}
-
-	public function formAdd($dishCategoryArr){
+	public function formAdd(){
         return [
 
             "config"=>[
@@ -127,17 +74,9 @@ class Dish extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Add",
-                "submitClass"=>"cta-blue width-80 last-sm-elem",
-				"enctype"=>"multipart/form-data"
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
-				"image"=>[ 
-                    "type"=>"file",
-                    "label"=>"image",
-                    "id"=>"image",
-                    "class"=>"input-file",
-                    "required"=>true,
-                ],
                 "name"=>[ 
                     "type"=>"text",
                     "label"=>"Name",
@@ -156,45 +95,18 @@ class Dish extends Database
 					"class"=>"input-description",
                     "placeholder"=>"Description here",
                 ],
-                "price"=>[ 
-					"type"=>"text",
-					"label"=>"price",
-					"id"=>"price",
-					"class"=>"input-price",
-                    "required"=>true,
-                    "placeholder"=>"Price",
-                ],
-                "category"=>[ 
-					"type"=>"select",
-					"label"=>"Category associated",
-					"id"=>"category",
-					"class"=>"input-category-select",
-					"options" => $dishCategoryArr,
-                ],
                 "notes"=>[ 
 					"type"=>"text",
 					"label"=>"notes",
 					"id"=>"notes",
 					"class"=>"input-notes",
                     "placeholder"=>"Notes",
-                ],
-                "allergens"=>[ 
-					"type"=>"text",
-					"label"=>"allergens",
-					"id"=>"allergens",
-					"class"=>"input-allergens",
-                    "placeholder"=>"Allergens",
-                	]
-				]
-				/*, 
-				"render" => [
-					"block1" => [ "price", "category" ]
-				]*/
-
+                ]
+            ]
         ];
     }
 
-	public function formEdit($content, $categoryArr){
+	public function formEdit($content){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -202,18 +114,9 @@ class Dish extends Database
                 "id"=>"form_content",
                 "class"=>"form-content",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem",
-				"enctype"=>"multipart/form-data"
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
-				"image"=>[ 
-                    "type"=>"file",
-                    "label"=>"image",
-                    "id"=>"image",
-                    "class"=>"input-file",
-                    "required"=>false,
-					"value"=> $content['image']
-                ],
                 "name"=>[ 
                     "type"=>"text",
                     "label"=>"Name",
@@ -226,47 +129,20 @@ class Dish extends Database
                     "required"=>true,
 					"value"=> $content['name']
                 ],
-                
 				"description"=>[ 
 					"type"=>"text",
 					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input-description",
-					"options" => $categoryArr,
 					"value"=> $content['description']
-                ],
-                "price"=>[ 
-					"type"=>"text",
-					"label"=>"price",
-					"id"=>"price",
-					"class"=>"input-price",
-					"options" => $categoryArr,
-					"value"=> $content['price']
-                ],
-                "category"=>[ 
-					"type"=>"select",
-					"label"=>"Category associated",
-					"id"=>"category",
-					"class"=>"input-category-select",
-					"options" => $categoryArr,
-					"value"=> $content['category']
                 ],
                 "notes"=>[ 
 					"type"=>"text",
 					"label"=>"notes",
 					"id"=>"notes",
 					"class"=>"input-notes",
-					"options" => $categoryArr,
 					"value"=> $content['notes']
                 ],
-                "allergens"=>[ 
-					"type"=>"text",
-					"label"=>"allergens",
-					"id"=>"allergens",
-					"class"=>"input-allergens",
-					"options" => $categoryArr,
-					"value"=> $content['allergens']
-                ]
             ]
         ];
     }
@@ -276,18 +152,13 @@ class Dish extends Database
             "config"=>[
                 "method"=>"",
                 "action"=>"",
-				"href" => "editDish?id=" . $data['id'],
+				"href" => "editDishCategory?id=" . $data['id'],
                 "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "fields"=>[
-				"image"=>[ 
-					"type"=>"image",
-                    "value" => $data['image']??'image',
-					"name" => $data['image']
-                ],
                 "name"=>[ 
                     "type"=>"text",
                     "value" => $data['name'],
@@ -298,26 +169,11 @@ class Dish extends Database
                     "value" => $data['description']??'description',
 					"name" => $data['description']
                 ],
-				"price"=>[ 
-                    "type"=>"text",
-                    "value" => $data['price']??'price',
-					"name" => $data['price']
-                ],
-				"category"=>[ 
-                    "type"=>"text",
-                    "value" => $data['category'],
-					"name" => $data['category']
-                ],
 				"notes" => [
 					"type"=>"text",
                     "value" => $data['notes']??'notes',
 					"name" => $data['notes']
                 ],
-                "allergens" => [
-					"type"=>"text",
-                    "value" => $data['allergens']??'allergens',
-					"name" => $data['allergens']
-				],
                 "isActive" => [
 					"type"=>"text",
                     "value" => $data['isActive']??'is active',
@@ -326,10 +182,6 @@ class Dish extends Database
             ]
         ];
     }
-
-	public function returnData() : array{
-		return get_object_vars($this);
-	}
 	
 }
 

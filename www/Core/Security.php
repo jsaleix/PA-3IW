@@ -19,4 +19,18 @@ class Security
 			return $uid;
 		return 0;
 	}
+
+	public function disconnect(){
+		$uid = Security::isConnected();
+		return $uid == 0 ? 0 : Token::destroyToken($uid);
+	}
+
+	public function getUser(){
+		if ( session_status() === PHP_SESSION_NONE || !isset($_SESSION['token']) )
+			return 0;
+		$user = new User();
+		$user->setToken($_SESSION['token']);
+		$result = $user->findOne();
+		return $result['id'];
+	}
 }

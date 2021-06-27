@@ -4,6 +4,7 @@ namespace CMS;
 use App\Core\Router;
 use App\Models\Site;
 use CMS\Core\PageRenderer;
+use App\Core\Security;
 
 function handleCMS($uri){
     if(!$uri){ throw new InvalidArgumentException ('Missing uri parameter');}
@@ -15,6 +16,8 @@ function handleCMS($uri){
         $page->renderPage();
 
     }else{
+        if( !Security::isConnected())
+            header('Location: '.DOMAIN . '/login');
         $siteObj = new Site();
         $siteObj->setSubDomain($uri[0]);
         $site = $siteObj->findOne();
@@ -23,11 +26,7 @@ function handleCMS($uri){
             return;
         }
         $uri = array_slice($uri, 2);
-        if(empty($uri[0])){
-            $uri[0] = '/';
-        }else{
-            $uri[0] = '/' . $uri[0];
-        }
+        $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
         $uri = implode($uri, '/');
         $router = new Router($uri, "Cms/routes.yml");
         $c = $router->getController();

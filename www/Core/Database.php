@@ -77,6 +77,10 @@ class Database
 					if($col == 'IS NULL'){
 							$columns[$key] = NULL;
 						}
+					
+					if($col == 'IS FALSE'){
+						$columns[$key] = 0;
+					}
 				}
 				$setCmd = [];
 				foreach( array_keys($columns) as $field )
@@ -89,6 +93,50 @@ class Database
 				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
 				$query 	= $this->pdo->prepare($req);
 			}
+			$query->execute($columns);
+			return true;
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			return false;
+		}
+	}
+
+	public function delete(){
+		try{
+			$columns = array_diff_key (
+							get_object_vars($this),
+							get_class_vars(get_class())
+						);
+
+			unset($columns["id"]);
+			foreach($columns as $key => $col){
+				if( empty($col))
+					unset($columns[$key]);
+
+				if($col == 'IS NULL'){
+						$columns[$key] = NULL;
+					}
+			}
+			$setCmd = [];
+			foreach( array_keys($columns) as $field )
+			{
+				if(!is_null($this->$field) && !empty($this->$field))
+				{
+					array_push($setCmd, $field . " =:" . $field . "");
+				}
+			}
+			$req = "DELETE FROM " . $this->table . ' WHERE ';
+			if(count($setCmd) > 0){
+				$req .= implode(' AND ', $setCmd) ;
+			}
+
+			if($this->getId()){
+				if(count($setCmd) > 0) $req .= ' AND ';
+				$req .= ' id = ' . $this->getId();
+			}
+
+			echo $req;
+			$query 	= $this->pdo->prepare($req);
 			$query->execute($columns);
 			return true;
 		}catch(\Exception $e){
@@ -144,16 +192,15 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
-
+		/*echo "SELECT * FROM ".$this->table." WHERE " .  implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		echo var_dump(array_values($columns));
+		echo '<br><br>';*/
 		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
 		implode(" = ? AND ", array_keys($columns)) . " = ? ");
 
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
-		/*echo "SELECT * FROM ".$this->table." WHERE " . implode(" = ? AND ", array_keys($columns)) . " = ? <br>";
-		echo implode('-', $columns) . '<br><br>';
-		var_dump($result);
-		echo '<br><br>';*/
+
 		return !isset($result[0]) ? false : $result;
 	}
 
@@ -166,6 +213,10 @@ class Database
 			echo $e->getMessage();
 			return false;
 		}
+	}
+
+	public function getLastId(){
+		return $this->pdo->lastInsertId();
 	}
 
 }

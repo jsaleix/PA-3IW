@@ -27,13 +27,26 @@ class Token{
 			if ( session_status() === PHP_SESSION_NONE )
 				return 0;
 			$user = new User();
+			if(!isset($_SESSION['token'])) return 0;
 			$user->setToken($_SESSION['token']);
 			$result = $user->findOne();
-			if( !$result){
+			if( !$result)
 				return 0;
-			}
-			return Token::createToken($result, $user);
+			return Token::createToken($result);
 		} catch( Exception $e){
+			return 0;
+		}
+	}
+
+	public function destroyToken($uid){
+		try{
+			$user = new User();
+			$user->setId($uid);
+			$user->setToken("IS NULL");
+			$user->save();
+			unset($_SESSION['token']);
+			return 1;
+		} catch ( Exception $e){
 			return 0;
 		}
 	}

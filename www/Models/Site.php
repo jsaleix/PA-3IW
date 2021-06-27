@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Core\Database;
 use App\Core\FileUploader;
+use App\Core\Security;
 
 use CMS\Models\Page;
 use CMS\Models\Content;
 use CMS\Models\Post;
+use CMS\Models\DishCategory;
+
 
 class Site extends Database
 {
@@ -109,7 +112,8 @@ class Site extends Database
 
         clearstatcache();
         if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
-            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') || !file_exists($dir . '/comment.script'))
+            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') || !file_exists($dir . '/comment.script') ||
+            !file_exists($dir . '/menu.script') || !file_exists($dir . '/menu_dish_association.script') )
         {
 			die("Missing required file");
             return false;
@@ -117,7 +121,10 @@ class Site extends Database
 
         $toReplace = [':X', ':prefix'];
         $replaceBy = [$this->prefix, DBPREFIXE];
-        $tableToCreate = [ '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', '/medium.script', '/post.script', '/content.script', '/comment.script'];
+        $tableToCreate = [ 
+            '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', 
+            '/medium.script', '/post.script', '/content.script', '/comment.script', '/menu.script', '/menu_dish_association.script'
+        ];
         try{
             foreach( $tableToCreate as $table){
                 $table = file_get_contents($dir . $table);
@@ -134,9 +141,17 @@ class Site extends Database
             $postObj = new Post();
             $postObj->setTitle('Welcome');
             $postObj->setContent('This is your first article on your new website.');
-            $postObj->setPublisher(2);
+            $postObj->setPublisher(Security::getUser());
             $postObj->setPrefix($this->prefix);
             $postObj->save();
+
+            $dishCatObj = new DishCategory();
+            $dishCatObj->setPrefix($this->prefix);
+            $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
+            foreach($dishCatArr as $cat){
+                $dishCatObj->setName($cat);
+                $dishCatObj->save();
+            }
 
             return true;
         }catch(\Exception $e){

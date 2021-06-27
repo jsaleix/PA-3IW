@@ -22,6 +22,10 @@ class Security{
 	}
 
 	public function loginAction(){
+		if( Secu::isConnected()){
+			header('Location: '.DOMAIN);
+			return;
+		}
 		$user = new User();
 		$view = new View("login");
 
@@ -30,9 +34,14 @@ class Security{
 		if(!empty($_POST) && !empty($_POST['email'])){
 			$user->setEmail(htmlspecialchars($_POST['email']));
 			$result = $user->findOne();
-			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd']) && $result['isActive'] == 1){
-				Secu::connect($result);
-				echo Secu::isConnected();
+			if ( password_verify(htmlspecialchars($_POST['pwd']), $result['pwd'])){
+				if( $result['isActive'] == 0){
+					$errors = ["Vous devez activer votre compte grâce au mail que nous vous avons envoyé avant de vous connecter"];
+					$view->assign("errors", $errors);
+				} else {
+					Secu::connect($result);
+					header('Location: '.DOMAIN);
+				}
 			}else{
 				$errors = ["Utilisateur non trouvé"];
 				$view->assign("errors", $errors);
@@ -44,7 +53,10 @@ class Security{
 	}
 
 	public function registerAction(){
-
+		if( Secu::isConnected()){
+			header('Location: '.DOMAIN);
+			return;
+		}
 		$user = new User();
 		$view = new View("register");
 
@@ -66,6 +78,7 @@ class Security{
 				$mail->setToken(bin2hex(random_bytes(128)));
 				$mail->save();
 				$mail->sendConfirmationMail($user->getEmail());
+				header('Location: '.DOMAIN);
 			}else{
 				$view->assign("errors", $errors);
 			}
@@ -76,24 +89,14 @@ class Security{
 	}
 
 	public function logoutAction(){
-
-		$security = new Secu();
-		if($security->isConnected()){
-			echo "OK";
-		}else{
-			echo "NOK";
+		if(!Secu::isConnected()){
+			header('Location: '.DOMAIN);
+			return;
 		}
-		
+		Secu::disconnect();
+		header('Location: '.DOMAIN.'/login');
 	}
 
-
-	public function updateAction(){
-		$user = new User();
-		$user->setId(2);
-		$user->setEmail("testAjaha");
-		$user->save();
-	}
-	
 	public function mailconfirmAction(){
 		$token = new MailToken();
 		$token->setToken($_GET['token']);

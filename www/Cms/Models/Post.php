@@ -12,6 +12,7 @@ class Post extends Database
 	protected $publisher;
 	protected $type = 'article';
 	protected $publicationDate;
+	protected $allowComment;
 
 	public function __construct (){
 		parent::__construct();
@@ -30,7 +31,10 @@ class Post extends Database
 	}
 
 	public function setTitle($title){
-		$this->title = htmlspecialchars($title);
+		$title = htmlspecialchars($title);
+		$title = preg_replace("/[^A-Za-z0-9]+/", "", $title);//keeps letters and digits
+
+		$this->title = $title;
 	}
 
 	public function getTitle(){
@@ -65,8 +69,16 @@ class Post extends Database
 		$this->publicationDate = $publicationDate;
 	}
 
-	public function getPublicationDate($publicationDate){
+	public function getPublicationDate(){
 		return $this->publicationDate;
+	}
+
+	public function setAllowComment($allowComment){
+		$this->allowComment = $allowComment == 0 ? 'IS FALSE' : 1;
+	}
+
+	public function getAllowComment(){
+		return $this->allowComment;
 	}
 
 	public function returnData() : array{
@@ -92,7 +104,7 @@ class Post extends Database
 		}
 	}
 
-	public function formAddContent($pagesArr){
+	public function formAddContent(){
         return [
 
             "config"=>[
@@ -126,6 +138,20 @@ class Post extends Database
                     "error"=>"A content is required for an article!",
                     "required"=>true
                 ],
+				"allowComment"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Allow users to comment this post",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "disable comment",
+						1 => "enable comment"
+					],
+                    "class"=>"input-content",
+                    "placeholder"=>"Enable comments on the post",
+                    "error"=>"You need to specify if the post can be commented!",
+                    "required"=>true,
+                ],
 				/*"page"=>[ 
 					"type"=>"select",
 					"label"=>"Page associated",
@@ -139,7 +165,7 @@ class Post extends Database
         ];
     }
 
-	public function formEditContent($content, $pagesArr){
+	public function formEditContent($content){
         return [
 
             "config"=>[
@@ -174,6 +200,21 @@ class Post extends Database
                     "error"=>"A content is required for an article!",
                     "required"=>true,
 					"value"=> $content['content']
+                ],
+				"allowComment"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Allow users to comment this post",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "disable comment",
+						1 => "enable comment"
+					],
+                    "class"=>"input-content",
+                    "placeholder"=>"Enable comments on the post",
+                    "error"=>"You need to specify if the post can be commented!",
+                    "required"=>true,
+					"value"=> $content['allowComment']
                 ],
 				/*"page"=>[ 
 					"type"=>"select",
@@ -230,7 +271,12 @@ class Post extends Database
 					"type"=>"text",
                     "value" => $data['publisher'],
 					"name" => $data['publisher']
-				]
+				],
+				"allowComment" => [
+					"type"=>"text",
+                    "value" => $data['allowComment'],
+					"name" => $data['allowComment']
+				],
             ]
         ];
     }

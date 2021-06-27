@@ -13,6 +13,8 @@ use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
+use App\Core\Security;
+
 class PostController{
 
 
@@ -28,27 +30,20 @@ class PostController{
 	public function createArticleAction($site){
 		$postObj = new Post();
 
-		$page = new Page();
-		$page->setPrefix($site['prefix']);
-		$pages = $page->findAll();
-		$pagesArr = array();
-		foreach($pages as $data){
-			$pagesArr[$data['id']] = $data['name'];
-		}
-
-		$form = $postObj->formAddContent($pagesArr);
+		$form = $postObj->formAddContent();
 		$view = new View('admin.create', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content ] = $_POST;
+			[ "title" => $title, "content" => $content, "allowComment" => $allowComment ] = $_POST;
 			if($title && $content){
 				$insert = new Post();
 				$insert->setTitle($title);
 				$insert->setContent($content);
-				$insert->setPublisher(2);
+				$insert->setPublisher(Security::getUser());
+				$insert->setAllowComment($allowComment);
 				$insert->setPrefix($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
@@ -69,16 +64,16 @@ class PostController{
 		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
 		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit' ];
-
+		$datas = [];
 		foreach($posts as $item){
 			$userObj = new User();
 			$userObj->setId($item['publisher']);
 			$user = $userObj->findOne();
 
 			$item['publisher'] = $user['firstname']??'None';
-			$button = '<a href="editArticle?id=' . $item['id'] . '">Go</a>';
-			$formalized = "'" . $item['id'] . "','" . $item['title'] . "','" . $item['content'] . "','" . $item['publisher'] .  "','" . $item['publicationDate'] . "','" . $button . "'";
-			$datas[] = $formalized;
+			$button = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
+			//$item['content'] = 
+			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $button . "\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
 		$view = new View('back/list', 'back');
@@ -94,14 +89,6 @@ class PostController{
 			echo 'article not set ';
 		}
 
-		$page = new Page();
-		$page->setPrefix($site['prefix']);
-		$pages = $page->findAll();
-		$pagesArr = array();
-		foreach($pages as $data){
-			$pagesArr[$data['id']] = $data['name'];
-		}
-
 		$contentObj = new Post();
 		$contentObj->setPrefix($site['prefix']);
 		$contentObj->setId($_GET['id']);
@@ -109,36 +96,37 @@ class PostController{
 		if(!$content){
 			header("Location: managearticles");
 		}
-		$pagesArr = array();
-		foreach($pages as $data){
-			$pagesArr[$data['id']] = $data['name'];
-		}
-
-		$form = $contentObj->formEditContent((array)$content, $pagesArr);
 
 		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Edit an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content] = $_POST;
-			if($title && $content ){
-				/*$insert = new Content($title, $content, $page, 2);
-				$insert->setTableName($site['prefix']);*/
+			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
+			if($title && $postContent){
 				$contentObj->setTitle($title);
-				$contentObj->setContent($content);
+				$contentObj->setContent($postContent);
+				$contentObj->setAllowComment($allowComment);
 				$adding = $contentObj->save();
 				if($adding){
 					$message ='Article successfully updated!';
 					$view->assign("message", $message);
 				}else{
+					$contentObj->setTitle(null);
+					$contentObj->setContent(null);
+					$contentObj->setAllowComment(null);
 					$errors = ["Error when updating this article"];
 					$view->assign("errors", $errors);
 				}
+				$content = $contentObj->findOne();
+			}else{
+				$errors = ["Missing required field(s)"];
 			}
 		}
 
+		$form = $contentObj->formEditContent($content);
+		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit an article");
+		$view->assign('errors', $errors??[]);
 
 	}
 
@@ -197,6 +185,9 @@ class PostController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'article not set ';
 		}
+		$user = Security::getUser();
+        $userObj = new User();
+
 		$commentObj = new Comment();
 		$commentObj->setPrefix($site->getPrefix());
 
@@ -207,28 +198,52 @@ class PostController{
         if(!$post){
             return 'No content found :/';
         }
-
-        $publisherData = new User();
-		if(!empty($publisher))
+		
+		/* Retrieve post author */
+		if(!empty($post['publisher']))
         {
-			$publisherData->setId($publisher);
-        	$publisher = $publisherData->findOne();
-			$name = $publisher['firstname'] . " " . $publisher['lastname'];
+			$userObj->setId($post['publisher']);
+        	$publisher = $userObj->findOne();
+			$post['author'] = $publisher['firstname'] . " " . $publisher['lastname'];
 		}else{
-			$name = 'Unknown';
+			$post['author'] = 'Unknown';
 		}
-		$commentObj->setIdPost($_GET['id']);
-		$comments = $commentObj->findAll();
 
-		$errors = [];
-		if(isset($_POST['message']) && !empty($_POST['message']) /*&& isconnected*/){
-			$commentObj->setMessage($_POST['message']);
-			$commentObj->setIdUser(2);
-			$commentPublished = $commentObj->save();
-			if(!$commentPublished){
-				$errors[] = 'Your comment could not be published';
+		#if the admin allows the post to get commented
+		if($post['allowComment'] === 1){
+			$commentObj->setIdPost($_GET['id']);
+
+			if(isset($_POST['message']) && !empty($_POST['message']) && $user)
+			{
+				$commentObj->setMessage($_POST['message']);
+				$commentObj->setIdUser($user);
+				$commentPublished = $commentObj->save();
+				if(!$commentPublished){
+					$errors[] = 'Your comment could not be published';
+				} else {
+					$commentObj->setMessage(null);
+					$commentObj->setIdUser(null);
+				}
 			}
+	
+			$comments = $commentObj->findAll();
+			if( $comments ){
+				$commentsTmp = [];
+				foreach($comments as $comment)
+				{
+					$userObj->setId($comment['idUser']);
+					$commentAuthor = $userObj->findOne();
+					$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
+	
+					$date = new \DateTime($comment['date']);
+					$comment['date'] =  $date->format('d/m/y H:i:s');
+					$commentsTmp[] = $comment;
+				}
+				$comments = $commentsTmp;
+			} 
 		}
+		
+		$errors = [];
 
 		$view = new View('front/post', 'front');
 		$view->assign('pageTitle', $post['title']);
@@ -236,9 +251,8 @@ class PostController{
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
-		$view->assign('name', $name);
-		$view->assign('canPostComment', true);
-		$view->assign('comments', $comments);
+		$view->assign('canPostComment', !Security::getUser() == 0 );
+		$view->assign('comments', $comments??[]);
 
 	}
 
