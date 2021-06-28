@@ -44,11 +44,55 @@ class UserController{
     }
 
     public function addAdminAction($site){
-        echo "add";
+        $wlistObj = new Whitelist();
+		$wlistObj->setIdSite($site['id']);
+
+		$form = $dishCatObj->formAdd($dishCatArr);
+
+		$view = new View('admin.create', 'back');
+		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add a dish category");
+
+		if(!empty($_POST) )
+		{
+			$errors = [];
+			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
+			
+			if( $name ){
+				//Verify the dishCategor submitted
+				$dishCatObj->setName($name);
+				$dishCatObj->setDescription($description);
+				$dishCatObj->setNotes($notes);
+				$dishCatObj->setIsActive($isActive??1);
+
+				$adding = $dishCatObj->save();
+				if($adding){
+					$message ='Dish category successfully added!';
+					$view->assign("message", $message);
+				}else{
+					$errors[] = "Cannot insert this dish category";
+					$view->assign("errors", $errors);
+				}
+			}
+		}
     }
 
     public function deleteAdminAction($site){
-        echo "delete";
+        if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'user not set ';
+		}
+        $userObj = new User();
+        $userObj->setId($_GET['id']);
+        $user = $userObj->findOne();
+        if(!$user){
+            header("Location: ../users");
+        }
+        $wlistObj = new Whitelist();
+        $wlistObj->setIdSite($site['id']);
+        $wlistObj->setIdUser($_GET['id']);
+        $wlistObj->delete();
+        header("Location: ../users");
     }
 
 }

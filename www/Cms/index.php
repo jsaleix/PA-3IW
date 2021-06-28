@@ -25,7 +25,7 @@ function handleCMS($uri){
         $site = $siteObj->findOne();
         if(!$site || empty($site['id'])){
             echo 'This site does not exist <br>';
-            return;
+            header("Location: " . DOMAIN );
         }
         if( $site['creator'] !== Security::getUser()){
             $wlistObj = new Whitelist();
@@ -33,7 +33,7 @@ function handleCMS($uri){
             $wlistObj->setIdUser(Security::getUser());
             $wlist = $wlistObj->findOne();
             if( !$wlist )
-                return;
+                header("Location: " . DOMAIN . "/site/" . $site['subDomain']);
         }
         $uri = array_slice($uri, 2);
         $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
