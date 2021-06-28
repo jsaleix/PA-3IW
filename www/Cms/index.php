@@ -3,8 +3,10 @@ namespace CMS;
 
 use App\Core\Router;
 use App\Models\Site;
+use App\Models\Whitelist;
 use CMS\Core\PageRenderer;
 use App\Core\Security;
+
 
 function handleCMS($uri){
     if(!$uri){ throw new InvalidArgumentException ('Missing uri parameter');}
@@ -24,6 +26,14 @@ function handleCMS($uri){
         if(!$site || empty($site['id'])){
             echo 'This site does not exist <br>';
             return;
+        }
+        if( $site['creator'] !== Security::getUser()){
+            $wlistObj = new Whitelist();
+            $wlistObj->setIdSite($site['id']);
+            $wlistObj->setIdUser(Security::getUser());
+            $wlist = $wlistObj->findOne();
+            if( !$wlist )
+                return;
         }
         $uri = array_slice($uri, 2);
         $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);

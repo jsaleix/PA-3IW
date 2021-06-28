@@ -12,6 +12,7 @@ class User extends Database
 	protected $lastname;
 	protected $email;
 	protected $pwd;
+    protected $avatar;
 	protected $role;
 	protected $isActive;
     protected $token;
@@ -98,6 +99,22 @@ class User extends Database
      * @param mixed $password
      */
     public function setPwd($password)
+    {
+        $this->pwd = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->pwd;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setAvatar($password)
     {
         $this->pwd = $password;
     }
