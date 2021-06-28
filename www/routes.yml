@@ -53,8 +53,12 @@
   auth: true
   role: admin
 
+/account:
+  controller: Account
+  action: default
+  
 /account/mysites:
-  controller: Admin
-  action: displayMySites
+  controller: Account
+  action: mysites
   auth: true
   role: admin

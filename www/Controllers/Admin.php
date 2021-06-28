@@ -6,7 +6,6 @@ use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
-use App\Core\Token;
 use App\Core\FileUploader;
 
 use App\Models\User;
@@ -134,22 +133,6 @@ class Admin{
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the users");
-	}
-
-
-	public function displayMySitesAction(){
-		$wlistObj = new Whitelist();
-		$wlistObj->setIdUser(Token::verifyToken());
-		if($wlistObj->getIdUser() == 0 )
-			header("Location:" . DOMAIN . '/login');
-		$wlists = $wlistObj->findAll();
-		$siteObj = new Site();
-		foreach($wlists as $wlist){
-			$siteObj->setId($wlist["idSite"]);
-			$site = $siteObj->findOne();
-			print_r($site);
-			echo "<br>";
-		}
 	}
 
 }
