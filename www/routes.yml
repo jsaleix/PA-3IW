@@ -52,3 +52,9 @@
   action: displayUser
   auth: true
   role: admin
+
+/admin/mysites:
+  controller: Admin
+  action: displayMySites
+  auth: true
+  role: admin

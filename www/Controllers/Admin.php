@@ -10,8 +10,8 @@ use App\Core\Token;
 use App\Core\FileUploader;
 
 use App\Models\User;
-use App\Models\MailToken;
 use App\Models\Site;
+use App\Models\Whitelist;
 
 class Admin{
 
@@ -134,6 +134,22 @@ class Admin{
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the users");
+	}
+
+
+	public function displayMySitesAction(){
+		$wlistObj = new Whitelist();
+		$wlistObj->setIdUser(Token::verifyToken());
+		if($wlistObj->getIdUser() == 0 )
+			header("Location:" . DOMAIN . '/login');
+		$wlists = $wlistObj->findAll();
+		$siteObj = new Site();
+		foreach($wlists as $wlist){
+			$siteObj->setId($wlist["idSite"]);
+			$site = $siteObj->findOne();
+			print_r($site);
+			echo "<br>";
+		}
 	}
 
 }
