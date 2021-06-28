@@ -87,6 +87,18 @@
   controller: mediacontroller
   action: listMedias
 
+/users:
+  controller: usercontroller
+  action: listadmin
+
+/users/add:
+  controller: usercontroller
+  action: addadmin
+
+/users/delete:
+  controller: usercontroller
+  action: deleteadmin
+
 /ent/post:
   controller: postcontroller
   action: renderpost
