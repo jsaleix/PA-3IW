@@ -9,9 +9,6 @@ use App\Core\Helpers as h;
 
 session_start();
 
-//require "Core/Router.php";
-//require "Core/Security.php";
-
 require "Autoload.php";
 
 Autoload::register();

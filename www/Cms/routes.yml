@@ -106,3 +106,7 @@
 /ent/dish:
   controller: dishController
   action: renderdish
+
+/ent/menu:
+  controller: menuController
+  action: renderMenu

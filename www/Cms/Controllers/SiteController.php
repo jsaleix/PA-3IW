@@ -77,34 +77,26 @@ class SiteController{
 	* returns html for pageRenderer
 	*/
 	public function render($siteObj, $filter = null){
-		$siteData = $siteObj->returnData();
-        extract($siteData);
+		$site = $siteObj->returnData();
 
-		$image = strpos($image, 'http') !== false ? $image : (DOMAIN . '/' . $image) ;
 
-		if(!empty($creator))
+		if(!empty($site['creator']))
         {
 			$userObj = new User();
-			$userObj->setId($creator);
+			$userObj->setId($site['creator']);
         	$creator = $userObj->findOne();
-			$creatorName = $creator['firstname'] . " " . $creator['lastname'];
-		}else{
-			$creatorName = 'Unknown';
+			if($creator){
+				$site['creator'] = $creator['firstname'] . " " . $creator['lastname'];
+			}else{
+				$site['creator'] = 'Unknown';
+			}
 		}
         
-
-		$html = '<h2>' . $name . '\'s restaurant</h2>';
-		$html .= "<image src=${image} alt='${name}image'/>";
-		$html .= '<p>' . $description . '</p>';
-		$html .= '<p>Type of food: ' . $type . '</p>';
-		$html .= '*****';
-		$html .= '<p id='. $creator['id'] .' >Created by ' . $creatorName . ' </p>';
-
-		$view = new View('cms', 'front');
-		$view->assign('pageTitle', 'Restaurant informations');
+		$view = new View('front/about', 'front');
+		$view->assign('pageTitle', 'About our restaurant');
 		$view->assign("navbar", NavbarBuilder::renderNavbar($siteObj->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));
-		$view->assign('content', $html);
+		$view->assign('site', $site);
 
 	}
 

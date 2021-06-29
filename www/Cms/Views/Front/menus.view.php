@@ -1,11 +1,11 @@
 <section id="menu-page-section">
-    <?php if(isset($categories) && $categories && count($categories) > 0): ?>
-        <?php foreach($categories as $category): ?>
-            <?php if(count($category['dishes']) > 0): ?>
+    <?php if(isset($menus) && $menus && count($menus) > 0): ?>
+        <?php foreach($menus as $menu): ?>
+            <?php if(count($menu['dishes']) > 0): ?>
                 <div class="menu-container">
-                    <h2><?= $category['category']['name']?></h2></a>
+                    <a href="ent/menu?id=<?= $menu['menu']['id']?>"><h2><?= $menu['menu']['name']?></h2></a>
                     <div class="dishes-row">
-                        <?php foreach($category['dishes'] as $dish): ?>
+                        <?php foreach($menu['dishes'] as $dish): ?>
                             <div class="dish-item">
                                 <a class="dish-picture" href="ent/dish?id=<?= $dish['id'] ?>" ><img class="dish-picture" src='<?=  DOMAIN . '/' . $dish['image'] ?>'/></a>
                                 <h3><?= $dish['name'] ?></h3>

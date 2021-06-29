@@ -3,7 +3,7 @@
 <p><?=$dish['description']?></p>
 <p><?=$dish['notes']?></p>
 <p><?=$dish['allergens']?></p>
-<p><?=$dish['price']?></p>
+<p>$<?=$dish['price']?></p>
 
 <style>
 #dishImg{

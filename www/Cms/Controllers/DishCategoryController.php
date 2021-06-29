@@ -148,15 +148,6 @@ class DishCategoryController{
 	* returns html for pageRenderer
 	*/
 
-	private function renderItem($content){
-		$html = '<a <a href="ent/dish?id='. $content['id'] . '">';
-		$html .= '<img src="' . DOMAIN . '/' . $content['image'] . '"/>';
-		$html .= '<h4>' . $content['name'] . '</h4>';
-		$html .= '<p>' . $content['description'] . '</p>';
-		$html .= '</a>';
-		return $html;
-	}
-
 	public function renderList($site, $filter = null){
 		$dishCatObj = new DishCategory();
         $dishCatObj->setPrefix($site->getPrefix());
@@ -164,38 +155,33 @@ class DishCategoryController{
 
 		$dishObj = new Dish();
 		$dishObj->setPrefix($site->getPrefix());
+        $categories = [];
 
-        $html = "";
-        if(!$dishCatList || count($dishCatList) === 0){
-            $html .= 'No Category found :/';
-        }else{
+        if($dishCatList && count($dishCatList) > 0 ){
 			foreach($dishCatList as $category){
+				$categoryDishes = [];
 				$dishObj->setCategory($category['id']);
 				$dishes = $dishObj->findAll();
 				if($dishes){
-					$html .= '<h2>' . $category['name'] . '</h2>';
-					foreach($dishes as $dish){
-						$html .= $this->renderItem($dish);
-					}
+					$categoryDishes[] = $dishes;
+					$tmpCategory = ["category" => $category, "dishes" => $dishes] ;
+					$categories[] = $tmpCategory;
 				}
 			}
-
 		}
 		$dishObj->setCategory('IS NULL');
 		$dishes = $dishObj->findAll();
 
 		if($dishes){
-			$html .= '<h2>unclassified</h2>';
-			foreach($dishes as $dish){
-				$html .= $this->renderItem($dish);
-			}
+			$tmpCategory = ["category" => ["name" => "unclassified"], "dishes" => $dishes] ;
+			$categories[] = $tmpCategory;
 		}
 
-		$view = new View('cms', 'front');
+		$view = new View('front/dishes', 'front');
 		$view->assign('pageTitle', 'Dish page');
 		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
-		$view->assign('content', $html);
+		$view->assign('categories', $categories);
 
 	}
 
