@@ -3,9 +3,11 @@
 <section>
 	<?php if(isset($connected) && $connected):?>
 		<h2>Welcome <?= $pseudo;?></h2>
-		<a href="logout">Se deconnecter</a>
+		<a href="logout">Logout</a>
+		<a href="account">My account</a>
+		<a href="account/mysites">My sites</a>
 	<?php else: ?>
-		<a href="login">Se connecter</a>
+		<a href="login">Login</a>
 	<?php endif;?>
 </section>
 
