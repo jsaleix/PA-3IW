@@ -225,49 +225,56 @@ class MenuController{
 	* returns html for pageRenderer
 	*/
     public function renderMenus($site, $filter = null){
+        $view = new View('front/menus', 'front');
+        $view->assign('pageTitle', 'Menus');
+		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+
 		$menuObj = new Menu();
         $menuObj->setPrefix($site->getPrefix());
         $dishObj = new Dish();
         $dishObj->setPrefix($site->getPrefix());
         $dishCatObj = new DishCategory();
         $dishCatObj->setPrefix($site->getPrefix());
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishMenuAssocObj->setPrefix($site->getPrefix());
 
         $menuData = [];
         
         $menus = $menuObj->findAll();
-        if($menus && count($menus) > 0){
-            foreach($menus as $menu)
-            {
-                $dishes = [];
-                //$html .= '<h2><a href="ent/menu?id=' . $menu['id'] . '"/>##########MENU ' . $menu['name'] . '</a></h2>' ;
-                $dishMenuAssocObj = new Menu_dish_association();
-                $dishMenuAssocObj->setPrefix($site->getPrefix());
-                $dishMenuAssocObj->setMenu($menu['id']);
-                $dishesInMenu = $dishMenuAssocObj->findAll();
-                if($dishesInMenu){
-                    foreach($dishesInMenu as $dishId)
-                    {
-                        $dishObj->setId($dishId['dish']);
-                        $dish = $dishObj->findOne();
-                        if($dish){
-                            $dishCatObj->setId($dish['category']);
-                            $category = $dishCatObj->findOne();
-                            if($category){
-                                $dish['category'] = $category['name'];
+        try{
+            if($menus && count($menus) > 0){
+                foreach($menus as $menu)
+                {
+                    $dishes = [];
+                    
+                    $dishMenuAssocObj->setMenu($menu['id']);
+                    $dishesInMenu = $dishMenuAssocObj->findAll();
+                    if($dishesInMenu){
+                        foreach($dishesInMenu as $dishId)
+                        {
+                            $dishObj->setId($dishId['dish']);
+                            $dish = $dishObj->findOne();
+                            if($dish){
+                                if($dish['category']){
+                                    $dishCatObj->setId($dish['category']);
+                                    $category = $dishCatObj->findOne();
+                                    if($category){
+                                        $dish['category'] = $category['name'];
+                                    }
+                                }
+                                $dishes[] = $dish;
                             }
-                            $dishes[] = $dish;
                         }
+                        $tmpMenu = ["menu" => $menu, "dishes" => $dishes] ;
+                        $menuData[] = $tmpMenu;
                     }
-                    $tmpMenu = ["menu" => $menu, "dishes" => $dishes] ;
-                    $menuData[] = $tmpMenu;
                 }
             }
+        }catch(\Exception $e){
+            echo $e->getMessage();
         }
-
-		$view = new View('front/menus', 'front');
-		$view->assign('pageTitle', 'Menus');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
-		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+		
 		$view->assign('menus', $menuData);
 	}
 
