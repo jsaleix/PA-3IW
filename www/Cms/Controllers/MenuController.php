@@ -209,6 +209,7 @@ class MenuController{
                     $id = $menuObj->getLastId();
                     if($id){
                         header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus/edit?id=' . $id);
+                        exit();
                     }
 				}else{
 					$errors[] = "Cannot create this menu";
@@ -302,8 +303,10 @@ class MenuController{
 		$menuObj->setId($menuId);
         $menu = $menuObj->findOne();
 
-        if(!$menu) 
+        if(!$menu){
             header('location: '.DOMAIN);
+            exit();
+        }
 
         $dishMenuAssocObj->setPrefix($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);

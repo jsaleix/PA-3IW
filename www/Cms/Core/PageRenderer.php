@@ -59,7 +59,7 @@ class PageRenderer
             $page = $pageObj->findAll();
             $requestedPage = $page[0]['name'];
             header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/' . $requestedPage);
-            return;
+            exit();
         }
 
         if($requestedPage != 'ent')

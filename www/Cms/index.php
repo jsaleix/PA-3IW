@@ -18,22 +18,26 @@ function handleCMS($uri){
         $page->renderPage();
 
     }else{
-        if( !Security::isConnected())
+        if( !Security::isConnected()){
             header('Location: '.DOMAIN . '/login');
+            exit();
+        }
         $siteObj = new Site();
         $siteObj->setSubDomain($uri[0]);
         $site = $siteObj->findOne();
         if(!$site || empty($site['id'])){
-            echo 'This site does not exist <br>';
             header("Location: " . DOMAIN );
+            exit();
         }
         if( $site['creator'] !== Security::getUser()){
             $wlistObj = new Whitelist();
             $wlistObj->setIdSite($site['id']);
             $wlistObj->setIdUser(Security::getUser());
             $wlist = $wlistObj->findOne();
-            if( !$wlist )
+            if( !$wlist ){
                 header("Location: " . DOMAIN . "/site/" . $site['subDomain']);
+                exit();
+            }
         }
         $uri = array_slice($uri, 2);
         $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
