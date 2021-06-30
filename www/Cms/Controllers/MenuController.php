@@ -278,34 +278,31 @@ class MenuController{
 		$view->assign('menus', $menuData);
 	}
 
-    public function renderDishItem($dishId, $sitePrefix){
-        $dishObj = new Dish();
-        $dishObj->setPrefix($sitePrefix);
-        $dishObj->setId($dishId);
-        $dish = $dishObj->findOne();
-        if(!$dish){ return; }
-
-		$html = '<h2><a href="ent/dish?id='. $dish['id'] . '">' . $dish['name'] . '</a></h2>';
-        $html .= '<img src=' . DOMAIN . '/' . $dish['image'] . ' width=100 height=80/>';
-		$html .= '<br>';
-
-        return $html;
-	}
-
-    public function renderMenuAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
+    public function renderMenuAction($site, $filter = null){
+        if($filter){
+            $filter = json_decode($filter, true);
+            if(isset($filter['menuId'])){
+                $menuId = $filter['menuId'];
+            }else{
+                return;
+            }
+            //$filter = $filter['menuId']; 
+        }else if(isset($_GET['id']) && !empty($_GET['id']) ){
+            $menuId = $_GET['id'];
+		}else{
 			return 'menu id not set ';
-		}
-		$menuObj = new Menu();
+        }
+
+        $menuObj = new Menu();
         $dishMenuAssocObj = new Menu_dish_association();
         $dishCatObj = new DishCategory();
 
         $dishesData = [];
         
         $menuObj->setPrefix($site->getPrefix());
-		$menuObj->setId($_GET['id']);
+		$menuObj->setId($menuId);
         $menu = $menuObj->findOne();
-        
+
         if(!$menu) 
             header('location: '.DOMAIN);
 
@@ -314,7 +311,6 @@ class MenuController{
         $dishes = $dishMenuAssocObj->findAll();
 
         if($dishes){
-            $html = '';
             foreach($dishes as $dish)
             {
                 $dishId = $dish['dish'];
@@ -324,17 +320,18 @@ class MenuController{
                 $dishObj->setId($dishId);
                 $dish = $dishObj->findOne();
                 if($dish){
-                    $dishCatObj->setPrefix($sitePrefix);
-                    $dishCatObj->setId($dish['category']);
-                    $category = $dishCatObj->findOne();
-                    if($category){
-                        $dish['category'] = $category['name'];
+                    if($dish['category']){
+                        $dishCatObj->setPrefix($sitePrefix);
+                        $dishCatObj->setId($dish['category']);
+                        $category = $dishCatObj->findOne();
+                        if($category){
+                            $dish['category'] = $category['name'];
+                        }
                     }
                     $dishesData[] = $dish;
                 }
             }
         }
-
 		$view = new View('front/menu', 'front');
 		$view->assign('pageTitle', 'MENU ' . $menu['name']);
 		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));

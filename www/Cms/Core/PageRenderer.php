@@ -116,7 +116,7 @@ class PageRenderer
             $a = $action['method'];
             $f = $this->content['filter'];
             $debug = 'debug: ' . $a . ' ' . $c . ' ' . $f . '<br>';
-    
+
             if( file_exists("Cms/Controllers/".$c.".php")){
                 include "Cms/Controllers/".$c.".php";
                 $c = "CMS\\Controller\\".$c;
@@ -126,13 +126,13 @@ class PageRenderer
                         $content = $cObjet->$a($this->site, $f);
                         $content .= $debug;
                     }else{
-                        //die("L'action' : ".$a." n'existe pas");
+                        die("L'action' : ".$a." n'existe pas");
                     }
                 }else{
-                    //die("La classe controller : ".$c." n'existe pas");
+                    die("La classe controller : ".$c." n'existe pas");
                 }
             }else{
-                //die("Le fichier controller : ".$c." n'existe pas");
+                die("Le fichier controller : ".$c." n'existe pas");
             }
         }catch(\Exception $e){
             $content = $e->getMessage();
