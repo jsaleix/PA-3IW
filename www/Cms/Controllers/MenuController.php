@@ -286,7 +286,6 @@ class MenuController{
             }else{
                 return;
             }
-            //$filter = $filter['menuId']; 
         }else if(isset($_GET['id']) && !empty($_GET['id']) ){
             $menuId = $_GET['id'];
 		}else{
@@ -338,6 +337,7 @@ class MenuController{
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
         $view->assign('menu', $menu);
 		$view->assign('dishes', $dishesData);
+        $view->assign('baseUrl', (DOMAIN . '/site/' . $site->getSubDomain()));
 	}
 
 
