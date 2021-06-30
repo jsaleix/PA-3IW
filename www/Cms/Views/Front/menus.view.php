@@ -1,4 +1,5 @@
 <section id="menu-page-section">
+    <h2>Menus available</h2>
     <?php if(isset($menus) && $menus && count($menus) > 0): ?>
         <?php foreach($menus as $menu): ?>
             <?php if(count($menu['dishes']) > 0): ?>

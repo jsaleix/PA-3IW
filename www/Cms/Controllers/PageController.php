@@ -1,6 +1,8 @@
 <?php
 
 namespace CMS\Controller;
+use App\Core\Security;
+
 use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
@@ -104,12 +106,14 @@ class PageController{
 
 		if(!empty($_POST) ) {
 			$erros = [];
-			[ "name" => $name, "action" => $action ] = $_POST;
+			[ "name" => $name, "action" => $action, "filters" => $filters ] = $_POST;
 			if( $name ){
 				if( !empty($action) && $action !== '0'){
 					$pageObj->setAction($action);
 				}
 				$pageObj->setName($name);
+				$pageObj->setCreator(Security::getUser());
+				$pageOb->setFilters(htmlspecialchar($filters));
 				$adding = $pageObj->save();
 				if($adding){
 					$message ='Page successfully published!';
@@ -168,7 +172,7 @@ class PageController{
 		$contentArr = [ 'action' => $contentArr['method'] ];		
 		$pageArr = array_merge((array)$page, $contentArr);
 
-		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr);
+		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
 		$view = new View('admin.create', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
@@ -176,11 +180,12 @@ class PageController{
 		$view->assign('pageTitle', "Edit a page");
 
 		if(!empty($_POST) ) {
-			[ "name" => $name, "category" => $category, "action" => $action] = $_POST;
+			[ "name" => $name, "category" => $category, "action" => $action, "filters" => $filters] = $_POST;
 			if( $name ){
 				$pageObj->setName($name);
 				$pageObj->setCategory($category??null);
 				$pageObj->setAction($action??null);
+				$pageObj->setFilters(($filters));
 				$adding = $pageObj->save();
 
 				if($adding){

@@ -7,7 +7,7 @@
                     <img class="dish-picture" src='<?=  DOMAIN . '/' . $dish['image'] ?>'/>
                 </div>
                 <div class="dish-data">
-                    <h2><a href="ent/dish?id=<?= $dish['id']?>"><?= $dish['name'] ?></a></h2>
+                    <h2><a href="dish?id=<?= $dish['id']?>"><?= $dish['name'] ?></a></h2>
                     <h3>#<?= $dish['category']?></h3>
                     <p><?=$dish['description']?></p>
                 </div>
