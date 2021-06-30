@@ -113,7 +113,9 @@ class PageController{
 				}
 				$pageObj->setName($name);
 				$pageObj->setCreator(Security::getUser());
-				$pageOb->setFilters(htmlspecialchar($filters));
+				if($filters){
+					$pageOb->setFilters(htmlspecialchar($filters));
+				}
 				$adding = $pageObj->save();
 				if($adding){
 					$message ='Page successfully published!';
