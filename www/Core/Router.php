@@ -8,6 +8,7 @@ class Router
 	private $routesPath = "routes.yml";
 	private $controller;
 	private $action;
+	private $middleware;
 
 	public function __construct($uri, $routePath){
 		$this->routesPath = $routePath;
@@ -16,10 +17,14 @@ class Router
 			//[/] => Array ( [controller] => Global [action] => default )
 			$this->routes = yaml_parse_file($this->routesPath);
 
-			if( !empty($this->routes[$this->uri]) && $this->routes[$this->uri]["controller"] && $this->routes[$this->uri]["action"]){
+			if( !empty($this->routes[$this->uri]) 
+				&& $this->routes[$this->uri]["controller"]
+				&& $this->routes[$this->uri]["action"]){
 			
 				$this->setController($this->routes[$this->uri]["controller"]);
 				$this->setAction($this->routes[$this->uri]["action"]);
+				if( !empty($this->routes[$this->uri]["middleware"]))
+					$this->setMiddleware($this->routes[$this->uri]["middleware"]);
 			}else{
 				die("Chemin inexistant : 404");
 			}
@@ -52,6 +57,14 @@ class Router
 
 	public function getAction(){
 		return $this->action;
+	}
+
+	public function setMiddleware($middleware){
+		$this->middleware = $middleware;
+	}
+
+	public function getMiddleware(){
+		return $this->middleware;
 	}
 
 }

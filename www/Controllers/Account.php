@@ -13,8 +13,6 @@ class Account{
 
 
 	public function defaultAction(){
-		if( Secu::isConnected() == 0 )
-			return false;
         $userObj = new User();
 		$userObj->setId(Secu::getUser());
 		$user = $userObj->findOne();
@@ -26,10 +24,7 @@ class Account{
 		$view->assign("form", $form);
 	}
 
-	public function mysitesAction(){
-		if( !Secu::isConnected() )
-			header("Location:" . DOMAIN . '/login');
-		
+	public function mysitesAction(){		
 		$siteObj = new Site();
 		$userObj = new User();
 		$lists = [];

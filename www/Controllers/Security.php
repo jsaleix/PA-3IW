@@ -22,10 +22,6 @@ class Security{
 	}
 
 	public function loginAction(){
-		if( Secu::isConnected()){
-			header('Location: '.DOMAIN);
-			exit();
-		}
 		$user = new User();
 		$view = new View("login");
 
@@ -54,10 +50,6 @@ class Security{
 	}
 
 	public function registerAction(){
-		if( Secu::isConnected()){
-			header('Location: '.DOMAIN);
-			exit();
-		}
 		$user = new User();
 		$view = new View("register");
 
@@ -91,12 +83,9 @@ class Security{
 	}
 
 	public function logoutAction(){
-		if(!Secu::isConnected()){
-			header('Location: '.DOMAIN);
-			exit();
-		}
 		Secu::disconnect();
 		header('Location: '.DOMAIN);
+		exit();
 	}
 
 	public function mailconfirmAction(){

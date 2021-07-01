@@ -11,19 +11,15 @@ class Main{
 
 
 	public function defaultAction(){
-		
-        $isConnected = Security::isConnected();
-		if($isConnected){
+		$view = new View("home");
+		if(Security::isConnected()){
 			$userObj = new User();
 			$userObj->setId(Security::getUser());
 			$username = $userObj->findOne();
 			$username = $username['firstname'] . ' ' . $username['lastname'];
+			$view->assign("connected", $userObj->getId());
+			$view->assign("pseudo", $userObj->getId() != 0 ? $username : '');
 		}
-		$view = new View("home");
-		$view->assign("connected", $isConnected);
-        $view->assign("pseudo", $isConnected ? $username : '');
-
-
 	}
 
 

@@ -60,6 +60,14 @@ class Database
 				foreach($columns as $key => $col){
 					if( empty($col))
 						unset($columns[$key]);
+
+					if($col == 'IS NULL'){
+							$columns[$key] = NULL;
+						}
+					
+					if($col == 'IS FALSE'){
+						$columns[$key] = 0;
+					}
 				}
 				$query = $this->pdo->prepare("INSERT INTO ".$this->table." (".
 						implode(",", array_keys($columns))
