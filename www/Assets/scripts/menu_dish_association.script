@@ -6,11 +6,11 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Menu_dish_association` (
   CONSTRAINT `fk_dish_idx_idx:X`
     FOREIGN KEY (`dish`)
     REFERENCES `easymeal`.`:X_Dish` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_menu_idx_idx:X`
     FOREIGN KEY (`menu`)
     REFERENCES `easymeal`.`:X_Menu` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
   );

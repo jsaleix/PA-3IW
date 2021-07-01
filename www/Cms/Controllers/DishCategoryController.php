@@ -34,14 +34,15 @@ class DishCategoryController{
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatList = [];
 		$content = "";
-		$fields = [ 'id', 'name', 'description', 'notes', 'edit'];
+		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
 		$datas = [];
 
 		if($dishCategories){
 			foreach($dishCategories as $item){
 				//$dishCatList[] = $dishCatObj->listFormalize($item);
-				$button = '<a href="editdishcategory?id=' . $item['id'] . '">Go</a>';
-				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $button . "'";
+				$buttonEdit = '<a href="editdishcategory?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete = '<a href="deletedishcategory?id=' . $item['id'] . '">Go</a>';
+				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit."','". $buttonDelete . "'";
 
 			}
 		}else{
@@ -99,6 +100,7 @@ class DishCategoryController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
 			header("Location: managedishcategories");
+			exit();
 		}
 
 		$dishCatObj = new DishCategory();
@@ -107,6 +109,7 @@ class DishCategoryController{
 		$dish = $dishCatObj->findOne();
 		if(!$dish){
 			header("Location: managedishcategories");
+			exit();
 		}
 
 		$dishCatArr = [];
@@ -141,6 +144,26 @@ class DishCategoryController{
 				}
 			}
 		}
+	}
+
+	public function deleteDishCategoryAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'dish not set ';
+			header("Location: managedishcategories");
+			exit();
+		}
+
+		$dishCatObj = new DishCategory();
+		$dishCatObj->setPrefix($site['prefix']);
+		$dishCatObj->setId($_GET['id']??0);
+		$dish = $dishCatObj->findOne();
+		if(!$dish){
+			header("Location: managedishcategories");
+			exit();
+		}
+		$dishCatObj->delete();
+		header("Location: managedishcategories");
+		exit();
 	}
 
 	/*

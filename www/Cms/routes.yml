@@ -19,6 +19,10 @@
   controller: postcontroller
   action: editarticle
 
+/deletearticle:
+  controller: postcontroller
+  action: deletearticle
+
 /createpage:
   controller: pagecontroller
   action: createpage
@@ -30,6 +34,10 @@
 /editpage:
   controller: pagecontroller
   action: editpage
+
+/deletepage:
+  controller: pagecontroller
+  action: deletepage
 
 /searchdish:
   controller: dishController
@@ -47,6 +55,10 @@
   controller: dishController
   action: editdish
 
+/deletedish:
+  controller: dishController
+  action: deletedish
+
 /createdishcategory:
   controller: dishCategoryController
   action: createdishCategory
@@ -59,9 +71,17 @@
   controller: dishCategoryController
   action: editdishcategory
 
+/deletedishcategory:
+  controller: dishCategoryController
+  action: deletedishcategory
+
 /managecomments:
   controller: commentController
   action: managecomments
+
+/deletecomment:
+  controller: commentController
+  action: deletecomment
 
 /menus:
   controller: menuController
@@ -74,6 +94,10 @@
 /menus/create:
   controller: menuController
   action: createMenu
+
+/menus/delete:
+  controller: menuController
+  action: deleteMenu
 
 /events:
   controller: eventController

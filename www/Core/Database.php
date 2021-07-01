@@ -137,9 +137,7 @@ class Database
 			if(count($setCmd) > 0){
 				$req .= implode(' AND ', $setCmd) ;
 			}
-			echo "aqui";
 			if( method_exists($this, "getId") && $this->getId()){
-				echo "quiquiqui";
 				if(count($setCmd) > 0) $req .= ' AND ';
 				$req .= ' id = ' . $this->getId();
 			}
