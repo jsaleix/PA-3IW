@@ -87,12 +87,14 @@ class UserController{
         $user = $userObj->findOne();
         if(!$user){
             header("Location: ../users");
+			exit();
         }
         $wlistObj = new Whitelist();
         $wlistObj->setIdSite($site['id']);
         $wlistObj->setIdUser($_GET['id']);
         $wlistObj->delete();
         header("Location: ../users");
+		exit();
     }
 
 }

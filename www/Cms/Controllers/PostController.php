@@ -63,7 +63,7 @@ class PostController{
 		$postObj = new Post();
 		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
-		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit' ];
+		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit', 'Delete' ];
 		$datas = [];
 		foreach($posts as $item){
 			$userObj = new User();
@@ -71,9 +71,10 @@ class PostController{
 			$user = $userObj->findOne();
 
 			$item['publisher'] = $user['firstname']??'None';
-			$button = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
+			$buttonEdit = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
+			$buttonDelete = '<a href=\"deleteArticle?id=' . $item['id'] . '\">Go</a>';
 			//$item['content'] = 
-			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $button . "\"";
+			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
 		$view = new View('back/list', 'back');
@@ -95,6 +96,7 @@ class PostController{
 		$content = $contentObj->findOne();
 		if(!$content){
 			header("Location: managearticles");
+			exit();
 		}
 
 		$view = new View('admin.create', 'back');
@@ -128,6 +130,26 @@ class PostController{
 		$view->assign('pageTitle', "Edit an article");
 		$view->assign('errors', $errors??[]);
 
+	}
+
+	public function deleteArticleAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'article not set ';
+			header("Location: managearticles");
+			exit();
+		}
+
+		$contentObj = new Post();
+		$contentObj->setPrefix($site['prefix']);
+		$contentObj->setId($_GET['id']);
+		$content = $contentObj->findOne();
+		if(!$content){
+			header("Location: managearticles");
+			exit();
+		}
+		$contentObj->delete();
+		header("Location: managearticles");
+		exit();
 	}
 
 	/*

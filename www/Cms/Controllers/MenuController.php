@@ -21,13 +21,14 @@ class MenuController{
 		$menuObj = new Menu();
 		$menuObj->setPrefix($site['prefix']);
 		$menus = $menuObj->findAll();
-		$fields = [ 'id', 'name', 'description', 'notes', 'edit'];
+		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
 		$datas = [];
 
 		if($menus){
 			foreach($menus as $item){
-				$button = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
-				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $button . "'";
+				$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
+                $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
+				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
 			}
 		}
 
@@ -45,6 +46,7 @@ class MenuController{
         if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'menu not set ';
 			header("Location: /");
+            exit();
 		}
 
         $view = new View('back/menu', 'back');
@@ -62,6 +64,7 @@ class MenuController{
 		$menu = $menuObj->findOne();
 		if(!$menu){
 			header("Location: /");
+            exit();
 		}
 		
         $dishCatObj = new DishCategory();
@@ -107,6 +110,25 @@ class MenuController{
 
 
 
+    }
+
+    public function deleteMenuAction($site){
+        if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'menu not set ';
+			header("Location: /");
+            exit();
+		}
+        $menuObj = new Menu();
+		$menuObj->setPrefix($site['prefix']);
+		$menuObj->setId($_GET['id']??0);
+		$menu = $menuObj->findOne();
+		if(!$menu){
+			header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus');
+            exit();
+		}
+        $menuObj->delete();
+        header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus');
+        exit();
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){

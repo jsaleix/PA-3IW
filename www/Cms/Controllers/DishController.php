@@ -35,7 +35,7 @@ class DishController{
 		$dishes = $dishObj->findAll();
 		$dishesList = [];
 		$content = "";
-		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit' ];
+		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit', 'Delete' ];
 		$datas = [];
 		$dishCatObj = new DishCategory();
 		$dishCatObj->setPrefix($site['prefix']);
@@ -52,9 +52,10 @@ class DishController{
 					$item['category'] = 'No category';
 				}
 
-				$button = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete= '<a href="deleteDish?id=' . $item['id'] . '">Go</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $button . "'";
+				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $buttonEdit . "','" . $buttonDelete . "'";
 				$datas[] = $formalized;
 			}
 		}
@@ -136,6 +137,7 @@ class DishController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
 			header("Location: managedishes");
+			exit();
 		}
 
 		$dishObj = new Dish();
@@ -144,6 +146,7 @@ class DishController{
 		$dish = $dishObj->findOne();
 		if(!$dish){
 			header("Location: managedishes");
+			exit();
 		}
 
 		$dishCatObj = new DishCategory();
@@ -211,6 +214,27 @@ class DishController{
 				}
 			}
 		}
+	}
+
+	public function deleteDishAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'dish not set ';
+			header("Location: managedishes");
+			exit();
+		}
+
+		$dishObj = new Dish();
+		$dishObj->setPrefix($site['prefix']);
+		$dishObj->setId($_GET['id']??0);
+		$dish = $dishObj->findOne();
+		if(!$dish){
+			header("Location: managedishes");
+			exit();
+		}
+		$dishObj->delete();
+		header("Location: managedishes");
+		exit();
+
 	}
 
 	public function getDishAction($site){

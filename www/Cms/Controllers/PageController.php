@@ -31,7 +31,7 @@ class PageController{
 		$pageObj = new Page();
 		$pageObj->setPrefix($site['prefix']);
 		$pages = $pageObj->findAll();
-		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'edit'];
+		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'edit', 'delete'];
 		$datas = [];
 
 		$contentObj = new Content();
@@ -71,8 +71,9 @@ class PageController{
 			}
 
 
-			$button = '<a href="editPage?id=' . $item['id'] . '">Go</a>';
-			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $button . "'";
+			$buttonEdit = '<a href="editPage?id=' . $item['id'] . '">Go</a>';
+			$buttonDelete = '<a href="deletePage?id=' . $item['id'] . '">Go</a>';
+			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $buttonEdit . "','" . $buttonDelete ."'";
 
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
@@ -132,16 +133,16 @@ class PageController{
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'page not set ';
 			header("Location: managepages");
+			exit();
 		}
 
 		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
-
 		$pageObj->setPrefix($site['prefix']);
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
 			header("Location: managepages");
+			exit();
 		}
 
 		$contentObj = new Content();
@@ -199,6 +200,27 @@ class PageController{
 				}
 			}
 		}
+	}
+
+	public function deletePageAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'page not set ';
+			header("Location: managepages");
+			exit();
+		}
+		$pageObj = new Page();
+		$pageObj->setPrefix($site['prefix']);
+		$pageObj->setId($_GET['id']??0);
+		$page = $pageObj->findOne();
+		print_r($page);
+		if(!$page){
+			header("Location: managepages");
+			exit();
+		}
+		$pageObj->delete();
+		header("Location: managepages");
+		exit();
+
 	}
 
 }

@@ -23,7 +23,7 @@ class CommentController{
         $postObj->setPrefix($site['prefix']);
 
         $content = "";
-		$fields = [ 'Id', 'Message', 'Post', 'Author', 'Date' ];
+		$fields = [ 'Id', 'Message', 'Post', 'Author', 'Date', 'Delete' ];
 		$datas = [];
 
 		if($comments){
@@ -43,8 +43,9 @@ class CommentController{
                 }else{
                     $item['idUser'] = 'Unknown';
                 }
+                $buttonDelete = '<a href="deletecomment?id=' .$item['id'].'">Go</a>';
 
-				$formalized = "\"" . $item['id'] . "\",\"" . $item['message'] . "\",\"" . $item['idPost'] .  "\",\"" . $item['idUser'] . "\",\"" . $item['date'] . "\"";
+				$formalized = "'" . $item['id'] . "','" . $item['message'] . "','" . $item['idPost'] .  "','" . $item['idUser'] . "','" . $item['date']. "','" . $buttonDelete . "'";
 				$datas[] = $formalized;
 			}
 		}
@@ -55,5 +56,25 @@ class CommentController{
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the comments");
 	}
+
+    public function deleteCommentAction($site){
+        if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'comment not found ';
+			header("Location: managecomments");
+			exit();
+		}
+
+        $commentObj = new Comment();
+        $commentObj->setPrefix($site['prefix']);
+        $commentObj->setId($_GET['id']??0);
+        $comment = $commentObj->findOne();
+        if(!$comment){
+			header("Location: managecomments");
+			exit();
+        }
+        $commentObj->delete();
+        header("Location: managecomments");
+		exit();
+    }
 
 }
