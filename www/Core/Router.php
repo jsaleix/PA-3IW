@@ -26,10 +26,12 @@ class Router
 				if( !empty($this->routes[$this->uri]["middleware"]))
 					$this->setMiddleware($this->routes[$this->uri]["middleware"]);
 			}else{
+				\App\Core\Helpers::customRedirect('/');
 				die("Chemin inexistant : 404");
 			}
 
 		}else{
+			\App\Core\Helpers::customRedirect('/');
 			die("Le fichier routes.yml ne fonctionne pas !");
 		}
 	}

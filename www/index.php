@@ -5,7 +5,6 @@ define('STYLES', "/Styles/main.css");
 
 use App\Core\Router;
 use App\Core\ConstantMaker;
-use App\Core\Helpers as h;
 use App\Middlewares\Middleware;
 
 session_start();
