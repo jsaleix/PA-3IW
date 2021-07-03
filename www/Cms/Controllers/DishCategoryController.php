@@ -65,7 +65,7 @@ class DishCategoryController{
 
 		$form = $dishCatObj->formAdd($dishCatArr);
 
-		$view = new View('admin.create', 'back', $site);
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a dish category");
 
@@ -115,7 +115,7 @@ class DishCategoryController{
 		$dishArr = (array)$dish;
 		$form = $dishCatObj->formEdit($dishArr);
 
-		$view = new View('admin.create', 'back', $site);
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a dish catergory");
 

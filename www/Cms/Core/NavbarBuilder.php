@@ -6,14 +6,6 @@ use CMS\Models\Page;
 class NavbarBuilder
 {
 
-    public static function renderNavbar($site, $type = 'front'){
-		if($type === 'front'){
-			return self::renderFrontNavbar($site);
-		}else{
-			return self::renderBackNavbar($site);
-		}
-	}
-
 	public function renderFrontNavigation($site): void
 	{
 		$pageObj = new Page();

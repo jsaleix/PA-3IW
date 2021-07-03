@@ -27,7 +27,7 @@ class SiteController{
 	public function editSiteAction($site){
 		$siteObj = new Site();
         $siteObj->setId($site['id']);
-		$view = new View('admin.create', 'back', $site);
+		$view = new View('back/create', 'back', $site);
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;

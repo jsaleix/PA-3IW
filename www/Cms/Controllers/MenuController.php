@@ -205,7 +205,7 @@ class MenuController{
 
 		$form = $menuObj->formAdd();
 
-		$view = new View('admin.create', 'back', $site);
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a new menu");
 

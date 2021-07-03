@@ -30,7 +30,7 @@ class PostController{
 		$postObj = new Post();
 
 		$form = $postObj->formAddContent();
-		$view = new View('admin.create', 'back',  $site);
+		$view = new View('back/create', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -96,7 +96,7 @@ class PostController{
 			exit();
 		}
 
-		$view = new View('admin.create', 'back',  $site);
+		$view = new View('back/create', 'back',  $site);
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
@@ -171,7 +171,7 @@ class PostController{
 			$html .= $this->renderPostItem($postObj->returnData());
         }
 
-		$view = new View('cms', 'front', $site);
+		$view = new View('front/cms', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
 		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));

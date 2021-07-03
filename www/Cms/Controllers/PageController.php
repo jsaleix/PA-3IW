@@ -98,7 +98,7 @@ class PageController{
 
 		$form = $pageObj->formAddContent($actionArr);
 
-		$view = new View('admin.create', 'back', $site);
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
 
@@ -174,7 +174,7 @@ class PageController{
 
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
-		$view = new View('admin.create', 'back');
+		$view = new View('back/create', 'back');
 		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
