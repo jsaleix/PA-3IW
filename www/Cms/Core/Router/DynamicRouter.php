@@ -19,20 +19,16 @@ class DynamicRouter extends Router implements RouterInterface
 	private $uri;
 	private $controller;
 	private $action;
-	private $middleware;
-	private $domain;
-	private $path;
 
 	public function __construct($url){
 		try{
-			$this->uri = $url;
-			$this->domain = $url[0];
+			$domain = $url[0];
 
 			$pageObj = new Page();
 			$siteObj = new Site();
 			$requestedPage = $url[1];
 
-			$siteObj->setSubDomain($this->domain);
+			$siteObj->setSubDomain($domain);
 			$site = $siteObj->findOne();
 			if(empty($site['id']) || !$site){ throw new \Exception('This site does not exist'); }
 
