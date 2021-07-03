@@ -47,6 +47,7 @@ class PostController{
 				if($adding){
 					$message ='Article successfully published!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/articles?success', $site);
 				}else{
 					$errors = ["Impossible d\'inserer l'article"];
 					$view->assign("errors", $errors);
@@ -69,12 +70,11 @@ class PostController{
 			$user = $userObj->findOne();
 
 			$item['publisher'] = $user['firstname']??'None';
-			$buttonEdit = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
-			$buttonDelete = '<a href=\"deleteArticle?id=' . $item['id'] . '\">Go</a>';
-			//$item['content'] = 
+			$buttonEdit = '<a href=\"article/edit?id=' . $item['id'] . '\">Go</a>';
+			$buttonDelete = '<a href=\"article/delete?id=' . $item['id'] . '\">Go</a>';
 			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
-		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
+		$createArticleBtn = ['label' => 'Create an article', 'link' => 'article/create'];
 		$view = new View('back/list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
 		$view->assign("fields", $fields);
@@ -92,7 +92,7 @@ class PostController{
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
 		if(!$content){
-			header("Location: managearticles");
+			header("Location: articles");
 			exit();
 		}
 
@@ -129,23 +129,20 @@ class PostController{
 	}
 
 	public function deleteArticleAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'article not set ';
-			header("Location: managearticles");
-			exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('article not set');}
+			$contentObj = new Post();
+			$contentObj->setPrefix($site['prefix']);
+			$contentObj->setId($_GET['id']);
+			$content = $contentObj->findOne();
+			if(!$content){ throw new \Exception('No content found');}
+			$check = $contentObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this article');}
+			\App\Core\Helpers::customRedirect('/admin/articles', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/articles?error', $site);
 		}
-
-		$contentObj = new Post();
-		$contentObj->setPrefix($site['prefix']);
-		$contentObj->setId($_GET['id']);
-		$content = $contentObj->findOne();
-		if(!$content){
-			header("Location: managearticles");
-			exit();
-		}
-		$contentObj->delete();
-		header("Location: managearticles");
-		exit();
 	}
 
 	/*

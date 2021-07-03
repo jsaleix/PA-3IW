@@ -51,15 +51,15 @@ class DishController{
 					$item['category'] = 'No category';
 				}
 
-				$buttonEdit = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
-				$buttonDelete= '<a href="deleteDish?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="dish/edit?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete= '<a href="dish/delete?id=' . $item['id'] . '">Go</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
 				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $buttonEdit . "','" . $buttonDelete . "'";
 				$datas[] = $formalized;
 			}
 		}
 
-		$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
+		$addDishButton = ['label' => 'Add a new dish', 'link' => 'dish/create'];
 		
 		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addDishButton);
@@ -133,7 +133,7 @@ class DishController{
 	public function editDishAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
-			header("Location: managedishes");
+			header("Location: dishes");
 			exit();
 		}
 
@@ -142,7 +142,7 @@ class DishController{
 		$dishObj->setId($_GET['id']??0);
 		$dish = $dishObj->findOne();
 		if(!$dish){
-			header("Location: managedishes");
+			header("Location: dishes");
 			exit();
 		}
 
@@ -213,23 +213,20 @@ class DishController{
 	}
 
 	public function deleteDishAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'dish not set ';
-			header("Location: managedishes");
-			exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('Dish not set'); }
+			$dishObj = new Dish();
+			$dishObj->setPrefix($site['prefix']);
+			$dishObj->setId($_GET['id']??0);
+			$dish = $dishObj->findOne();
+			if(!$dish){ throw new \Exception('No content found'); }
+			$check = $dishObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this dish'); }
+			\App\Core\Helpers::customRedirect('/admin/dishes?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/dishes?error', $site);
 		}
-
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
-		$dishObj->setId($_GET['id']??0);
-		$dish = $dishObj->findOne();
-		if(!$dish){
-			header("Location: managedishes");
-			exit();
-		}
-		$dishObj->delete();
-		header("Location: managedishes");
-		exit();
 
 	}
 

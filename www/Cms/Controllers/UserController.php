@@ -77,22 +77,22 @@ class UserController{
     }
 
     public function deleteAdminAction($site){
-        if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'user not set ';
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('whitelist id not set');}
+			$userObj = new User();
+			$userObj->setId($_GET['id']);
+			$user = $userObj->findOne();
+			if(!$user){ throw new \Exception('Cannot find this user on the whitelist'); }
+			$wlistObj = new Whitelist();
+			$wlistObj->setIdSite($site['id']);
+			$wlistObj->setIdUser($_GET['id']);
+			$check = $wlistObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this user from whitelist');}
+			\App\Core\Helpers::customRedirect('/admin/users?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/users?error', $site);
 		}
-        $userObj = new User();
-        $userObj->setId($_GET['id']);
-        $user = $userObj->findOne();
-        if(!$user){
-            header("Location: ../users");
-			exit();
-        }
-        $wlistObj = new Whitelist();
-        $wlistObj->setIdSite($site['id']);
-        $wlistObj->setIdUser($_GET['id']);
-        $wlistObj->delete();
-        header("Location: ../users");
-		exit();
     }
 
 }

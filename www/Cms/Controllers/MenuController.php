@@ -106,27 +106,23 @@ class MenuController{
         $view->assign('subDomain', $site['subDomain']);
         $view->assign('dishes', $dishesArr);
 
-
-
     }
 
     public function deleteMenuAction($site){
-        if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'menu not set ';
-			header("Location: /");
-            exit();
-		}
-        $menuObj = new Menu();
-		$menuObj->setPrefix($site['prefix']);
-		$menuObj->setId($_GET['id']??0);
-		$menu = $menuObj->findOne();
-		if(!$menu){
-			header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus');
-            exit();
-		}
-        $menuObj->delete();
-        header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus');
-        exit();
+        try{
+            if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('menu is not set'); }
+            $menuObj = new Menu();
+            $menuObj->setPrefix($site['prefix']);
+            $menuObj->setId($_GET['id']??0);
+            $menu = $menuObj->findOne();
+            if(!$menu){ throw new \Exception('Menu not found'); }
+            $check = $menuObj->delete();
+            if(!$check){ throw new \Exception('Cannot delete this menu');}
+			\App\Core\Helpers::customRedirect('/admin/menus?success', $site);
+        }catch(\Exception $e){
+            echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/menus?error', $site);
+        }
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){

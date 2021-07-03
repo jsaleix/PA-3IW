@@ -39,8 +39,8 @@ class DishCategoryController{
 		if($dishCategories){
 			foreach($dishCategories as $item){
 				//$dishCatList[] = $dishCatObj->listFormalize($item);
-				$buttonEdit = '<a href="editdishcategory?id=' . $item['id'] . '">Go</a>';
-				$buttonDelete = '<a href="deletedishcategory?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="dishcategory/edit?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete = '<a href="dishcategory/delete?id=' . $item['id'] . '">Go</a>';
 				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit."','". $buttonDelete . "'";
 
 			}
@@ -48,7 +48,7 @@ class DishCategoryController{
 			$content = "No dish category yet";
 		}
 
-		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'createdishcategory'];
+		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'dishcategory/create'];
 		
 		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
@@ -96,7 +96,7 @@ class DishCategoryController{
 	public function editDishCategoryAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
-			header("Location: managedishcategories");
+			header("Location: dishcategories");
 			exit();
 		}
 
@@ -105,7 +105,7 @@ class DishCategoryController{
 		$dishCatObj->setId($_GET['id']??0);
 		$dish = $dishCatObj->findOne();
 		if(!$dish){
-			header("Location: managedishcategories");
+			header("Location: dishcategories");
 			exit();
 		}
 
@@ -134,6 +134,7 @@ class DishCategoryController{
 				if($adding){
 					$message ='Dish category successfully updated!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
 				}else{
 					$errors[] = "Cannot update this dish category";
 					$view->assign("errors", $errors);
@@ -143,23 +144,20 @@ class DishCategoryController{
 	}
 
 	public function deleteDishCategoryAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'dish not set ';
-			header("Location: managedishcategories");
-			exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('dish category not set');}
+			$dishCatObj = new DishCategory();
+			$dishCatObj->setPrefix($site['prefix']);
+			$dishCatObj->setId($_GET['id']??0);
+			$dish = $dishCatObj->findOne();
+			if(!$dish){ throw new \Exception('dish category not found');}
+			$check = $dishCatObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this article');}
+			\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/dishcategories?error', $site);
 		}
-
-		$dishCatObj = new DishCategory();
-		$dishCatObj->setPrefix($site['prefix']);
-		$dishCatObj->setId($_GET['id']??0);
-		$dish = $dishCatObj->findOne();
-		if(!$dish){
-			header("Location: managedishcategories");
-			exit();
-		}
-		$dishCatObj->delete();
-		header("Location: managedishcategories");
-		exit();
 	}
 
 	/*

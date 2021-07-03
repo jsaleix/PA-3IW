@@ -70,8 +70,8 @@ class PageController{
 			}
 
 
-			$buttonEdit = '<a href="editPage?id=' . $item['id'] . '">Go</a>';
-			$buttonDelete = '<a href="deletePage?id=' . $item['id'] . '">Go</a>';
+			$buttonEdit = '<a href="page/edit?id=' . $item['id'] . '">Go</a>';
+			$buttonDelete = '<a href="page/delete?id=' . $item['id'] . '">Go</a>';
 			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $buttonEdit . "','" . $buttonDelete ."'";
 
 		}
@@ -118,6 +118,7 @@ class PageController{
 				if($adding){
 					$message ='Page successfully published!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
 				}else{
 					$errors[] = "Cannot insert this page";
 					$view->assign("errors", $errors);
@@ -129,7 +130,7 @@ class PageController{
 	public function editPageAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'page not set ';
-			header("Location: managepages");
+			header("Location: pages");
 			exit();
 		}
 
@@ -138,7 +139,7 @@ class PageController{
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
-			header("Location: managepages");
+			header("Location: pages");
 			exit();
 		}
 
@@ -190,6 +191,7 @@ class PageController{
 				if($adding){
 					$message ='Page successfully updated!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
 				}else{
 					$errors = ["Error when updating this page"];
 					$view->assign("errors", $errors);
@@ -199,24 +201,21 @@ class PageController{
 	}
 
 	public function deletePageAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'page not set ';
-			header("Location: managepages");
-			exit();
-		}
-		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
-		$pageObj->setId($_GET['id']??0);
-		$page = $pageObj->findOne();
-		print_r($page);
-		if(!$page){
-			header("Location: managepages");
-			exit();
-		}
-		$pageObj->delete();
-		header("Location: managepages");
-		exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('page not set');}
+			$pageObj = new Page();
+			$pageObj->setPrefix($site['prefix']);
+			$pageObj->setId($_GET['id']??0);
+			$page = $pageObj->findOne();
 
+			if(!$page){ throw new \Exception('No page found'); }
+			$check = $pageObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this page');}
+			\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/pages?error', $site);
+		}
 	}
 
 }
