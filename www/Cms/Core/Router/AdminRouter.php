@@ -14,33 +14,33 @@ class AdminRouter extends Router implements RouterInterface
 	private $site;
 
 	public function __construct($uri){
-		if( !Security::isConnected()){
-            header('Location: '.DOMAIN . '/login');
-            exit();
-        }
-        $siteObj = new Site();
-        $siteObj->setSubDomain($uri[0]);
-        $site = $siteObj->findOne();
-        if(!$site || empty($site['id'])){
-            header("Location: " . DOMAIN );
-            exit();
-        }
-        if( $site['creator'] !== Security::getUser()){
-            $wlistObj = new Whitelist();
-            $wlistObj->setIdSite($site['id']);
-            $wlistObj->setIdUser(Security::getUser());
-            $wlist = $wlistObj->findOne();
-            if( !$wlist ){
-                header("Location: " . DOMAIN . "/site/" . $site['subDomain']);
-                exit();
+        try{
+            if( !Security::isConnected()){
+                \App\Core\Helpers::customRedirect('/login');
             }
-        }
-		$uri = array_slice($uri, 2);
-        $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
-        $uri = implode($uri, '/');
-		parent::__construct($uri, "Cms/routes.yml");
-		$this->uri  = $uri;
-		$this->site = $site;
+
+            $siteObj = new Site();
+            $siteObj->setSubDomain($uri[0]);
+            $site = $siteObj->findOne();
+            if(!$site || empty($site['id'])){ throw new \Exception('This site does not exist'); }
+
+            if( $site['creator'] !== Security::getUser()){
+                $wlistObj = new Whitelist();
+                $wlistObj->setIdSite($site['id']);
+                $wlistObj->setIdUser(Security::getUser());
+                $wlist = $wlistObj->findOne();
+                if( !$wlist ) { throw new \Exception('You\re not allowed to access this page'); }
+            }
+            $uri = array_slice($uri, 2);
+            $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
+            $uri = implode($uri, '/');
+            parent::__construct($uri, "Cms/routes.yml");
+            $this->uri  = $uri;
+            $this->site = $site;
+        }catch(\Exception $e){
+			echo $e->getMessage();
+            \App\Core\Helpers::customRedirect('/', $site);
+		}
 	}
 
 	public function route(): void{	
