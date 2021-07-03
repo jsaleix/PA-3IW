@@ -4,8 +4,9 @@ namespace CMS;
 use CMS\Core\CMSRouterMaker;
 
 function handleCMS($uri){
+    // $uri = // site/subDomain/page
     $uri = explode('/', $uri);
-    $uri = array_slice($uri, 2); // site/subDomain/page -> [ 'subDomain', 'page' ];
+    $uri = array_slice($uri, 2); // [ '', 'site', 'subDomain', 'page' ] -> [ 'subDomain', 'page' ];
 
     try{
         if(!$uri){ throw new \InvalidArgumentException ('Missing uri parameter');}

@@ -8,7 +8,7 @@ use App\Core\Security;
 
 use App\Core\Router;
 
-class fileRouter extends Router implements RouterInterface
+class AdminRouter extends Router implements RouterInterface
 {
 	private $uri;
 	private $site;
@@ -44,10 +44,10 @@ class fileRouter extends Router implements RouterInterface
 	}
 
 	public function route(): void{	
-        $c = $this->getController();
-        $a = $this->getAction();
-
 		try{
+            $c = $this->getController();
+            $a = $this->getAction();
+    
 			if(!file_exists("Cms/Controllers/".$c.".php")) throw new Exception("Le fichier controller : ".$c." n'existe pas");
 			include "Cms/Controllers/".$c.".php";
             $c = "CMS\\Controller\\".$c;
@@ -58,7 +58,6 @@ class fileRouter extends Router implements RouterInterface
 		}catch(\Exception $e){
 			echo $e->getMessage();
 		}
-
 
 	}
 

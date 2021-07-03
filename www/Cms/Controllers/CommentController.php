@@ -43,9 +43,9 @@ class CommentController{
                 }else{
                     $item['idUser'] = 'Unknown';
                 }
-                $buttonDelete = '<a href="deletecomment?id=' .$item['id'].'">Go</a>';
+                $buttonDelete = "<a href='deletecomment?id=" .$item['id']."'>Go</a>";
 
-				$formalized = "'" . $item['id'] . "','" . $item['message'] . "','" . $item['idPost'] .  "','" . $item['idUser'] . "','" . $item['date']. "','" . $buttonDelete . "'";
+				$formalized = "\"" . $item['id'] . "\",\"" . htmlspecialchars($item['message']) . "\",\"" . $item['idPost'] .  "\",\"" . $item['idUser'] . "\",\"" . $item['date']. "\",\"" . $buttonDelete . "\"";
 				$datas[] = $formalized;
 			}
 		}
