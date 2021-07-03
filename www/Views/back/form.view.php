@@ -6,7 +6,6 @@
 
 <?php endif;?>
 
-<main class="main-container">
 	<?= isset($content) && $content ?>
 
     <?php if(isset($form)): ?>
@@ -36,4 +35,3 @@
             } );
         </script>
     <?php endif; ?>
-</main>

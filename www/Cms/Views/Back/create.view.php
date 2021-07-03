@@ -23,6 +23,4 @@
         <h3> <?=$message?> </h3>
     <?php endif;?>
 
-    <main class="main-container">
-        <?php App\Core\FormBuilder::render($form)?>
-    </main>
+    <?php App\Core\FormBuilder::render($form)?>

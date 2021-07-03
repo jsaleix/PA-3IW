@@ -12,8 +12,8 @@ class NavbarBuilder
 		$pageObj->setPrefix($site->getPrefix());
         $pageObj->setCategory('IS NULL');
         $pagesToShow = $pageObj->findAll();
-		if(file_exists("CMS/Views/Front/navbar.view.php")){
-			include "CMS/Views/Front/navbar.view.php";
+		if(file_exists("CMS/Views/Front/navigation.php")){
+			include "CMS/Views/Front/navigation.php";
 		}else{
 			die('navbar not found');
 		}
@@ -21,8 +21,8 @@ class NavbarBuilder
 
 	public function renderBackNavigation($site): void
 	{
-		if(file_exists("CMS/Views/Back/navbar.view.php")){
-			include "CMS/Views/Back/navbar.view.php";
+		if(file_exists("CMS/Views/Back/navigation.php")){
+			include "CMS/Views/Back/navigation.php";
 		}else{
 			die('navbar not found');
 		}	

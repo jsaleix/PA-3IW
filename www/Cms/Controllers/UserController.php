@@ -46,7 +46,7 @@ class UserController{
         $wlistObj = new Whitelist();
 		$wlistObj->setIdSite($site['id']);
 
-		$form = $dishCatObj->formAdd($dishCatArr);
+		//$form = $wlistObj->formAdd();
 
 		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);

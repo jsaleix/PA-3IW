@@ -174,8 +174,7 @@ class PageController{
 
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
-		$view = new View('back/create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
 

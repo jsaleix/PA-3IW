@@ -2,34 +2,15 @@
 <html lang="FR">
 <head>
 	<meta charset="UTF-8">
-	<title>BACKOFFICE</title>
 	<meta name="EasyMeal - restaurant's backoffice">
-	<style>
-	.inline-list{
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		align-items: center;
-		align-content: center;
-	}
-
-	.inline-list > * {
-		margin-right: 10px;
-	}
-
-	.inline-list > input[type=submit]{
-		height: 2em;
-	}
-	</style>
-		<meta charset="UTF-8">
-		<title>Manage my site - EasyMeal</title>
-		<meta name="Création d'un site" content="Page d'initialisation d'un nouveau site sur EasyMeal">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href=<?php echo STYLES ?>>
-		<link rel="icon" href="/Assets/images/logo.png" />
-		<script src="/Assets/js/jquery-3.5.1.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+	<meta charset="UTF-8">
+	<title>Manage my site - EasyMeal</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href=<?php echo STYLES ?>>
+	<link rel="icon" href="/Assets/images/logo.png" />
+	<script src="/Assets/js/jquery-3.5.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 </head>
 <body>
 	<header>
@@ -51,11 +32,11 @@
 		</div>  
 	</header>
 	<main>
-	<?= CMS\Core\navbarBuilder::renderBackNavigation($this->site) ?>
+		<?= CMS\Core\navbarBuilder::renderBackNavigation($this->site) ?>
 
-	<div class="container">
-		<?php include $this->view ;?>
-	</div>
+		<div class="container">
+			<?php include $this->view ;?>
+		</div>
 	</main>
 </body>
 <script src="/Assets/js/backcms.js"></script>

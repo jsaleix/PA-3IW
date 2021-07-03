@@ -6,34 +6,32 @@
 
 <?php endif;?>
 
-<main class="main-container">
-	<?= isset($content) && $content ?>
+<?= isset($content) && $content ?>
 
-    <?php if(isset($form)): ?>
-        <?php App\Core\FormBuilder::render($form)?>
-    <?php endif;?>
+<?php if(isset($form)): ?>
+    <?php App\Core\FormBuilder::render($form)?>
+<?php endif;?>
 
-    <?php if(isset($list)): ?>
-        <h2>Sites created </h2>
-        <table id="data" class="display" width="100%"></table>
+<?php if(isset($list)): ?>
+    <h2>Sites created </h2>
+    <table id="data" class="display" width="100%"></table>
 
-        <script>
-            var dataSet = [
-                <?php foreach($datas as $data):?>
-                        [ <?=$data?> ],
-                <?php endforeach;?>
-                ];
-            
-            $(document).ready(function() {
-                $('#data').DataTable( {
-                    data: dataSet,
-                    columns: [
-                        <?php foreach($fields as $field):?>
-                        { title: "<?=$field?>" },
-                        <?php endforeach;?>
-                    ]
-                } );
+    <script>
+        var dataSet = [
+            <?php foreach($datas as $data):?>
+                    [ <?=$data?> ],
+            <?php endforeach;?>
+            ];
+        
+        $(document).ready(function() {
+            $('#data').DataTable( {
+                data: dataSet,
+                columns: [
+                    <?php foreach($fields as $field):?>
+                    { title: "<?=$field?>" },
+                    <?php endforeach;?>
+                ]
             } );
-        </script>
-    <?php endif; ?>
-</main>
+        } );
+    </script>
+<?php endif; ?>
