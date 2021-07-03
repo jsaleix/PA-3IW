@@ -9,7 +9,7 @@ use CMS\Models\Post;
 use CMS\Models\Page;
 use CMS\Models\Category;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -19,8 +19,7 @@ class SiteController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -28,7 +27,7 @@ class SiteController{
 	public function editSiteAction($site){
 		$siteObj = new Site();
         $siteObj->setId($site['id']);
-		$view = new View('admin.create', 'back');
+		$view = new View('admin.create', 'back', $site);
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
@@ -64,7 +63,6 @@ class SiteController{
 		}
 
 		$form = $siteObj->formEdit($site);
-		$view->assign("navbar", navbarBuilder::renderNavbar((array)$site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
 
@@ -92,9 +90,8 @@ class SiteController{
 			}
 		}
         
-		$view = new View('front/about', 'front');
+		$view = new View('front/about', 'front', $siteObj);
 		$view->assign('pageTitle', 'About our restaurant');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($siteObj->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));
 		$view->assign('site', $site);
 

@@ -38,4 +38,19 @@ class Helpers
 		exit();
 	}
 
+	public static function renderCMSLink($path, $site)
+	{
+		echo 'test';
+		$url = DOMAIN . '/site';
+		if(gettype($site) == 'array' )
+		{
+			$url .= $site['subDomain'] . '/' . $path;
+		}
+		if(gettype($site) === '\App\Models\Site')
+		{
+			$url .= $site->getSubDomain() . '/' . $path;
+		}
+		return $url;
+	}
+
 }

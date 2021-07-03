@@ -51,7 +51,7 @@
 		</div>  
 	</header>
 	<main>
-	<?=$navbar??''?>
+	<?= CMS\Core\navbarBuilder::renderBackNavigation($this->site) ?>
 
 	<div class="container">
 		<?php include $this->view ;?>

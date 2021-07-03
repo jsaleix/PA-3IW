@@ -8,7 +8,7 @@ use CMS\Models\Page;
 use CMS\Models\Comment;
 use CMS\Models\Post;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 
 class CommentController{
@@ -50,8 +50,7 @@ class CommentController{
 			}
 		}
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the comments");

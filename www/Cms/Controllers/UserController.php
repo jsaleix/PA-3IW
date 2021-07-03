@@ -6,7 +6,7 @@ use App\Models\Site;
 use App\Models\User;
 use App\Models\Whitelist;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -35,8 +35,7 @@ class UserController{
 
 		$addDishButton = ['label' => 'Add a new admin', 'link' => 'users/add'];
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addDishButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -49,8 +48,7 @@ class UserController{
 
 		$form = $dishCatObj->formAdd($dishCatArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin.create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a dish category");
 

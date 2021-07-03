@@ -9,7 +9,7 @@ use CMS\Models\Page;
 use CMS\Models\Category;
 use CMS\Models\Comment;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -21,8 +21,7 @@ class PostController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back',  $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -31,8 +30,7 @@ class PostController{
 		$postObj = new Post();
 
 		$form = $postObj->formAddContent();
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin.create', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -77,8 +75,7 @@ class PostController{
 			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -99,7 +96,7 @@ class PostController{
 			exit();
 		}
 
-		$view = new View('admin.create', 'back');
+		$view = new View('admin.create', 'back',  $site);
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
@@ -125,7 +122,6 @@ class PostController{
 		}
 
 		$form = $contentObj->formEditContent($content);
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 		$view->assign('errors', $errors??[]);
@@ -175,9 +171,9 @@ class PostController{
 			$html .= $this->renderPostItem($postObj->returnData());
         }
 
-		$view = new View('cms', 'front');
+		$view = new View('cms', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('content', $html);
 	}
@@ -267,9 +263,8 @@ class PostController{
 		
 		$errors = [];
 
-		$view = new View('front/post', 'front');
+		$view = new View('front/post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);

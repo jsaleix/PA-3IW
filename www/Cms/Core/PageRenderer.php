@@ -6,7 +6,7 @@ use App\Models\Site;
 use App\Models\Action;
 use App\Core\Router;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 

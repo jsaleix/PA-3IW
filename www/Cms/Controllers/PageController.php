@@ -11,7 +11,7 @@ use CMS\Models\Content;
 use CMS\Models\Page;
 use CMS\Models\Category;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 
 class PageController{
@@ -20,8 +20,7 @@ class PageController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -78,8 +77,7 @@ class PageController{
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
 
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $createPageBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -100,8 +98,7 @@ class PageController{
 
 		$form = $pageObj->formAddContent($actionArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin.create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
 

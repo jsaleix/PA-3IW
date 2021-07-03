@@ -12,7 +12,7 @@ use CMS\Models\Category;
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -22,8 +22,7 @@ class DishController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -62,8 +61,7 @@ class DishController{
 
 		$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addDishButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -85,8 +83,7 @@ class DishController{
 			}
 		}
 
-		$view = new View('/back/createDish', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('/back/createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign('pageTitle', "Add a dish");
 
@@ -164,8 +161,7 @@ class DishController{
 		$form = $dishObj->formEdit($dishArr, $dishCatArr);
 		$form = $dishObj->formAdd($dishCatArr);*/
 
-		$view = new View('/back/createDish', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('/back/createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign("name", $dish['name']);
 		$view->assign("image", (DOMAIN . '/' . $dish['image']));
@@ -285,9 +281,8 @@ class DishController{
             return 'No content found :/';
         }
 
-		$view = new View('front/dish', 'front');
+		$view = new View('front/dish', 'front', $site);
 		$view->assign('pageTitle', 'Dishes available');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('dish', $dish);
 	}
