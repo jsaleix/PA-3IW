@@ -7,13 +7,13 @@
   controller: admin
   action: default
 
-/article/create:
-  controller: postcontroller
-  action: createArticle
-
 /articles:
   controller: postcontroller
   action: managearticles
+
+/article/create:
+  controller: postcontroller
+  action: createArticle
 
 /article/edit:
   controller: postcontroller
@@ -23,13 +23,13 @@
   controller: postcontroller
   action: deletearticle
 
-/page/create:
-  controller: pagecontroller
-  action: createpage
-
 /pages:
   controller: pagecontroller
   action: managepages
+
+/page/create:
+  controller: pagecontroller
+  action: createpage
 
 /page/edit:
   controller: pagecontroller
@@ -39,21 +39,21 @@
   controller: pagecontroller
   action: deletepage
 
-/searchdish:
+/dishes:
   controller: dishController
-  action: getDish
+  action: managedishes
 
 /dish/create:
   controller: dishController
   action: createdish
 
-/dishes:
-  controller: dishController
-  action: managedishes
-
 /dish/edit:
   controller: dishController
   action: editdish
+
+/dishcategories:
+  controller: dishCategoryController
+  action: managedishcategories
 
 /dish/delete:
   controller: dishController
@@ -62,10 +62,6 @@
 /dishcategory/create:
   controller: dishCategoryController
   action: createdishCategory
-
-/dishcategories:
-  controller: dishCategoryController
-  action: managedishcategories
 
 /dishcategory/edit:
   controller: dishCategoryController
@@ -123,6 +119,12 @@
   controller: usercontroller
   action: deleteadmin
 
+#Api routes
+/api/searchdish:
+  controller: dishController
+  action: getDish
+
+#Entities 
 /ent/post:
   controller: postcontroller
   action: renderpost
