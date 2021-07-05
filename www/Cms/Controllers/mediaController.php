@@ -28,7 +28,29 @@ class MediaController{
 	}
 
 	public function listMediasAction($site){
-		$view = new View('back/manageLibrary', 'back', $site);
+		$mediumObj = new Medium();
+		$mediumObj->setPrefix($site['prefix']);
+		$media = $mediumObj->findAll();
+		$mediumList = [];
+		$content = "";
+		$fields = ['id', 'image', 'name', 'publicationDate', 'Edit', 'Delete'];
+		$datas = [];
+
+		if($media){
+			foreach($media as $item){
+				$img = '<img src='.DOMAIN.'/'.$item['path'].' width=100 height=80/>';
+				$buttonEdit = '<a href="medium/edit?id='.$item['id'].'">Go</a>';
+				$buttonDelete = '<a href="medium/delete?id='.$item['id'].'">Go</a>';
+				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
+				$datas[] = $formalized;
+			}
+		}
+		$addMediumButton = ['label' => 'Add a new Medium', 'link' => 'medium/create'];
+
+		$view = new View('back/list', 'back', $site);
+		$view->assign("createButton", $addMediumButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the dishes");
 	}
 
