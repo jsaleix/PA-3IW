@@ -112,7 +112,7 @@
         let select = document.getElementById('category-selector');
         select = select.value;
         try{
-            let res = await fetch('<?=DOMAIN?>/site/<?=$subDomain?>/admin/searchdish?category=' + select, 
+            let res = await fetch('<?=DOMAIN?>/site/<?=$subDomain?>/admin/api/searchdish?category=' + select, 
             {
                 method: 'GET',
                 headers:{

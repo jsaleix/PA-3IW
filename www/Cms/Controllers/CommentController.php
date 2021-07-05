@@ -8,7 +8,7 @@ use CMS\Models\Page;
 use CMS\Models\Comment;
 use CMS\Models\Post;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 
 class CommentController{
@@ -43,38 +43,35 @@ class CommentController{
                 }else{
                     $item['idUser'] = 'Unknown';
                 }
-                $buttonDelete = "<a href='deletecomment?id=" .$item['id']."'>Go</a>";
+                $buttonDelete = "<a href='comment/delete?id=" .$item['id']."'>Go</a>";
 
 				$formalized = "\"" . $item['id'] . "\",\"" . htmlspecialchars($item['message']) . "\",\"" . $item['idPost'] .  "\",\"" . $item['idUser'] . "\",\"" . $item['date']. "\",\"" . $buttonDelete . "\"";
 				$datas[] = $formalized;
 			}
 		}
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the comments");
 	}
 
     public function deleteCommentAction($site){
-        if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'comment not found ';
-			header("Location: managecomments");
-			exit();
+        try{
+            if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('comment not set'); }
+            $commentObj = new Comment();
+            $commentObj->setPrefix($site['prefix']);
+            $commentObj->setId($_GET['id']??0);
+            $comment = $commentObj->findOne();
+            if(!$comment){ throw new \Exception('Cannot delete this comment'); }
+            $check = $commentObj->delete();
+            if(!$check){ throw new \Exception('Cannot delete this comment');}
+			\App\Core\Helpers::customRedirect('/admin/comments?success', $site);
+        }catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/comments?error', $site);
 		}
-
-        $commentObj = new Comment();
-        $commentObj->setPrefix($site['prefix']);
-        $commentObj->setId($_GET['id']??0);
-        $comment = $commentObj->findOne();
-        if(!$comment){
-			header("Location: managecomments");
-			exit();
-        }
-        $commentObj->delete();
-        header("Location: managecomments");
-		exit();
+        
     }
 
 }

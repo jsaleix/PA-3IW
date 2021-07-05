@@ -12,7 +12,7 @@ use CMS\Models\Category;
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -22,8 +22,7 @@ class DishController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -52,18 +51,17 @@ class DishController{
 					$item['category'] = 'No category';
 				}
 
-				$buttonEdit = '<a href="editDish?id=' . $item['id'] . '">Go</a>';
-				$buttonDelete= '<a href="deleteDish?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="dish/edit?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete= '<a href="dish/delete?id=' . $item['id'] . '">Go</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
 				$formalized = "'" . $item['id'] . "','" . $img . "','" . $item['name'] . "','" . $item['category'] .  "','" . $item['price'] . "','" . $buttonEdit . "','" . $buttonDelete . "'";
 				$datas[] = $formalized;
 			}
 		}
 
-		$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
+		$addDishButton = ['label' => 'Add a new dish', 'link' => 'dish/create'];
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addDishButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -85,8 +83,7 @@ class DishController{
 			}
 		}
 
-		$view = new View('/back/createDish', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('/back/createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign('pageTitle', "Add a dish");
 
@@ -136,7 +133,7 @@ class DishController{
 	public function editDishAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
-			header("Location: managedishes");
+			header("Location: dishes");
 			exit();
 		}
 
@@ -145,7 +142,7 @@ class DishController{
 		$dishObj->setId($_GET['id']??0);
 		$dish = $dishObj->findOne();
 		if(!$dish){
-			header("Location: managedishes");
+			header("Location: dishes");
 			exit();
 		}
 
@@ -164,8 +161,7 @@ class DishController{
 		$form = $dishObj->formEdit($dishArr, $dishCatArr);
 		$form = $dishObj->formAdd($dishCatArr);*/
 
-		$view = new View('/back/createDish', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('/back/createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign("name", $dish['name']);
 		$view->assign("image", (DOMAIN . '/' . $dish['image']));
@@ -217,23 +213,20 @@ class DishController{
 	}
 
 	public function deleteDishAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'dish not set ';
-			header("Location: managedishes");
-			exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('Dish not set'); }
+			$dishObj = new Dish();
+			$dishObj->setPrefix($site['prefix']);
+			$dishObj->setId($_GET['id']??0);
+			$dish = $dishObj->findOne();
+			if(!$dish){ throw new \Exception('No content found'); }
+			$check = $dishObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this dish'); }
+			\App\Core\Helpers::customRedirect('/admin/dishes?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/dishes?error', $site);
 		}
-
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
-		$dishObj->setId($_GET['id']??0);
-		$dish = $dishObj->findOne();
-		if(!$dish){
-			header("Location: managedishes");
-			exit();
-		}
-		$dishObj->delete();
-		header("Location: managedishes");
-		exit();
 
 	}
 
@@ -285,9 +278,8 @@ class DishController{
             return 'No content found :/';
         }
 
-		$view = new View('front/dish', 'front');
+		$view = new View('front/dish', 'front', $site);
 		$view->assign('pageTitle', 'Dishes available');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('dish', $dish);
 	}

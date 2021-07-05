@@ -7,31 +7,31 @@
   controller: admin
   action: default
 
-/createarticle:
-  controller: postcontroller
-  action: createArticle
-
-/managearticles:
+/articles:
   controller: postcontroller
   action: managearticles
 
-/editarticle:
+/article/create:
+  controller: postcontroller
+  action: createArticle
+
+/article/edit:
   controller: postcontroller
   action: editarticle
 
-/deletearticle:
+/article/delete:
   controller: postcontroller
   action: deletearticle
 
-/createpage:
-  controller: pagecontroller
-  action: createpage
-
-/managepages:
+/pages:
   controller: pagecontroller
   action: managepages
 
-/editpage:
+/page/create:
+  controller: pagecontroller
+  action: createpage
+
+/page/edit:
   controller: pagecontroller
   action: editpage
 
@@ -39,47 +39,43 @@
   controller: pagecontroller
   action: deletepage
 
-/searchdish:
-  controller: dishController
-  action: getDish
-
-/createdish:
-  controller: dishController
-  action: createdish
-
-/managedishes:
+/dishes:
   controller: dishController
   action: managedishes
 
-/editdish:
+/dish/create:
+  controller: dishController
+  action: createdish
+
+/dish/edit:
   controller: dishController
   action: editdish
 
-/deletedish:
-  controller: dishController
-  action: deletedish
-
-/createdishcategory:
-  controller: dishCategoryController
-  action: createdishCategory
-
-/managedishcategories:
+/dishcategories:
   controller: dishCategoryController
   action: managedishcategories
 
-/editdishcategory:
+/dish/delete:
+  controller: dishController
+  action: deletedish
+
+/dishcategory/create:
+  controller: dishCategoryController
+  action: createdishCategory
+
+/dishcategory/edit:
   controller: dishCategoryController
   action: editdishcategory
 
-/deletedishcategory:
+/dishcategory/delete:
   controller: dishCategoryController
   action: deletedishcategory
 
-/managecomments:
+/comments:
   controller: commentController
   action: managecomments
 
-/deletecomment:
+/comment/delete:
   controller: commentController
   action: deletecomment
 
@@ -135,6 +131,12 @@
   controller: usercontroller
   action: deleteadmin
 
+#Api routes
+/api/searchdish:
+  controller: dishController
+  action: getDish
+
+#Entities 
 /ent/post:
   controller: postcontroller
   action: renderpost

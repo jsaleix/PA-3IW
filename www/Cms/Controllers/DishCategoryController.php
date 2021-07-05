@@ -11,7 +11,7 @@ use CMS\Models\Category;
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -21,8 +21,7 @@ class DishCategoryController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -40,8 +39,8 @@ class DishCategoryController{
 		if($dishCategories){
 			foreach($dishCategories as $item){
 				//$dishCatList[] = $dishCatObj->listFormalize($item);
-				$buttonEdit = '<a href="editdishcategory?id=' . $item['id'] . '">Go</a>';
-				$buttonDelete = '<a href="deletedishcategory?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="dishcategory/edit?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete = '<a href="dishcategory/delete?id=' . $item['id'] . '">Go</a>';
 				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit."','". $buttonDelete . "'";
 
 			}
@@ -49,10 +48,9 @@ class DishCategoryController{
 			$content = "No dish category yet";
 		}
 
-		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'createdishcategory'];
+		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'dishcategory/create'];
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -67,8 +65,7 @@ class DishCategoryController{
 
 		$form = $dishCatObj->formAdd($dishCatArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a dish category");
 
@@ -99,7 +96,7 @@ class DishCategoryController{
 	public function editDishCategoryAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'dish not set ';
-			header("Location: managedishcategories");
+			header("Location: dishcategories");
 			exit();
 		}
 
@@ -108,7 +105,7 @@ class DishCategoryController{
 		$dishCatObj->setId($_GET['id']??0);
 		$dish = $dishCatObj->findOne();
 		if(!$dish){
-			header("Location: managedishcategories");
+			header("Location: dishcategories");
 			exit();
 		}
 
@@ -118,8 +115,7 @@ class DishCategoryController{
 		$dishArr = (array)$dish;
 		$form = $dishCatObj->formEdit($dishArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a dish catergory");
 
@@ -138,6 +134,7 @@ class DishCategoryController{
 				if($adding){
 					$message ='Dish category successfully updated!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
 				}else{
 					$errors[] = "Cannot update this dish category";
 					$view->assign("errors", $errors);
@@ -147,23 +144,20 @@ class DishCategoryController{
 	}
 
 	public function deleteDishCategoryAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'dish not set ';
-			header("Location: managedishcategories");
-			exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('dish category not set');}
+			$dishCatObj = new DishCategory();
+			$dishCatObj->setPrefix($site['prefix']);
+			$dishCatObj->setId($_GET['id']??0);
+			$dish = $dishCatObj->findOne();
+			if(!$dish){ throw new \Exception('dish category not found');}
+			$check = $dishCatObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this article');}
+			\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/dishcategories?error', $site);
 		}
-
-		$dishCatObj = new DishCategory();
-		$dishCatObj->setPrefix($site['prefix']);
-		$dishCatObj->setId($_GET['id']??0);
-		$dish = $dishCatObj->findOne();
-		if(!$dish){
-			header("Location: managedishcategories");
-			exit();
-		}
-		$dishCatObj->delete();
-		header("Location: managedishcategories");
-		exit();
 	}
 
 	/*
@@ -200,9 +194,8 @@ class DishCategoryController{
 			$categories[] = $tmpCategory;
 		}
 
-		$view = new View('front/dishes', 'front');
+		$view = new View('front/dishes', 'front', $site);
 		$view->assign('pageTitle', 'Dish page');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('categories', $categories);
 
