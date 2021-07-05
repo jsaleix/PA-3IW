@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title><?=$pageTitle?></title>
 	<meta name="EasyMeal - Y restaurant's">
-    <?= $style??''?>
+    <?= CMS\Core\StyleBuilder::renderStyle($this->site) ?>
+	
 </head>
 <body>
 	<header>
@@ -13,4 +14,5 @@
 	<?php include $this->view ;?>
 
 </body>
+<?= CMS\Core\StyleBuilder::renderStyleScript($this->site) ?>
 </html>
