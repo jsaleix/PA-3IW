@@ -136,6 +136,10 @@
   controller: dishController
   action: getDish
 
+/api/getfilters:
+  controller: actionController
+  action: getActionFilters
+
 #Entities 
 /ent/post:
   controller: postcontroller

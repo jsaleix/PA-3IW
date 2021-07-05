@@ -283,8 +283,8 @@ class MenuController{
     public function renderMenuAction($site, $filter = null){
         if($filter){
             $filter = json_decode($filter, true);
-            if(isset($filter['menuId'])){
-                $menuId = $filter['menuId'];
+            if(isset($filter['menu'])){
+                $menuId = $filter['menu'];
             }else{
                 return;
             }
