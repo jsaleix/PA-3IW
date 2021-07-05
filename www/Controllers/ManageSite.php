@@ -15,6 +15,7 @@ class ManageSite{
         {
             header('Status: 301 Moved Permanently', false, 301);      
             header('Location: /?error=not_connected'); 
+            exit();
         }
         $step = $_GET['step']??1;
 

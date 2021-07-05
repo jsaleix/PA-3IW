@@ -7,10 +7,10 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Content` (
   CONSTRAINT `fk_content_page_:X`
     FOREIGN KEY (`page`)
     REFERENCES `easymeal`.`:X_Page` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_method_page_:X`
     FOREIGN KEY (`method`)
     REFERENCES `easymeal`.`:prefixAction` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);

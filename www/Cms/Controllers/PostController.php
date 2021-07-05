@@ -9,7 +9,7 @@ use CMS\Models\Page;
 use CMS\Models\Category;
 use CMS\Models\Comment;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -21,8 +21,7 @@ class PostController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back',  $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -31,8 +30,7 @@ class PostController{
 		$postObj = new Post();
 
 		$form = $postObj->formAddContent();
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -49,6 +47,7 @@ class PostController{
 				if($adding){
 					$message ='Article successfully published!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/articles?success', $site);
 				}else{
 					$errors = ["Impossible d\'inserer l'article"];
 					$view->assign("errors", $errors);
@@ -63,7 +62,7 @@ class PostController{
 		$postObj = new Post();
 		$postObj->setPrefix($site['prefix']);
 		$posts = $postObj->findAll();
-		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit' ];
+		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit', 'Delete' ];
 		$datas = [];
 		foreach($posts as $item){
 			$userObj = new User();
@@ -71,13 +70,12 @@ class PostController{
 			$user = $userObj->findOne();
 
 			$item['publisher'] = $user['firstname']??'None';
-			$button = '<a href=\"editArticle?id=' . $item['id'] . '\">Go</a>';
-			//$item['content'] = 
-			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $button . "\"";
+			$buttonEdit = '<a href=\"article/edit?id=' . $item['id'] . '\">Go</a>';
+			$buttonDelete = '<a href=\"article/delete?id=' . $item['id'] . '\">Go</a>';
+			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
-		$createArticleBtn = ['label' => 'Create an article', 'link' => 'createarticle'];
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$createArticleBtn = ['label' => 'Create an article', 'link' => 'article/create'];
+		$view = new View('back/list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -94,10 +92,11 @@ class PostController{
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
 		if(!$content){
-			header("Location: managearticles");
+			header("Location: articles");
+			exit();
 		}
 
-		$view = new View('admin.create', 'back');
+		$view = new View('back/create', 'back',  $site);
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
@@ -123,11 +122,27 @@ class PostController{
 		}
 
 		$form = $contentObj->formEditContent($content);
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 		$view->assign('errors', $errors??[]);
 
+	}
+
+	public function deleteArticleAction($site){
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('article not set');}
+			$contentObj = new Post();
+			$contentObj->setPrefix($site['prefix']);
+			$contentObj->setId($_GET['id']);
+			$content = $contentObj->findOne();
+			if(!$content){ throw new \Exception('No content found');}
+			$check = $contentObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this article');}
+			\App\Core\Helpers::customRedirect('/admin/articles', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/articles?error', $site);
+		}
 	}
 
 	/*
@@ -153,9 +168,9 @@ class PostController{
 			$html .= $this->renderPostItem($postObj->returnData());
         }
 
-		$view = new View('cms', 'front');
+		$view = new View('front/cms', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
+		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('content', $html);
 	}
@@ -245,9 +260,8 @@ class PostController{
 		
 		$errors = [];
 
-		$view = new View('front/post', 'front');
+		$view = new View('front/post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
-		$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);

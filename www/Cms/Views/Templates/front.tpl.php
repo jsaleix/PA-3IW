@@ -8,7 +8,7 @@
 </head>
 <body>
 	<header>
-		<?=$navbar??''?>
+		<?= CMS\Core\navbarBuilder::renderFrontNavigation($this->site) ?>
 	</header>
 	<?php include $this->view ;?>
 

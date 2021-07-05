@@ -10,7 +10,7 @@ use CMS\Models\Menu;
 use CMS\Models\DishCategory;
 use CMS\Models\Menu_dish_association;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
@@ -21,20 +21,20 @@ class MenuController{
 		$menuObj = new Menu();
 		$menuObj->setPrefix($site['prefix']);
 		$menus = $menuObj->findAll();
-		$fields = [ 'id', 'name', 'description', 'notes', 'edit'];
+		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
 		$datas = [];
 
 		if($menus){
 			foreach($menus as $item){
-				$button = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
-				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $button . "'";
+				$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
+                $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
+				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
 			}
 		}
 
 		$addCatButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
 		
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -45,9 +45,10 @@ class MenuController{
         if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'menu not set ';
 			header("Location: /");
+            exit();
 		}
 
-        $view = new View('back/menu', 'back');
+        $view = new View('back/menu', 'back', $site);
 
         if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ){
             $action = $_POST['action'];
@@ -62,6 +63,7 @@ class MenuController{
 		$menu = $menuObj->findOne();
 		if(!$menu){
 			header("Location: /");
+            exit();
 		}
 		
         $dishCatObj = new DishCategory();
@@ -95,7 +97,6 @@ class MenuController{
         }
 
 		//$form = $menuObj->formEdit((array)$menu);
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
 		//$view->assign("form", $form);
         $view->assign("name", $menu['name']);
         $view->assign("description", $menu['description']);
@@ -105,8 +106,23 @@ class MenuController{
         $view->assign('subDomain', $site['subDomain']);
         $view->assign('dishes', $dishesArr);
 
+    }
 
-
+    public function deleteMenuAction($site){
+        try{
+            if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('menu is not set'); }
+            $menuObj = new Menu();
+            $menuObj->setPrefix($site['prefix']);
+            $menuObj->setId($_GET['id']??0);
+            $menu = $menuObj->findOne();
+            if(!$menu){ throw new \Exception('Menu not found'); }
+            $check = $menuObj->delete();
+            if(!$check){ throw new \Exception('Cannot delete this menu');}
+			\App\Core\Helpers::customRedirect('/admin/menus?success', $site);
+        }catch(\Exception $e){
+            echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/menus?error', $site);
+        }
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
@@ -185,8 +201,7 @@ class MenuController{
 
 		$form = $menuObj->formAdd();
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a new menu");
 
@@ -209,6 +224,7 @@ class MenuController{
                     $id = $menuObj->getLastId();
                     if($id){
                         header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus/edit?id=' . $id);
+                        exit();
                     }
 				}else{
 					$errors[] = "Cannot create this menu";
@@ -219,7 +235,126 @@ class MenuController{
     }
 
 
+	//CMS FRONT
+    /*
+	* Front vizualization
+	* returns html for pageRenderer
+	*/
+    public function renderMenus($site, $filter = null){
+        $view = new View('front/menus', 'front', $site);
+        $view->assign('pageTitle', 'Menus');
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+
+		$menuObj = new Menu();
+        $menuObj->setPrefix($site->getPrefix());
+        $dishObj = new Dish();
+        $dishObj->setPrefix($site->getPrefix());
+        $dishCatObj = new DishCategory();
+        $dishCatObj->setPrefix($site->getPrefix());
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishMenuAssocObj->setPrefix($site->getPrefix());
+
+        $menuData = [];
+        
+        $menus = $menuObj->findAll();
+        try{
+            if($menus && count($menus) > 0){
+                foreach($menus as $menu)
+                {
+                    $dishes = [];
+                    
+                    $dishMenuAssocObj->setMenu($menu['id']);
+                    $dishesInMenu = $dishMenuAssocObj->findAll();
+                    if($dishesInMenu){
+                        foreach($dishesInMenu as $dishId)
+                        {
+                            $dishObj->setId($dishId['dish']);
+                            $dish = $dishObj->findOne();
+                            if($dish){
+                                if($dish['category']){
+                                    $dishCatObj->setId($dish['category']);
+                                    $category = $dishCatObj->findOne();
+                                    if($category){
+                                        $dish['category'] = $category['name'];
+                                    }
+                                }
+                                $dishes[] = $dish;
+                            }
+                        }
+                        $tmpMenu = ["menu" => $menu, "dishes" => $dishes] ;
+                        $menuData[] = $tmpMenu;
+                    }
+                }
+            }
+        }catch(\Exception $e){
+            echo $e->getMessage();
+        }
 		
+		$view->assign('menus', $menuData);
+	}
+
+    public function renderMenuAction($site, $filter = null){
+        if($filter){
+            $filter = json_decode($filter, true);
+            if(isset($filter['menuId'])){
+                $menuId = $filter['menuId'];
+            }else{
+                return;
+            }
+        }else if(isset($_GET['id']) && !empty($_GET['id']) ){
+            $menuId = $_GET['id'];
+		}else{
+			return 'menu id not set ';
+        }
+
+        $menuObj = new Menu();
+        $dishMenuAssocObj = new Menu_dish_association();
+        $dishCatObj = new DishCategory();
+
+        $dishesData = [];
+        
+        $menuObj->setPrefix($site->getPrefix());
+		$menuObj->setId($menuId);
+        $menu = $menuObj->findOne();
+
+        if(!$menu){
+            header('location: '.DOMAIN);
+            exit();
+        }
+
+        $dishMenuAssocObj->setPrefix($site->getPrefix());
+        $dishMenuAssocObj->setMenu($menu['id']);
+        $dishes = $dishMenuAssocObj->findAll();
+
+        if($dishes){
+            foreach($dishes as $dish)
+            {
+                $dishId = $dish['dish'];
+                $sitePrefix = $site->getPrefix();
+                $dishObj = new Dish();
+                $dishObj->setPrefix($sitePrefix);
+                $dishObj->setId($dishId);
+                $dish = $dishObj->findOne();
+                if($dish){
+                    if($dish['category']){
+                        $dishCatObj->setPrefix($sitePrefix);
+                        $dishCatObj->setId($dish['category']);
+                        $category = $dishCatObj->findOne();
+                        if($category){
+                            $dish['category'] = $category['name'];
+                        }
+                    }
+                    $dishesData[] = $dish;
+                }
+            }
+        }
+		$view = new View('front/menu', 'front', $site);
+		$view->assign('pageTitle', 'MENU ' . $menu['name']);
+		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
+        $view->assign('menu', $menu);
+		$view->assign('dishes', $dishesData);
+        $view->assign('baseUrl', (DOMAIN . '/site/' . $site->getSubDomain()));
+	}
 
 
 }

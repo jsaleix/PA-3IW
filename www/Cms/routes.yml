@@ -7,61 +7,77 @@
   controller: admin
   action: default
 
-/createarticle:
-  controller: postcontroller
-  action: createArticle
-
-/managearticles:
+/articles:
   controller: postcontroller
   action: managearticles
 
-/editarticle:
+/article/create:
+  controller: postcontroller
+  action: createArticle
+
+/article/edit:
   controller: postcontroller
   action: editarticle
 
-/createpage:
-  controller: pagecontroller
-  action: createpage
+/article/delete:
+  controller: postcontroller
+  action: deletearticle
 
-/managepages:
+/pages:
   controller: pagecontroller
   action: managepages
 
-/editpage:
+/page/create:
+  controller: pagecontroller
+  action: createpage
+
+/page/edit:
   controller: pagecontroller
   action: editpage
 
-/searchdish:
-  controller: dishController
-  action: getDish
+/deletepage:
+  controller: pagecontroller
+  action: deletepage
 
-/createdish:
-  controller: dishController
-  action: createdish
-
-/managedishes:
+/dishes:
   controller: dishController
   action: managedishes
 
-/editdish:
+/dish/create:
+  controller: dishController
+  action: createdish
+
+/dish/edit:
   controller: dishController
   action: editdish
 
-/createdishcategory:
-  controller: dishCategoryController
-  action: createdishCategory
-
-/managedishcategories:
+/dishcategories:
   controller: dishCategoryController
   action: managedishcategories
 
-/editdishcategory:
+/dish/delete:
+  controller: dishController
+  action: deletedish
+
+/dishcategory/create:
+  controller: dishCategoryController
+  action: createdishCategory
+
+/dishcategory/edit:
   controller: dishCategoryController
   action: editdishcategory
 
-/managecomments:
+/dishcategory/delete:
+  controller: dishCategoryController
+  action: deletedishcategory
+
+/comments:
   controller: commentController
   action: managecomments
+
+/comment/delete:
+  controller: commentController
+  action: deletecomment
 
 /menus:
   controller: menuController
@@ -75,6 +91,10 @@
   controller: menuController
   action: createMenu
 
+/menus/delete:
+  controller: menuController
+  action: deleteMenu
+
 /events:
   controller: eventController
   action: manageevents
@@ -83,10 +103,40 @@
   controller: sitecontroller
   action: editsite
 
-/medialibrary:
+/medium:
   controller: mediacontroller
   action: listMedias
 
+/medium/edit:
+  controller: mediacontroller
+  action: editMedium
+
+/medium/delete:
+  controller: mediacontroller
+  action: deleteMedium
+
+/medium/create:
+  controller: mediacontroller
+  action: createMedium
+
+/users:
+  controller: usercontroller
+  action: listadmin
+
+/users/add:
+  controller: usercontroller
+  action: addadmin
+
+/users/delete:
+  controller: usercontroller
+  action: deleteadmin
+
+#Api routes
+/api/searchdish:
+  controller: dishController
+  action: getDish
+
+#Entities 
 /ent/post:
   controller: postcontroller
   action: renderpost
@@ -94,3 +144,7 @@
 /ent/dish:
   controller: dishController
   action: renderdish
+
+/ent/menu:
+  controller: menuController
+  action: renderMenu

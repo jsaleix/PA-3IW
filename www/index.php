@@ -5,12 +5,9 @@ define('STYLES', "/Styles/main.css");
 
 use App\Core\Router;
 use App\Core\ConstantMaker;
-use App\Core\Helpers as h;
+use App\Middlewares\Middleware;
 
 session_start();
-
-//require "Core/Router.php";
-//require "Core/Security.php";
 
 require "Autoload.php";
 
@@ -33,6 +30,11 @@ if( preg_match('/\/site\/+/', $uri) ){
 $router = new Router($uri, "routes.yml");
 $c = $router->getController();
 $a = $router->getAction();
+$m = $router->getMiddleware();
+
+if($m){
+	Middleware::$m();
+}
 
 if( file_exists("./Controllers/".$c.".php")){
 

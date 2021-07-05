@@ -6,6 +6,4 @@
 
 <?php endif;?>
 
-<main class="main-container">
-	<?= $content ?>
-</main>
+<?= $content ?>

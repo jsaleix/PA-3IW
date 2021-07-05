@@ -149,7 +149,7 @@ class DishCategory extends Database
             "config"=>[
                 "method"=>"",
                 "action"=>"",
-				"href" => "editDishCategory?id=" . $data['id'],
+				"href" => "dishcategory/edit?id=" . $data['id'],
                 "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",

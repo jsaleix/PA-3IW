@@ -14,6 +14,8 @@ class Page extends Database
 	protected $name;
 	protected $category = null;
     protected $creationDate = null;
+    protected $creator;
+    private $filters;
     private $action = null;
 
 	public function __construct(){
@@ -87,6 +89,22 @@ class Page extends Database
         return $this->action;
     }
 
+    public function setFilters($filter){
+        $this->filters = $filter;
+    }
+
+    public function getFilters(){
+        return $this->filters;
+    }
+
+    public function setCreator($creator){
+        $this->creator = $creator;
+    }
+
+    public function getCreator(){
+        return $this->creator;
+    }
+
     public function save(){
         if($this->action){
             //Verify if action exists
@@ -113,15 +131,23 @@ class Page extends Database
             $contentObj->setPrefix(parent::getPrefix());
             $contentObj->setPage($page['id']);
             $contentObj->setMethod($this->action);
+            if($this->filters){
+                $contentObj->setFilter($this->filters);
+            }
             $content = $contentObj->save();
         }else{
             $contentObj = new Content();
             $contentObj->setPrefix(parent::getPrefix());
             $contentObj->setPage($this->id);
-
             $contentId = $contentObj->findOne();
+
             $contentObj->setId($contentId['id']);
             $contentObj->setMethod($this->action);
+            if($this->filters ){
+                $contentObj->setFilter($this->filters);
+            }else{
+                echo 'no filter';
+            }
             $content = $contentObj->save();
         }
 
@@ -163,6 +189,12 @@ class Page extends Database
 					"error"=>"An action needs to be associated with your page!",
 					"required"=>true,
 					"options" => $actionArr
+                ],
+                "filters"=>[ 
+					"type"=>"text",
+					"label"=>"filters associated",
+					"id"=>"filters",
+					"class"=>"input-filters",
 					]
                 ]
         ];
@@ -204,7 +236,7 @@ class Page extends Database
         ];
     }
 
-    public function formEditContent($content, $dataArr, $actionArr = null){
+    public function formEditContent($content, $dataArr, $actionArr = null, $filters = null){
         return [
 
             "config"=>[
@@ -247,7 +279,14 @@ class Page extends Database
 					"required"=>true,
 					"options" => $actionArr,
 					"value"=> $content['action']
-                ]
+                ],
+                "filters"=>[ 
+					"type"=>"text",
+					"placeholder"=>"filters associated",
+					"id"=>"filters",
+					"class"=>"input-filters",
+                    "value"=> $filters
+					]
             ]
         ];
     }

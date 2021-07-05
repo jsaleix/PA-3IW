@@ -29,6 +29,7 @@ class FormBuilder
 				case "radio":
 					$html .= self::renderRadio($name, $configInput);
 					break;
+
 				case "select":
 					$html .= self::renderSelect($name, $configInput);
 					break;
@@ -42,6 +43,10 @@ class FormBuilder
 					}else{
 						self::renderCheckBox($name, $configInput);
 					}
+					break;
+				case 'img':
+				case 'file':
+					$html .= self::renderFileInput($name, $configInput);
 					break;
 
 				default:
@@ -81,6 +86,28 @@ class FormBuilder
 
 
 	public static function renderInput($name, $configInput){
+		$html =  "<input 
+						name=\"".$name."\" 
+						type=\"".($configInput["type"]??"text")."\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
+						$html =  "<input 
+						name=\"".$name."\" 
+						type=\"".($configInput["type"]??"text")."\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
+		return $html;
+	}
+
+	public static function renderFileInput($name, $configInput){
 		$html =  "<input 
 						name=\"".$name."\" 
 						type=\"".($configInput["type"]??"text")."\" 

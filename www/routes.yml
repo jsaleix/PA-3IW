@@ -6,18 +6,22 @@
 /register:
   controller: Security
   action: register
+  middleware: noAuth
 
 /login:
   controller: Security
   action: login  
+  middleware: noAuth
 
 /logout:
   controller: Security
   action: logout
+  middleware: auth
 
 /create:
   controller: ManageSite
   action: create
+  middleware: auth
 
 /mailconfirm:
   controller: Security
@@ -26,29 +30,29 @@
 /admin:
   controller: Admin
   action: default
-  auth: true
-  role: admin
 
 /admin/sites:
   controller: Admin
   action: displaySites
-  auth: true
-  role: admin
 
 /admin/site:
   controller: Admin
   action: displaySite
-  auth: true
-  role: admin
 
 /admin/users:
   controller: Admin
   action: displayUsers
-  auth: true
-  role: admin
 
 /admin/user:
   controller: Admin
   action: displayUser
-  auth: true
-  role: admin
+
+/account:
+  controller: Account
+  action: default
+  middleware: auth
+  
+/account/mysites:
+  controller: Account
+  action: mysites
+  middleware: auth

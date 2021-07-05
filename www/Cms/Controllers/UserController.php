@@ -1,0 +1,98 @@
+<?php
+
+namespace CMS\Controller;
+
+use App\Models\Site;
+use App\Models\User;
+use App\Models\Whitelist;
+
+use CMS\Core\CMSView as View;
+use CMS\Core\NavbarBuilder;
+use CMS\Core\StyleBuilder;
+
+class UserController{
+
+    public function listAdminAction($site){
+        $wlistObj = new Whitelist();
+        $wlistObj->setIdSite($site['id']);
+        $wlist = $wlistObj->findAll();
+        $userObj = new User();
+        $fields = [ 'id', 'name', 'email', 'joinDate', 'Delete' ];
+        $datas = [];
+
+		if($wlist){
+			foreach($wlist as $item){
+                $userObj->setId($item['idUser']);
+                $user = $userObj->findOne();
+                if($user){
+                    $name = $user['firstname'] . " " . $user['lastname']; 
+                    $button = '<a href="users/delete?id=' . $user['id'] . '">Go</a>';
+                    $formalized = "'" . $user['id'] . "','" . $name . "','" . $user['email'] . "','" . $user['joinDate'] .  "','" . $button . "'";
+                    $datas[] = $formalized;
+                }
+			}
+		}
+
+		$addDishButton = ['label' => 'Add a new admin', 'link' => 'users/add'];
+		
+		$view = new View('back/list', 'back', $site);
+		$view->assign("createButton", $addDishButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
+		$view->assign('pageTitle', "Manage the dishes");
+    }
+
+    public function addAdminAction($site){
+        $wlistObj = new Whitelist();
+		$wlistObj->setIdSite($site['id']);
+
+		//$form = $wlistObj->formAdd();
+
+		$view = new View('back/create', 'back', $site);
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Add a dish category");
+
+		if(!empty($_POST) )
+		{
+			$errors = [];
+			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
+			
+			if( $name ){
+				//Verify the dishCategor submitted
+				$dishCatObj->setName($name);
+				$dishCatObj->setDescription($description);
+				$dishCatObj->setNotes($notes);
+				$dishCatObj->setIsActive($isActive??1);
+
+				$adding = $dishCatObj->save();
+				if($adding){
+					$message ='Dish category successfully added!';
+					$view->assign("message", $message);
+				}else{
+					$errors[] = "Cannot insert this dish category";
+					$view->assign("errors", $errors);
+				}
+			}
+		}
+    }
+
+    public function deleteAdminAction($site){
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('whitelist id not set');}
+			$userObj = new User();
+			$userObj->setId($_GET['id']);
+			$user = $userObj->findOne();
+			if(!$user){ throw new \Exception('Cannot find this user on the whitelist'); }
+			$wlistObj = new Whitelist();
+			$wlistObj->setIdSite($site['id']);
+			$wlistObj->setIdUser($_GET['id']);
+			$check = $wlistObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this user from whitelist');}
+			\App\Core\Helpers::customRedirect('/admin/users?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/users?error', $site);
+		}
+    }
+
+}

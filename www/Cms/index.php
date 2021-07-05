@@ -1,55 +1,22 @@
 <?php
 namespace CMS;
 
-use App\Core\Router;
-use App\Models\Site;
-use CMS\Core\PageRenderer;
-use App\Core\Security;
+use CMS\Core\CMSRouterMaker;
 
-function handleCMS($uri){
-    if(!$uri){ throw new InvalidArgumentException ('Missing uri parameter');}
+function handleCMS($uri){ // $uri = // site/subDomain/page
     $uri = explode('/', $uri);
-    $uri = array_slice($uri, 2);
+    $uri = array_slice($uri, 2); // [ '', 'site', 'subDomain', 'page' ] -> [ 'subDomain', 'page' ];
 
-    if(empty($uri[1]) || $uri[1] !== 'admin'){
-        $page = new PageRenderer($uri);
-        $page->renderPage();
-
-    }else{
-        if( !Security::isConnected())
-            header('Location: '.DOMAIN . '/login');
-        $siteObj = new Site();
-        $siteObj->setSubDomain($uri[0]);
-        $site = $siteObj->findOne();
-        if(!$site || empty($site['id'])){
-            echo 'This site does not exist <br>';
-            return;
-        }
-        $uri = array_slice($uri, 2);
-        $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
-        $uri = implode($uri, '/');
-        $router = new Router($uri, "Cms/routes.yml");
-        $c = $router->getController();
-        $a = $router->getAction();
-
-        if( file_exists("Cms/Controllers/".$c.".php")){
-            include "Cms/Controllers/".$c.".php";
-            $c = "CMS\\Controller\\".$c;
-            if(class_exists($c)){
-                $cObjet = new $c();
-                if(method_exists($cObjet, $a)){
-                    $cObjet->$a($site);
-                }else{
-                    die("L'action' : ".$a." n'existe pas");
-                }
-            }else{
-                die("La classe controller : ".$c." n'existe pas");
-            }
-        }else{
-            die("Le fichier controller : ".$c." n'existe pas");
-        }
+    try{
+        if(!$uri){ throw new \InvalidArgumentException ('Missing uri parameter');}
+        if(!$uri[0]){ throw new \InvalidArgumentException ('Missing uri parameter index 0');}
+    }catch(\Exception $e){
+        echo $e->getMessage();
+        \App\Core\Helpers::errorStatus();
     }
-
+    
+    $router = CMSRouterMaker::make($uri);
+    $router->route();
 }
 
 

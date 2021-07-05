@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Comment` (
   CONSTRAINT `fk_comment_creator_:X`
     FOREIGN KEY (`idUser`)
     REFERENCES `easymeal`.`:prefixUser` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)

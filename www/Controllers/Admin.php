@@ -6,12 +6,11 @@ use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\ConstantMaker as c;
-use App\Core\Token;
 use App\Core\FileUploader;
 
 use App\Models\User;
-use App\Models\MailToken;
 use App\Models\Site;
+use App\Models\Whitelist;
 
 class Admin{
 
@@ -55,12 +54,14 @@ class Admin{
 	public function displaySiteAction(){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			header("Location:" . DOMAIN . '/admin/sites');
+			exit();
 		}
 		$siteObj = new Site();
 		$siteObj->setId($_GET['id']);
 		$site = $siteObj->findOne();
 		if(!$site){
 			header("Location:" . DOMAIN . '/admin/sites');
+			exit();
 		}
 		$form = $siteObj->formEdit($site);
 
@@ -72,12 +73,14 @@ class Admin{
 	public function displayUserAction(){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			header("Location:" . DOMAIN . '/admin/users');
+			exit();
 		}
 		$userObj = new User();
 		$userObj->setId($_GET['id']);
 		$user = $userObj->findOne();
 		if(!$user){
 			header("Location:" . DOMAIN . '/admin/users');
+			exit();
 		}
 		$siteObj = new Site();
 		$view = new View('back/form', 'back');
