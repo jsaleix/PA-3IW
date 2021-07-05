@@ -13,7 +13,7 @@ use CMS\Models\Dish;
 use CMS\Models\DishCategory;
 use CMS\Models\Medium;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 
 class MediaController{
@@ -22,37 +22,13 @@ class MediaController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
 
 	public function listMediasAction($site){
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
-		$media = $mediumObj->findAll();
-		$mediumList = [];
-		$content = "";
-		$fields = ['id', 'image', 'name', 'publicationDate', 'Edit', 'Delete'];
-		$datas = [];
-
-		if($media){
-			foreach($media as $item){
-				$img = '<img src='.DOMAIN.'/'.$item['path'].' width=100 height=80/>';
-				$buttonEdit = '<a href="medium/edit?id='.$item['id'].'">Go</a>';
-				$buttonDelete = '<a href="medium/delete?id='.$item['id'].'">Go</a>';
-				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
-				$datas[] = $formalized;
-			}
-		}
-		$addMediumButton = ['label' => 'Add a new Medium', 'link' => 'medium/create'];
-		//print_r($datas);
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
-		$view->assign("createButton", $addMediumButton);
-		$view->assign("fields", $fields);
-		$view->assign("datas", $datas);
+		$view = new View('back/manageLibrary', 'back', $site);
 		$view->assign('pageTitle', "Manage the dishes");
 	}
 

@@ -276,7 +276,7 @@ class Dish extends Database
             "config"=>[
                 "method"=>"",
                 "action"=>"",
-				"href" => "editDish?id=" . $data['id'],
+				"href" => "dish/edit?id=" . $data['id'],
                 "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",

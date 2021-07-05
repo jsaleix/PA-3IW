@@ -11,7 +11,7 @@ use CMS\Models\Content;
 use CMS\Models\Page;
 use CMS\Models\Category;
 
-use CMS\Core\View;
+use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
 
 class PageController{
@@ -20,8 +20,7 @@ class PageController{
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('admin', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('admin', 'back', $site);
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 		
@@ -71,15 +70,14 @@ class PageController{
 			}
 
 
-			$buttonEdit = '<a href="editPage?id=' . $item['id'] . '">Go</a>';
-			$buttonDelete = '<a href="deletePage?id=' . $item['id'] . '">Go</a>';
+			$buttonEdit = '<a href="page/edit?id=' . $item['id'] . '">Go</a>';
+			$buttonDelete = '<a href="page/delete?id=' . $item['id'] . '">Go</a>';
 			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $buttonEdit . "','" . $buttonDelete ."'";
 
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
 
-		$view = new View('back/list', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $createPageBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -100,8 +98,7 @@ class PageController{
 
 		$form = $pageObj->formAddContent($actionArr);
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
 
@@ -121,6 +118,7 @@ class PageController{
 				if($adding){
 					$message ='Page successfully published!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
 				}else{
 					$errors[] = "Cannot insert this page";
 					$view->assign("errors", $errors);
@@ -132,7 +130,7 @@ class PageController{
 	public function editPageAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'page not set ';
-			header("Location: managepages");
+			header("Location: pages");
 			exit();
 		}
 
@@ -141,7 +139,7 @@ class PageController{
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
-			header("Location: managepages");
+			header("Location: pages");
 			exit();
 		}
 
@@ -177,8 +175,7 @@ class PageController{
 
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
-		$view = new View('admin.create', 'back');
-		$view->assign("navbar", navbarBuilder::renderNavBar($site, 'back'));
+		$view = new View('back/create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
 
@@ -194,6 +191,7 @@ class PageController{
 				if($adding){
 					$message ='Page successfully updated!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
 				}else{
 					$errors = ["Error when updating this page"];
 					$view->assign("errors", $errors);
@@ -203,24 +201,21 @@ class PageController{
 	}
 
 	public function deletePageAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'page not set ';
-			header("Location: managepages");
-			exit();
-		}
-		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
-		$pageObj->setId($_GET['id']??0);
-		$page = $pageObj->findOne();
-		print_r($page);
-		if(!$page){
-			header("Location: managepages");
-			exit();
-		}
-		$pageObj->delete();
-		header("Location: managepages");
-		exit();
+		try{
+			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('page not set');}
+			$pageObj = new Page();
+			$pageObj->setPrefix($site['prefix']);
+			$pageObj->setId($_GET['id']??0);
+			$page = $pageObj->findOne();
 
+			if(!$page){ throw new \Exception('No page found'); }
+			$check = $pageObj->delete();
+			if(!$check){ throw new \Exception('Cannot delete this page');}
+			\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/admin/pages?error', $site);
+		}
 	}
 
 }
