@@ -33,14 +33,12 @@ class PageController{
 		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'edit', 'delete'];
 		$datas = [];
 
-		$contentObj = new Content();
-		$contentObj->setPrefix($site['prefix']);
+		$contentObj = new Content($site['prefix']);
 
 		$actionObj = new Action();
 		$userObj = new User();
 
-		$categoryObj = new Category();
-		$categoryObj->setPrefix($site['prefix']);
+		$categoryObj = new Category($site['prefix']);
 
 		foreach($pages as $item){
 			if($item['category'] !== NULL){
@@ -143,8 +141,7 @@ class PageController{
 			exit();
 		}
 
-		$contentObj = new Content();
-		$contentObj->setPrefix($site['prefix']);
+		$contentObj = new Content($site['prefix']);
 		$contentObj->setPage($_GET['id']);
 		$content = $contentObj->findOne();
 
@@ -157,8 +154,7 @@ class PageController{
 			}
 		}
 
-		$categoryObj = new Category();
-		$categoryObj->setPrefix($site['prefix']);
+		$categoryObj = new Category($site['prefix']);
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';

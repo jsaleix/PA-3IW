@@ -138,15 +138,13 @@ class Site extends Database
 
             FileUploader::createCMSDirs($this->subDomain);
 
-            $postObj = new Post();
+            $postObj = new Post($this->prefix);
             $postObj->setTitle('Welcome');
             $postObj->setContent('This is your first article on your new website.');
             $postObj->setPublisher(Security::getUser());
-            $postObj->setPrefix($this->prefix);
             $postObj->save();
 
-            $dishCatObj = new DishCategory();
-            $dishCatObj->setPrefix($this->prefix);
+            $dishCatObj = new DishCategory($this->prefix);
             $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
             foreach($dishCatArr as $cat){
                 $dishCatObj->setName($cat);

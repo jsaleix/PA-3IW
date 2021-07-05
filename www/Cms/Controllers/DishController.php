@@ -29,15 +29,13 @@ class DishController{
 	}
 
 	public function manageDishesAction($site){
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
+		$dishObj = new Dish($site['prefix']);
 		$dishes = $dishObj->findAll();
 		$dishesList = [];
 		$content = "";
 		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit', 'Delete' ];
 		$datas = [];
-		$dishCatObj = new DishCategory();
-		$dishCatObj->setPrefix($site['prefix']);
+		$dishCatObj = new DishCategory($site['prefix']);
 
 		if($dishes){
 			foreach($dishes as $item){
@@ -69,11 +67,9 @@ class DishController{
 	}
 
 	public function createDishAction($site){
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
+		$dishObj = new Dish($site['prefix']);
 
-		$dishCatObj = new DishCategory();
-		$dishCatObj->setPrefix($site['prefix']);
+		$dishCatObj = new DishCategory($site['prefix']);
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		
@@ -137,8 +133,7 @@ class DishController{
 			exit();
 		}
 
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
+		$dishObj = new Dish($site['prefix']);
 		$dishObj->setId($_GET['id']??0);
 		$dish = $dishObj->findOne();
 		if(!$dish){
@@ -146,8 +141,7 @@ class DishController{
 			exit();
 		}
 
-		$dishCatObj = new DishCategory();
-		$dishCatObj->setPrefix($site['prefix']);
+		$dishCatObj = new DishCategory($site['prefix']);
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		
@@ -215,8 +209,7 @@ class DishController{
 	public function deleteDishAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('Dish not set'); }
-			$dishObj = new Dish();
-			$dishObj->setPrefix($site['prefix']);
+			$dishObj = new Dish($site['prefix']);
 			$dishObj->setId($_GET['id']??0);
 			$dish = $dishObj->findOne();
 			if(!$dish){ throw new \Exception('No content found'); }
@@ -232,8 +225,7 @@ class DishController{
 
 	public function getDishAction($site){
 		$category = $_GET['category']??'';
-		$dishObj = new Dish();
-		$dishObj->setPrefix($site['prefix']);
+		$dishObj = new Dish($site['prefix']);
 		if(isset($category)){
 			$dishObj->setCategory($category);
 		}
@@ -269,8 +261,7 @@ class DishController{
 			return 'dish id not set ';
 		}
 
-		$dishObj = new Dish();
-        $dishObj->setPrefix($site->getPrefix());
+		$dishObj = new Dish($site->getPrefix());
 		$dishObj->setId($_GET['id']);
 		$dishObj->setIsActive(1);
         $dish = $dishObj->findOne();

@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Menu extends Database
+class Menu extends CMSModels
 {
 
 	protected $id;
@@ -12,8 +11,8 @@ class Menu extends Database
 	protected $notes;
 	protected $isActive;
 
-	public function __construct (){
-		parent::__construct();
+	public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){

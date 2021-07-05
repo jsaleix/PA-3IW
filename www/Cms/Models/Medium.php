@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Medium extends Database
+class Medium extends CMSModels
 {
     protected $id;
     protected $name;
@@ -12,8 +11,8 @@ class Medium extends Database
     protected $publisher;
     protected $publicationDate;
 
-    public function __construct (){
-		parent::__construct();
+    public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){

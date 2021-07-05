@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Post extends Database
+class Post extends CMSModels
 {
 
 	protected $id;
@@ -14,8 +13,8 @@ class Post extends Database
 	protected $publicationDate;
 	protected $allowComment;
 
-	public function __construct (){
-		parent::__construct();
+	public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){

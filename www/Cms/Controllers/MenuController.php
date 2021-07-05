@@ -18,8 +18,7 @@ class MenuController{
 
 
     public function manageMenusAction($site){
-		$menuObj = new Menu();
-		$menuObj->setPrefix($site['prefix']);
+		$menuObj = new Menu($site['prefix']);
 		$menus = $menuObj->findAll();
 		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
 		$datas = [];
@@ -57,8 +56,7 @@ class MenuController{
             $this->manageDishInMenu($action, $site, $view, $_POST, $_GET);
 		}
 
-		$menuObj = new Menu();
-		$menuObj->setPrefix($site['prefix']);
+		$menuObj = new Menu($site['prefix']);
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
 		if(!$menu){
@@ -66,8 +64,7 @@ class MenuController{
             exit();
 		}
 		
-        $dishCatObj = new DishCategory();
-        $dishCatObj->setPrefix($site['prefix']);
+        $dishCatObj = new DishCategory($site['prefix']);
         $dishCatArr = $dishCatObj->findAll();
         $selectDishCat = [];
 
@@ -77,15 +74,13 @@ class MenuController{
             }
         }
 
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
         $dishMenuAssocObj->setMenu($menu['id']);
         $dishes = $dishMenuAssocObj->findAll();
         $dishesArr = [];
         if($dishes){
             foreach($dishes as $item){
-                $dishObj = new Dish();
-                $dishObj->setPrefix($site['prefix']);
+                $dishObj = new Dish($site['prefix']);
                 $dishObj->setId($item['dish']);
                 $dish = $dishObj->findOne();
                 if($dish){
@@ -111,8 +106,7 @@ class MenuController{
     public function deleteMenuAction($site){
         try{
             if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('menu is not set'); }
-            $menuObj = new Menu();
-            $menuObj->setPrefix($site['prefix']);
+            $menuObj = new Menu($site['prefix']);
             $menuObj->setId($_GET['id']??0);
             $menu = $menuObj->findOne();
             if(!$menu){ throw new \Exception('Menu not found'); }
@@ -126,17 +120,14 @@ class MenuController{
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
-        $menuObj = new Menu();
-		$menuObj->setPrefix($site['prefix']);
+        $menuObj = new Menu($site['prefix']);
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
         
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
         $dishMenuAssocObj->setMenu($menu['id']);
 
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishMenuAssocObj->setPrefix($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
         $dishMenuAssocObj->setMenu($menu['id']);
 
         switch($action)
@@ -196,8 +187,7 @@ class MenuController{
     }
 
     public function createMenuAction($site){
-        $menuObj = new Menu();
-		$menuObj->setPrefix($site['prefix']);
+        $menuObj = new Menu($site['prefix']);
 
 		$form = $menuObj->formAdd();
 
@@ -245,14 +235,11 @@ class MenuController{
         $view->assign('pageTitle', 'Menus');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 
-		$menuObj = new Menu();
-        $menuObj->setPrefix($site->getPrefix());
-        $dishObj = new Dish();
-        $dishObj->setPrefix($site->getPrefix());
-        $dishCatObj = new DishCategory();
-        $dishCatObj->setPrefix($site->getPrefix());
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishMenuAssocObj->setPrefix($site->getPrefix());
+		$menuObj = new Menu($site->getPrefix());
+        $dishObj = new Dish($site->getPrefix());
+        $dishCatObj = new DishCategory($site->getPrefix());
+        print_r($dishCatObj);
+        $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
 
         $menuData = [];
         
@@ -331,8 +318,7 @@ class MenuController{
             {
                 $dishId = $dish['dish'];
                 $sitePrefix = $site->getPrefix();
-                $dishObj = new Dish();
-                $dishObj->setPrefix($sitePrefix);
+                $dishObj = new Dish($sitePrefix);
                 $dishObj->setId($dishId);
                 $dish = $dishObj->findOne();
                 if($dish){

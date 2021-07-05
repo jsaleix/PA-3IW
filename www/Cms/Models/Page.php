@@ -127,8 +127,7 @@ class Page extends Database
             $pageObj->setPrefix(parent::getPrefix());
             $page = $pageObj->findOne();
 
-            $contentObj = new Content();
-            $contentObj->setPrefix(parent::getPrefix());
+            $contentObj = new Content(parent::getPrefix());
             $contentObj->setPage($page['id']);
             $contentObj->setMethod($this->action);
             if($this->filters){
@@ -136,8 +135,7 @@ class Page extends Database
             }
             $content = $contentObj->save();
         }else{
-            $contentObj = new Content();
-            $contentObj->setPrefix(parent::getPrefix());
+            $contentObj = new Content(parent::getPrefix());
             $contentObj->setPage($this->id);
             $contentId = $contentObj->findOne();
 

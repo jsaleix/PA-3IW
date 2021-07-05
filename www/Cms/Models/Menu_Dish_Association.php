@@ -1,17 +1,16 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Menu_dish_association extends Database
+class Menu_dish_association extends CMSModels
 {
 
 	protected $id;
 	protected $dish;
 	protected $menu;
 
-	public function __construct (){
-		parent::__construct();
+	public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){

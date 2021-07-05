@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Content extends Database
+class Content extends CMSModels
 {
 
 	protected $id = null;
@@ -11,8 +10,8 @@ class Content extends Database
 	protected $method;
     protected $filter;
 
-	public function __construct(){
-        parent::__construct();
+	public function __construct($prefix = null){
+        parent::__construct($prefix);
 	}
 
     public function setPrefix($prefix){

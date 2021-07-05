@@ -28,8 +28,7 @@ class MediaController{
 	}
 
 	public function listMediasAction($site){
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$media = $mediumObj->findAll();
 		$mediumList = [];
 		$content = "";
@@ -55,8 +54,7 @@ class MediaController{
 	}
 
 	public function createMediumAction($site){
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 
 		$view = new View('admin.create', 'back');
 
@@ -65,8 +63,7 @@ class MediaController{
 	public function editMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)
@@ -79,8 +76,7 @@ class MediaController{
 	public function deleteMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)
