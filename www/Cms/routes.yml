@@ -107,9 +107,21 @@
   controller: sitecontroller
   action: editsite
 
-/medialibrary:
+/medium:
   controller: mediacontroller
   action: listMedias
+
+/medium/edit:
+  controller: mediacontroller
+  action: editMedium
+
+/medium/delete:
+  controller: mediacontroller
+  action: deleteMedium
+
+/medium/create:
+  controller: mediacontroller
+  action: createMedium
 
 /users:
   controller: usercontroller

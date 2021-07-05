@@ -11,6 +11,7 @@ use CMS\Models\Page;
 use CMS\Models\Category;
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
+use CMS\Models\Medium;
 
 use CMS\Core\View;
 use CMS\Core\NavbarBuilder;
@@ -28,9 +29,67 @@ class MediaController{
 	}
 
 	public function listMediasAction($site){
-		$view = new View('back/manageLibrary', 'back');
+		$mediumObj = new Medium();
+		$mediumObj->setPrefix($site['prefix']);
+		$media = $mediumObj->findAll();
+		$mediumList = [];
+		$content = "";
+		$fields = ['id', 'image', 'name', 'publicationDate', 'Edit', 'Delete'];
+		$datas = [];
+
+		if($media){
+			foreach($media as $item){
+				$img = '<img src='.DOMAIN.'/'.$item['path'].' width=100 height=80/>';
+				$buttonEdit = '<a href="medium/edit?id='.$item['id'].'">Go</a>';
+				$buttonDelete = '<a href="medium/delete?id='.$item['id'].'">Go</a>';
+				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
+				$datas[] = $formalized;
+			}
+		}
+		$addMediumButton = ['label' => 'Add a new Medium', 'link' => 'medium/create'];
+		//print_r($datas);
+		$view = new View('back/list', 'back');
 		$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
+		$view->assign("createButton", $addMediumButton);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the dishes");
+	}
+
+	public function createMediumAction($site){
+		$mediumObj = new Medium();
+		$mediumObj->setPrefix($site['prefix']);
+
+		$view = new View('admin.create', 'back');
+
+	}
+
+	public function editMediumAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) )
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		$mediumObj = new Medium();
+		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj->setId($_GET['id']??0);
+		$medium = $mediumObj->findOne();
+		if(!$medium)
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		
+		print_r($medium);
+
+	}
+
+	public function deleteMediumAction($site){
+		if(!isset($_GET['id']) || empty($_GET['id']) )
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		$mediumObj = new Medium();
+		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj->setId($_GET['id']??0);
+		$medium = $mediumObj->findOne();
+		if(!$medium)
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		echo "Would have delete Medium with id ".$mediumObj->getId()." but working on it tho it's disabled";
+		//$mediumObj->delete();
+		//\App\Core\Helpers::customRedirect('/admin/medium', $site);
 	}
 
 }
