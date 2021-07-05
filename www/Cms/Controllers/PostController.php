@@ -168,7 +168,7 @@ class PostController{
 			$html .= $this->renderPostItem($postObj->returnData());
         }
 
-		$view = new View('front/cms', 'front', $site);
+		$view = new View('cms', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
 		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));

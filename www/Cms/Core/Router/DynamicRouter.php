@@ -40,6 +40,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$siteObj->setSubDomain($site['subDomain']);
 			$siteObj->setPrefix($site['prefix']);
 			$siteObj->setType($site['type']);
+			$siteObj->setTheme($site['theme']);
+			
 			$this->site = $siteObj;
 
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
