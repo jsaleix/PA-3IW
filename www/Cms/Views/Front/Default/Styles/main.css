@@ -218,6 +218,7 @@
 
 * {
   font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
 }
 
 *::-webkit-scrollbar {
@@ -277,6 +278,81 @@ hr {
 
 .article-display span {
   color: #2DC091;
+}
+
+.article-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-container h1 {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.article-container h2 {
+  width: 100%;
+  font-size: 16px;
+  font-weight: normal;
+  color: black;
+  margin: 0;
+}
+
+.article-container h2 span {
+  color: #2DC091;
+  font-weight: bold;
+}
+
+.article-container h3 {
+  font-size: 22px;
+}
+
+.article-container p {
+  align-self: center;
+  font-size: 20px;
+  color: black;
+  text-align: justify;
+  width: 95%;
+  margin-bottom: 2em;
+}
+
+.article-container .comment-input {
+  align-self: center;
+}
+
+.article-container .comment-btn {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  align-self: flex-end;
+  margin-right: 0;
+}
+
+.article-container .comment {
+  margin-bottom: 2em;
+}
+
+.article-container .comment h2 {
+  font-size: 18px;
+  color: black;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.article-container .comment h2 span {
+  color: #2DC091;
+  font-weight: bold;
+}
+
+.article-container .comment p {
+  color: black;
+  font-size: 16px;
+  margin-top: 5px;
 }
 
 .container {
@@ -668,6 +744,10 @@ hr {
   outline: none;
   font-size: 16px;
   margin: 5px;
+}
+
+.input-100 {
+  width: 100%;
 }
 
 .input::-moz-placeholder {
