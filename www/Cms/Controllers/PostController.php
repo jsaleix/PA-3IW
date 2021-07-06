@@ -147,53 +147,54 @@ class PostController{
 	*/
 	public function renderList($site, $filter = null){
 		$postObj = new Post($site->getPrefix());
-        $contents = $postObj->findAll();
-        $html = "";
-        if(!$contents || count($contents) === 0){
-            $html .= 'No content found :/';
+        $posts = $postObj->findAll();
+		$errors = [];
+
+        if(!$posts || count($posts) === 0){
+			array_push($errors, "Aucun résultats");
             return;
         }
+		
+		$tmp_posts = [];
 
-        foreach($contents as $content){
-            $postObj = new Post();
-			$postObj->setTitle($content['title']);
-			$postObj->setContent($content['content']);
-			$postObj->setPublisher($content['publisher']);
-			$postObj->setId($content['id']);
-			$html .= $this->renderPostItem($postObj->returnData());
-        }
+		foreach ($posts as $post){
+			$publisher = new User();
+			$publisher->setId($post['publisher']);
+			$publisher = $publisher->findOne();
 
-		$view = new View('cms', 'front', $site);
-		$view->assign('pageTitle', 'Posts');
-		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
-		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
-		$view->assign('content', $html);
-	}
-
-	public function renderPostItem($content){
-        $publisherData = new User();
-        extract($content);
-		if(!empty($publisher))
-        {
-			$publisherData->setId($publisher);
-        	$publisher = $publisherData->findOne();
-			$name = $publisher['firstname'] . " " . $publisher['lastname'];
-		}else{
-			$name = 'Unknown';
+			array_push($tmp_posts, ["post" => $post, "publisher" => $publisher]);
 		}
 		
-		$html = '<div class="article-display col-8 col-md-10 col-sm-11">';
-		$html .= '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
-		$html .= '<p>' . $content . '</p>';
-		$html .= '<br/>';
-		$html .= '<p id='. $publisher['id'] .' >Par <b>' . $name . '</b> le <span>01/01</span> à <span>10h11</span> </p>';
-		$html .= '<hr/>';
-		$html .= "</div>";
 
-
-
-        return $html;
+		$view = new View('posts', 'front', $site);
+		$view->assign('pageTitle', 'Posts');
+		$view->assign('posts', $tmp_posts);
 	}
+
+	// public function renderPostItem($content){
+    //     $publisherData = new User();
+    //     extract($content);
+	// 	if(!empty($publisher))
+    //     {
+	// 		$publisherData->setId($publisher);
+    //     	$publisher = $publisherData->findOne();
+	// 		$name = $publisher['firstname'] . " " . $publisher['lastname'];
+	// 	}else{
+	// 		$name = 'Unknown';
+	// 	}
+		
+	// 	$html = '<div class="article-display col-8 col-md-10 col-sm-11">';
+	// 	$html .= '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
+	// 	$html .= '<p>' . $content . '</p>';
+	// 	$html .= '<br/>';
+	// 	$html .= '<p id='. $publisher['id'] .' >Par <b>' . $name . '</b> le <span>01/01</span> à <span>10h11</span> </p>';
+	// 	$html .= '<hr/>';
+	// 	$html .= "</div>";
+
+
+
+    //     return $html;
+	// }
 
 	//$site is an instance of Site
 	public function renderPostAction($site, $filter = null){

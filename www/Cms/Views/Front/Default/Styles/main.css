@@ -245,9 +245,24 @@ a {
   min-height: 100%;
 }
 
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4em;
+  padding-bottom: 2em;
+}
+
+.posts-container h1 {
+  font-size: 34px;
+  width: 100%;
+  margin: 0;
+}
+
 hr {
   border: none;
   border-top: 1px solid black;
+  width: 100%;
 }
 
 .article-display h2 {
