@@ -9,12 +9,19 @@ class FormValidator
 	public static function check($form, &$data){
 		$errors = [];
 		if( $data["CSRF"] != $_SESSION["CSRF"] ){
-			$errors[] = "Le site a rencontré un problème de sécurité, vérifier bien utiliser notre site officiel";
+			$errors[] = "Le site a rencontré un problème de sécurité, vérifiez bien utiliser notre site officiel";
 			return $errors;
 		}
 		unset($data["CSRF"]);
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
+				if($configInput["type"] == "radio" &&
+					$configInput["required"] == true &&
+					isset($data[$name])
+				){
+					break;
+				}
+
 				if(!empty($configInput["required"]) &&
 					$configInput["required"] == true &&
 					empty($data[$name])
@@ -26,11 +33,9 @@ class FormValidator
 				if($configInput["type"] == "file" ){
 					if( !self::verifyFileSize($data[$name])){
 						$errors[] = "Le fichier est trop gros";
-						return $errors;
 					}
 					if( !self::verifyFileType($data[$name])){
 						$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
-						return $errors;
 					}
 					break;			
 				}
