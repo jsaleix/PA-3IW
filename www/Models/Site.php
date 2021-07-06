@@ -23,6 +23,7 @@ class Site extends Database
 	protected $subDomain;
 	protected $prefix;
     protected $type;
+    protected $theme;
 
 	public function __construct(){
 		parent::__construct();
@@ -38,6 +39,17 @@ class Site extends Database
         $this->id = $id;
     }
     
+
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+    }
+
     public function setName($name)
     {
         $this->name = htmlspecialchars($name);

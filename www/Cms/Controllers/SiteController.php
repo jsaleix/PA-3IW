@@ -27,7 +27,7 @@ class SiteController{
 	public function editSiteAction($site){
 		$siteObj = new Site();
         $siteObj->setId($site['id']);
-		$view = new View('back/create', 'back', $site);
+		$view = new View('create', 'back', $site);
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
@@ -90,7 +90,7 @@ class SiteController{
 			}
 		}
         
-		$view = new View('front/about', 'front', $siteObj);
+		$view = new View('about', 'front', $siteObj);
 		$view->assign('pageTitle', 'About our restaurant');
 		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));
 		$view->assign('site', $site);

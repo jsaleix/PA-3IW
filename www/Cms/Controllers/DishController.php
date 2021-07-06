@@ -59,7 +59,7 @@ class DishController{
 
 		$addDishButton = ['label' => 'Add a new dish', 'link' => 'dish/create'];
 		
-		$view = new View('back/list', 'back', $site);
+		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $addDishButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -79,7 +79,7 @@ class DishController{
 			}
 		}
 
-		$view = new View('/back/createDish', 'back', $site);
+		$view = new View('createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign('pageTitle', "Add a dish");
 
@@ -155,7 +155,7 @@ class DishController{
 		$form = $dishObj->formEdit($dishArr, $dishCatArr);
 		$form = $dishObj->formAdd($dishCatArr);*/
 
-		$view = new View('/back/createDish', 'back', $site);
+		$view = new View('createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
 		$view->assign("name", $dish['name']);
 		$view->assign("image", (DOMAIN . '/' . $dish['image']));
@@ -269,7 +269,7 @@ class DishController{
             return 'No content found :/';
         }
 
-		$view = new View('front/dish', 'front', $site);
+		$view = new View('dish', 'front', $site);
 		$view->assign('pageTitle', 'Dishes available');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('dish', $dish);

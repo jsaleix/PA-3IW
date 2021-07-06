@@ -21,7 +21,7 @@
 						<?php App\Core\FormBuilder::render($form)?>
 					<div class="form-auth" id="second-auth" >
 						<hr>
-						<h3 style="font-weight: lighter;">Deja un compte ? ?</h3>
+						<h3 style="font-weight: lighter;">Deja un compte?</h3>
 						<button onclick="location.href='./login'" class="cta-white width-80 last-elem" type="button" >Connexion</button>
 					</div>
 				</div>

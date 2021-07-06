@@ -30,7 +30,7 @@ class PostController{
 		$postObj = new Post($site['prefix']);
 
 		$form = $postObj->formAddContent();
-		$view = new View('back/create', 'back',  $site);
+		$view = new View('create', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -73,7 +73,7 @@ class PostController{
 			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'article/create'];
-		$view = new View('back/list', 'back',  $site);
+		$view = new View('list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -93,7 +93,7 @@ class PostController{
 			exit();
 		}
 
-		$view = new View('back/create', 'back',  $site);
+		$view = new View('create', 'back',  $site);
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
@@ -163,7 +163,7 @@ class PostController{
 			$html .= $this->renderPostItem($postObj->returnData());
         }
 
-		$view = new View('front/cms', 'front', $site);
+		$view = new View('cms', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
 		//$view->assign("navbar", NavbarBuilder::renderNavbar($site->returnData(), 'front'));
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
@@ -181,29 +181,35 @@ class PostController{
 		}else{
 			$name = 'Unknown';
 		}
-        
-		$html = '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
-		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
+		
+		$html = '<div class="article-display col-8 col-md-10 col-sm-11">';
+		$html .= '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
 		$html .= '<p>' . $content . '</p>';
-		$html .= '<hr>';
+		$html .= '<br/>';
+		$html .= '<p id='. $publisher['id'] .' >Par <b>' . $name . '</b> le <span>01/01</span> à <span>10h11</span> </p>';
+		$html .= '<hr/>';
+		$html .= "</div>";
+
+
 
         return $html;
 	}
 
 	//$site is an instance of Site
 	public function renderPostAction($site, $filter = null){
-		if($filter){
+		if(!empty($filter)){
             $filter = json_decode($filter, true);
             if(isset($filter['post'])){
                 $postId = $filter['post'];
             }else{
                 return;
             }
-		}else if(!isset($_GET['id']) || empty($_GET['id']) ){
+		}else if(isset($_GET['id']) && !empty($_GET['id']) ){
 			$postId = $_GET['id'];
 		}else{
 			return 'article not set ';
 		}
+
 		$user = Security::getUser();
         $userObj = new User();
 
@@ -262,7 +268,7 @@ class PostController{
 		
 		$errors = [];
 
-		$view = new View('front/post', 'front',  $site);
+		$view = new View('post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));

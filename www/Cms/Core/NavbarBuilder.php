@@ -12,8 +12,13 @@ class NavbarBuilder
 		$pageObj->setPrefix($site->getPrefix());
         $pageObj->setCategory('IS NULL');
         $pagesToShow = $pageObj->findAll();
-		if(file_exists("CMS/Views/Front/navigation.php")){
-			include "CMS/Views/Front/navigation.php";
+
+		$theme = $site->getTheme()??"Default";
+		
+		$theme = strlen($theme)>0 ? $theme : "Default"; 
+
+		if(file_exists("CMS/Views/Front/".$theme."/navigation.php")){
+			include_once("CMS/Views/Front/".$theme."/navigation.php");
 		}else{
 			die('navbar not found');
 		}

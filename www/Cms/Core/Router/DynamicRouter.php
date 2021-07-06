@@ -40,6 +40,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$siteObj->setSubDomain($site['subDomain']);
 			$siteObj->setPrefix($site['prefix']);
 			$siteObj->setType($site['type']);
+			$siteObj->setTheme($site['theme']);
+			
 			$this->site = $siteObj;
 
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
@@ -99,9 +101,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$c = $this->getController();
 			$a = $this->getAction();
 			$f = $this->getFilter();
-
 			$debug = 'debug: ' . $a . ' - ' . $c . ' - ' . $f . '<br>';
-			echo $debug;
+			// echo $debug;
 
 			if(!file_exists("Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
 			include "Cms/Controllers/".$c.".php";
