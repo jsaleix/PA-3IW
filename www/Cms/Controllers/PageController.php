@@ -73,7 +73,7 @@ class PageController{
 			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $buttonEdit . "','" . $buttonDelete ."'";
 
 		}
-		$createPageBtn = ['label' => 'Create a page', 'link' => 'createpage'];
+		$createPageBtn = ['label' => 'Create a page', 'link' => 'page/create'];
 
 		$view = new View('back/list', 'back', $site);
 		$view->assign("createButton", $createPageBtn);
@@ -96,9 +96,10 @@ class PageController{
 
 		$form = $pageObj->formAddContent($actionArr);
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('back/page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
+        $view->assign('subDomain', $site['subDomain']);
 
 		if(!empty($_POST) ) {
 			$erros = [];
@@ -107,6 +108,14 @@ class PageController{
 				if( !empty($action) && $action !== '0'){
 					$pageObj->setAction($action);
 				}
+				$actionObj->setId($action);
+				$check = $actionObj->findOne();
+				if(!$check){
+					return;
+				}
+				$contentAction = json_encode(array( $check['filters'] => $filters));
+				$pageObj->setFilters(($contentAction));
+				
 				$pageObj->setName($name);
 				$pageObj->setCreator(Security::getUser());
 				if($filters){
@@ -154,7 +163,8 @@ class PageController{
 			}
 		}
 
-		$categoryObj = new Category($site['prefix']);
+		$categoryObj = new Category();
+		$categoryObj->setPrefix($site['prefix']);
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
@@ -171,27 +181,38 @@ class PageController{
 
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('back/page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
-
+        $view->assign('subDomain', $site['subDomain']);
 		if(!empty($_POST) ) {
-			[ "name" => $name, "category" => $category, "action" => $action, "filters" => $filters] = $_POST;
-			if( $name ){
-				$pageObj->setName($name);
-				$pageObj->setCategory($category??null);
-				$pageObj->setAction($action??null);
-				$pageObj->setFilters(($filters));
-				$adding = $pageObj->save();
+			try{
+				[ "name" => $name, "category" => $category, "action" => $action, "filters" => $filters] = $_POST;
+				if( $name ){
+					$pageObj->setName($name);
+					$pageObj->setCategory($category??null);
+					$pageObj->setAction($action??null);
 
-				if($adding){
-					$message ='Page successfully updated!';
-					$view->assign("message", $message);
-					\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
-				}else{
-					$errors = ["Error when updating this page"];
-					$view->assign("errors", $errors);
+					$actionObj->setId($action);
+					$check = $actionObj->findOne();
+					if(!$check){
+						return;
+					}
+					$contentAction = json_encode(array( $check['filters'] => $filters));
+					$pageObj->setFilters(($contentAction));
+					$adding = $pageObj->save();
+
+					if($adding){
+						$message ='Page successfully updated!';
+						$view->assign("message", $message);
+						\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
+					}else{
+						$errors = ["Error when updating this page"];
+						$view->assign("errors", $errors);
+					}
 				}
+			}catch(\Exception $e){
+
 			}
 		}
 	}

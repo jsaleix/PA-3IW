@@ -191,8 +191,17 @@ class PostController{
 	}
 
 	//$site is an instance of Site
-	public function renderPostAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
+	public function renderPostAction($site, $filter = null){
+		if($filter){
+            $filter = json_decode($filter, true);
+            if(isset($filter['post'])){
+                $postId = $filter['post'];
+            }else{
+                return;
+            }
+		}else if(!isset($_GET['id']) || empty($_GET['id']) ){
+			$postId = $_GET['id'];
+		}else{
 			return 'article not set ';
 		}
 		$user = Security::getUser();
@@ -201,7 +210,7 @@ class PostController{
 		$commentObj = new Comment($site->getPrefix());
 
 		$postObj = new Post($site->getPrefix());
-		$postObj->setId($_GET['id']);
+		$postObj->setId($postId);
         $post = $postObj->findOne();
         if(!$post){
             return 'No content found :/';
@@ -219,7 +228,7 @@ class PostController{
 
 		#if the admin allows the post to get commented
 		if($post['allowComment'] === 1){
-			$commentObj->setIdPost($_GET['id']);
+			$commentObj->setIdPost($postId);
 
 			if(isset($_POST['message']) && !empty($_POST['message']) && $user)
 			{
