@@ -71,6 +71,8 @@ class FormBuilder
 			
 		}
 
+		$html .= self::createCSRFToken();
+
 		if($form["config"]["class"] === "form-auth")
 			$html .= "<input class=\"".($form["config"]["submitClass"]??"")."\"type='submit' value=\"".($form["config"]["submit"]??"Connexion")."\" />";
 		else
@@ -82,6 +84,19 @@ class FormBuilder
 
 		echo $html;
 
+	}
+
+	public static function createCSRFToken(){
+		$CSRFtoken = bin2hex(random_bytes(54));
+		$_SESSION["CSRF"]=$CSRFtoken;
+		$html = "<input
+					name=\"CSRF\"
+					type=\"text\"
+					id=\"CSRF\"
+					style=\"visibility: hidden\"
+					value=\"".$CSRFtoken."\">";
+		return $html;
+		
 	}
 
 

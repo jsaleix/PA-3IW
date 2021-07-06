@@ -11,4 +11,16 @@ class CMSModels extends Database
             parent::setTableName($prefix."_");
         }
 	}
+
+    public function populate($data, $save = FALSE){
+        foreach($data as $key => $attr){
+            if(property_exists($this, $key)){
+                $key = "set".ucfirst($key);
+                $this->$key($attr);
+            }
+        }
+        if($save == TRUE)
+            return $this->save();
+        return;
+    }
 }

@@ -6,12 +6,22 @@ class FormValidator
 {
 
 
-	public static function check($form, $data, $files = null){
-		if( $files != null)
-			$data = array_merge($data, $files);
+	public static function check($form, &$data){
 		$errors = [];
+		if( $data["CSRF"] != $_SESSION["CSRF"] ){
+			$errors[] = "Le site a rencontré un problème de sécurité, vérifiez bien utiliser notre site officiel";
+			return $errors;
+		}
+		unset($data["CSRF"]);
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
+				if($configInput["type"] == "radio" &&
+					$configInput["required"] == true &&
+					isset($data[$name])
+				){
+					break;
+				}
+
 				if(!empty($configInput["required"]) &&
 					$configInput["required"] == true &&
 					empty($data[$name])
@@ -23,11 +33,9 @@ class FormValidator
 				if($configInput["type"] == "file" ){
 					if( !self::verifyFileSize($data[$name])){
 						$errors[] = "Le fichier est trop gros";
-						return $errors;
 					}
 					if( !self::verifyFileType($data[$name])){
 						$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
-						return $errors;
 					}
 					break;			
 				}
@@ -97,10 +105,11 @@ class FormValidator
 			$errors[] = "Tentative de Hack";
 		}
 		return $errors;
+		
 	}
 
 	public static function sanitizeData($data){
-		return htmlspecialchars(stripslashes(trim($data)));
+		return htmlspecialchars(addslashes(trim($data)));
 	}
 
 	public static function emailValidate($email){
