@@ -253,7 +253,7 @@ class PostController{
 					$comment['author'] = $commentAuthor['firstname'] . ' ' . $commentAuthor['lastname'];
 	
 					$date = new \DateTime($comment['date']);
-					$comment['date'] =  $date->format('d/m/y H:i:s');
+					$comment['date'] =  $date->format('d/m/y \a\t H:i');
 					$commentsTmp[] = $comment;
 				}
 				$comments = $commentsTmp;
