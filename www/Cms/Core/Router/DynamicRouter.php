@@ -103,7 +103,7 @@ class DynamicRouter extends Router implements RouterInterface
 			$f = $this->getFilter();
 
 			$debug = 'debug: ' . $a . ' - ' . $c . ' - ' . $f . '<br>';
-			echo $debug;
+			// echo $debug;
 
 			if(!file_exists("Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
 			include "Cms/Controllers/".$c.".php";

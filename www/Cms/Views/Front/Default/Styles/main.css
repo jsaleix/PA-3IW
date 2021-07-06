@@ -229,11 +229,39 @@ body {
   padding: 0;
   margin: 0;
   width: 100%;
+  height: 100%;
 }
 
 a {
   color: #2DC091;
   text-decoration: none;
+}
+
+.main-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid black;
+}
+
+.article-display h2 {
+  font-size: 22px;
+  color: #2DC091;
+}
+
+.article-display p {
+  color: black;
+  font-size: 14px;
+}
+
+.article-display span {
+  color: #2DC091;
 }
 
 .container {
@@ -722,7 +750,6 @@ a {
   height: 100%;
   -webkit-animation: slideInRight 1.5s ease-out;
           animation: slideInRight 1.5s ease-out;
-  padding-bottom: 3em;
   display: none;
 }
 
@@ -756,7 +783,6 @@ a {
   padding-top: 1em;
   padding-bottom: 1em;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.35);
-  margin-bottom: 2em;
   overflow: hidden;
   z-index: 1001;
 }
@@ -899,5 +925,77 @@ a {
   to {
     transform: translateX(0%);
   }
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #2DC091;
+  padding: 1em;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+footer .bar {
+  height: 100%;
+  width: 4px;
+  background: white;
+  margin-left: 10px;
+}
+
+footer h2 {
+  color: white;
+  font-weight: 28px;
+}
+
+footer p {
+  font-size: 8px;
+  color: white;
+  margin: 0;
+  padding-bottom: 1em;
+}
+
+footer .social-container {
+  height: 100%;
+  align-items: flex-end;
+  margin-left: 2em;
+  margin-right: 2em;
+  justify-content: space-around;
+}
+
+footer .social-container .social-btn {
+  background: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  margin: 1em;
+  transition: 0.5s;
+}
+
+footer .social-container .social-btn:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: 0.5s;
+}
+
+footer .social-container .social-btn img {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+footer ul {
+  list-style: none;
+  padding-left: 1.5em;
+}
+
+footer ul li {
+  margin-top: 0.2em;
+}
+
+footer ul li a {
+  font-size: 14px;
+  color: white;
 }
 

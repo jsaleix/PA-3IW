@@ -186,11 +186,16 @@ class PostController{
 		}else{
 			$name = 'Unknown';
 		}
-        
-		$html = '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
-		$html .= '<p id='. $publisher['id'] .' >By ' . $name . ' </p>';
+		
+		$html = '<div class="article-display col-8 col-md-10 col-sm-11">';
+		$html .= '<h2><a href="ent/post?id='. $id . '">' . $title . '</a></h2>';
 		$html .= '<p>' . $content . '</p>';
-		$html .= '<hr>';
+		$html .= '<br/>';
+		$html .= '<p id='. $publisher['id'] .' >Par <b>' . $name . '</b> le <span>01/01</span> à <span>10h11</span> </p>';
+		$html .= '<hr/>';
+		$html .= "</div>";
+
+
 
         return $html;
 	}
