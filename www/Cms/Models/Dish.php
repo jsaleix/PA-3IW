@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Dish extends Database
+class Dish extends CMSModels
 {
 
 	protected $id;
@@ -16,8 +15,8 @@ class Dish extends Database
 	protected $allergens;
 	protected $isActive;
 
-	public function __construct (){
-		parent::__construct();
+	public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){

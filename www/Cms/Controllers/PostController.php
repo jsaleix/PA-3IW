@@ -27,7 +27,7 @@ class PostController{
 	}
 
 	public function createArticleAction($site){
-		$postObj = new Post();
+		$postObj = new Post($site['prefix']);
 
 		$form = $postObj->formAddContent();
 		$view = new View('back/create', 'back',  $site);
@@ -37,12 +37,11 @@ class PostController{
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $content, "allowComment" => $allowComment ] = $_POST;
 			if($title && $content){
-				$insert = new Post();
+				$insert = new Post($site['prefix']);
 				$insert->setTitle($title);
 				$insert->setContent($content);
 				$insert->setPublisher(Security::getUser());
 				$insert->setAllowComment($allowComment);
-				$insert->setPrefix($site['prefix']);
 				$adding = $insert->save();
 				if($adding){
 					$message ='Article successfully published!';
@@ -59,8 +58,7 @@ class PostController{
 	}
 
 	public function manageArticlesAction($site){
-		$postObj = new Post();
-		$postObj->setPrefix($site['prefix']);
+		$postObj = new Post($site['prefix']);
 		$posts = $postObj->findAll();
 		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit', 'Delete' ];
 		$datas = [];
@@ -87,8 +85,7 @@ class PostController{
 			echo 'article not set ';
 		}
 
-		$contentObj = new Post();
-		$contentObj->setPrefix($site['prefix']);
+		$contentObj = new Post($site['prefix']);
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
 		if(!$content){
@@ -131,8 +128,7 @@ class PostController{
 	public function deleteArticleAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('article not set');}
-			$contentObj = new Post();
-			$contentObj->setPrefix($site['prefix']);
+			$contentObj = new Post($site['prefix']);
 			$contentObj->setId($_GET['id']);
 			$content = $contentObj->findOne();
 			if(!$content){ throw new \Exception('No content found');}
@@ -150,8 +146,7 @@ class PostController{
 	* returns html for pageRenderer
 	*/
 	public function renderList($site, $filter = null){
-		$postObj = new Post();
-        $postObj->setPrefix($site->getPrefix());
+		$postObj = new Post($site->getPrefix());
         $contents = $postObj->findAll();
         $html = "";
         if(!$contents || count($contents) === 0){
@@ -201,19 +196,26 @@ class PostController{
 	}
 
 	//$site is an instance of Site
-	public function renderPostAction($site){
-		if(!isset($_GET['id']) || empty($_GET['id']) ){
+	public function renderPostAction($site, $filter = null){
+		if($filter){
+            $filter = json_decode($filter, true);
+            if(isset($filter['post'])){
+                $postId = $filter['post'];
+            }else{
+                return;
+            }
+		}else if(!isset($_GET['id']) || empty($_GET['id']) ){
+			$postId = $_GET['id'];
+		}else{
 			return 'article not set ';
 		}
 		$user = Security::getUser();
         $userObj = new User();
 
-		$commentObj = new Comment();
-		$commentObj->setPrefix($site->getPrefix());
+		$commentObj = new Comment($site->getPrefix());
 
-		$postObj = new Post();
-        $postObj->setPrefix($site->getPrefix());
-		$postObj->setId($_GET['id']);
+		$postObj = new Post($site->getPrefix());
+		$postObj->setId($postId);
         $post = $postObj->findOne();
         if(!$post){
             return 'No content found :/';
@@ -231,7 +233,7 @@ class PostController{
 
 		#if the admin allows the post to get commented
 		if($post['allowComment'] === 1){
-			$commentObj->setIdPost($_GET['id']);
+			$commentObj->setIdPost($postId);
 
 			if(isset($_POST['message']) && !empty($_POST['message']) && $user)
 			{

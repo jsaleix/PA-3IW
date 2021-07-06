@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
 use App\Core\FileUploader;
+use App\Core\FormValidator;
+use App\Core\Security;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
@@ -28,8 +30,7 @@ class MediaController{
 	}
 
 	public function listMediasAction($site){
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$media = $mediumObj->findAll();
 		$mediumList = [];
 		$content = "";
@@ -55,18 +56,53 @@ class MediaController{
 	}
 
 	public function createMediumAction($site){
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
+		$form = $mediumObj->formAdd();
 
-		$view = new View('admin.create', 'back');
+		$view = new View('back/create', 'back', $site);
+		$view->assign("form", $form);
+		$view->assign("pageTitle", "Add a medium");
 
+		if( !empty($_POST)){
+			$errors = [];
+			[ "name" => $name, "type" => $type ] = $_POST;
+			[ "image" => $image ] = $_FILES;
+
+			$errors = FormValidator::check($form, $_POST, $_FILES);
+			if(count($errors) != 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			$date = new \DateTime();
+			$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
+			$imgName = $date->format("Ymd_Hisu");
+			$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+			if($isUploaded != false){
+				$image = $isUploaded;
+			}else{
+				$image = null;
+			}
+
+			$mediumObj->setName($name);
+			$mediumObj->setType($type);
+			$mediumObj->setPath($image);
+			$mediumObj->setPublisher(Security::getUser());
+			$pdoResult = $mediumObj->save();
+			if( $pdoResult ){
+				$message = "Medium successfully added!";
+				$view->assign("message", $message);
+			} else {
+				$errors[] = "Cannot insert this medium";
+				$view->assign("errors", $errors);
+			}
+				
+		}
 	}
 
 	public function editMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)
@@ -79,8 +115,7 @@ class MediaController{
 	public function deleteMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium();
-		$mediumObj->setPrefix($site['prefix']);
+		$mediumObj = new Medium($site['prefix']);
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)

@@ -127,8 +127,7 @@ class Page extends Database
             $pageObj->setPrefix(parent::getPrefix());
             $page = $pageObj->findOne();
 
-            $contentObj = new Content();
-            $contentObj->setPrefix(parent::getPrefix());
+            $contentObj = new Content(parent::getPrefix());
             $contentObj->setPage($page['id']);
             $contentObj->setMethod($this->action);
             if($this->filters){
@@ -136,8 +135,7 @@ class Page extends Database
             }
             $content = $contentObj->save();
         }else{
-            $contentObj = new Content();
-            $contentObj->setPrefix(parent::getPrefix());
+            $contentObj = new Content(parent::getPrefix());
             $contentObj->setPage($this->id);
             $contentId = $contentObj->findOne();
 
@@ -184,14 +182,14 @@ class Page extends Database
 				"action"=>[ 
 					"type"=>"select",
 					"label"=>"action associated",
-					"id"=>"page",
+					"id"=>"action",
 					"class"=>"input-page_select",
 					"error"=>"An action needs to be associated with your page!",
 					"required"=>true,
 					"options" => $actionArr
                 ],
                 "filters"=>[ 
-					"type"=>"text",
+					"type"=>"hidden",
 					"label"=>"filters associated",
 					"id"=>"filters",
 					"class"=>"input-filters",
@@ -229,7 +227,7 @@ class Page extends Database
                     "value" => $pageData['creationDate']
                 ],
                 "action" => [
-                    "type" => "text",
+                    "type" => "hidden",
                     "value" => $pageData['action']??'Action unknown'
                 ]
             ]
@@ -281,7 +279,7 @@ class Page extends Database
 					"value"=> $content['action']
                 ],
                 "filters"=>[ 
-					"type"=>"text",
+					"type"=>"hidden",
 					"placeholder"=>"filters associated",
 					"id"=>"filters",
 					"class"=>"input-filters",

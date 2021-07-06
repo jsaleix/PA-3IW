@@ -48,12 +48,12 @@ class AdminRouter extends Router implements RouterInterface
             $c = $this->getController();
             $a = $this->getAction();
     
-			if(!file_exists("Cms/Controllers/".$c.".php")) throw new Exception("Le fichier controller : ".$c." n'existe pas");
+			if(!file_exists("Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
 			include "Cms/Controllers/".$c.".php";
             $c = "CMS\\Controller\\".$c;
-			if(!class_exists($c)) throw new Exception("La classe controller : ".$c." n'existe pas");
+			if(!class_exists($c)) throw new \Exception("La classe controller : ".$c." n'existe pas");
 			$cObjet = new $c();
-			if(!method_exists($cObjet, $a)) throw new Exception("L'action' : ".$a." n'existe pas");
+			if(!method_exists($cObjet, $a)) throw new \Exception("L'action' : ".$a." n'existe pas");
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
 			echo $e->getMessage();

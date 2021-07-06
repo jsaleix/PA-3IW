@@ -1,9 +1,8 @@
 <?php
 
 namespace CMS\Models;
-use App\Core\Database;
 
-class Medium extends Database
+class Medium extends CMSModels
 {
     protected $id;
     protected $name;
@@ -12,8 +11,8 @@ class Medium extends Database
     protected $publisher;
     protected $publicationDate;
 
-    public function __construct (){
-		parent::__construct();
+    public function __construct ($prefix = null){
+		parent::__construct($prefix);
 	}
 
 	public function setPrefix($prefix){
@@ -71,25 +70,44 @@ class Medium extends Database
     public function formAdd(){
         return [
             "config"=>[
-                "config"=>[
-                    "method"=>"POST",
-                    "action"=>"",
-                    "id"=>"form_content",
-                    "class"=>"form-content",
-                    "submit"=>"Publish",
-                    "submitClass"=>"cta-blue width-80 last-sm-elem"
-                ],
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Add",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+				"enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[
-                    
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input-content",
+                    "placeholder"=>"New medium",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
                 ],
                 "type"=>[
-
+                    "type"=>"text",
+                    "label"=>"Type",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"type",
+                    "class"=>"input-content",
+                    "placeholder"=>"Type",
+                    "error"=>"The type cannot be empty!",
+                    "required"=>true,
                 ],
-                "path"=>[
-
-                ]
+                "image"=>[ 
+                    "type"=>"file",
+                    "label"=>"image",
+                    "id"=>"image",
+                    "class"=>"input-file",
+                    "required"=>true,
+                ],
             ]
         ];
     }
