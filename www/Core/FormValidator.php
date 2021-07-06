@@ -6,10 +6,13 @@ class FormValidator
 {
 
 
-	public static function check($form, $data, $files = null){
-		if( $files != null)
-			$data = array_merge($data, $files);
+	public static function check($form, &$data){
 		$errors = [];
+		if( $data["CSRF"] != $_SESSION["CSRF"] ){
+			$errors[] = "Le site a rencontré un problème de sécurité, vérifier bien utiliser notre site officiel";
+			return $errors;
+		}
+		unset($data["CSRF"]);
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
 				if(!empty($configInput["required"]) &&
@@ -97,10 +100,11 @@ class FormValidator
 			$errors[] = "Tentative de Hack";
 		}
 		return $errors;
+		
 	}
 
 	public static function sanitizeData($data){
-		return htmlspecialchars(stripslashes(trim($data)));
+		return htmlspecialchars(addslashes(trim($data)));
 	}
 
 	public static function emailValidate($email){

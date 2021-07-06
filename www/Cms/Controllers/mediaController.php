@@ -39,9 +39,9 @@ class MediaController{
 
 		if($media){
 			foreach($media as $item){
-				$img = '<img src='.DOMAIN.'/'.$item['path'].' width=100 height=80/>';
-				$buttonEdit = '<a href="medium/edit?id='.$item['id'].'">Go</a>';
-				$buttonDelete = '<a href="medium/delete?id='.$item['id'].'">Go</a>';
+				$img = "<img src=".DOMAIN."/".$item['path']." width=100 height=80/>";
+				$buttonEdit = "<a href=\"medium/edit?id=".$item['id']."\">Go</a>";
+				$buttonDelete = "<a href=\"medium/delete?id=".$item['id']."\">Go</a>";
 				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
 				$datas[] = $formalized;
 			}
@@ -67,9 +67,9 @@ class MediaController{
 			$errors = [];
 			[ "name" => $name, "type" => $type ] = $_POST;
 			[ "image" => $image ] = $_FILES;
-
-			$errors = FormValidator::check($form, $_POST, $_FILES);
-			if(count($errors) != 0){
+			$data = array_merge($_POST, $_FILES);
+			$errors = FormValidator::check($form, $data);
+			if( count($errors) > 0){
 				$view->assign("errors", $errors);
 				return;
 			}
@@ -82,9 +82,8 @@ class MediaController{
 			}else{
 				$image = null;
 			}
-
-			$mediumObj->setName($name);
-			$mediumObj->setType($type);
+			$mediumObj->setName($data["name"]);
+			$mediumObj->setType($data["type"]);
 			$mediumObj->setPath($image);
 			$mediumObj->setPublisher(Security::getUser());
 			$pdoResult = $mediumObj->save();
@@ -95,7 +94,6 @@ class MediaController{
 				$errors[] = "Cannot insert this medium";
 				$view->assign("errors", $errors);
 			}
-				
 		}
 	}
 
@@ -108,7 +106,9 @@ class MediaController{
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
 		
-		print_r($medium);
+		//print_r($medium);
+		$CSRFtoken = bin2hex(random_bytes(54));
+		echo $CSRFtoken;
 
 	}
 
