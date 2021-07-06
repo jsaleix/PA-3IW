@@ -204,7 +204,7 @@ class PostController{
             }else{
                 return;
             }
-		}else if(!isset($_GET['id']) || empty($_GET['id']) ){
+		}else if(isset($_GET['id']) && !empty($_GET['id']) ){
 			$postId = $_GET['id'];
 		}else{
 			return 'article not set ';
