@@ -85,6 +85,7 @@ class DishController{
 
 		if(!empty($_POST) ) {
 			$errors = [];
+			print_r($_FILES);
 			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
 			[ "image" => $image ] = $_FILES;
 			if( $name ){
@@ -113,7 +114,6 @@ class DishController{
 				$dishObj->setIsActive($isActive??1);
 
 				$adding = $dishObj->save();
-				$adding = true;
 				if($adding){
 					$message ='Dish successfully added!';
 					$view->assign("message", $message);
