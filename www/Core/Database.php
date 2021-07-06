@@ -211,6 +211,50 @@ class Database
 		return !isset($result[0]) ? false : $result;
 	}
 
+	public function findAllLike($groupBy){
+		$columns = array_diff_key (
+			get_object_vars($this),
+			get_class_vars(get_class())
+		);
+		foreach($columns as $key => $col){
+			if( empty($col) || $col === NULL ){
+				unset($columns[$key]);
+			}else{
+				//$columns[$key] = '%'.$columns[$key].'%';
+			}
+		}
+
+		$req = "SELECT * FROM ".$this->table;
+
+		$index = 0;
+		$len = count($columns);
+		if( $len > 0) {
+			$req .= " WHERE ";
+			foreach( $columns as $key => $col ){
+				if($col == 'IS NULL' || $col == 'IS NOT NULL'){
+					$req .= $key . ' ' .$col ;
+					unset($columns[$key]);
+				}else{
+					$req .= $key . " LIKE CONCAT('%',?,'%') ";
+				}
+				$index++;
+				if($index < $len){
+					$req .= ' OR ';
+				}
+			}
+		}
+
+		if($groupBy){
+			$req .= " GROUP BY '" . $groupBy . "'";
+		}
+
+		$query = $this->pdo->prepare($req);
+		$query->execute(array_values($columns));
+		$result = $query->fetchAll();
+
+		return !isset($result[0]) ? false : $result;
+	}
+
 	public function createTable($req){
 		try{
 			$query = $this->pdo->prepare($req);

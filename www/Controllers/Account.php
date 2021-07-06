@@ -83,4 +83,44 @@ class Account{
 	}
 
 
+	public function searchUsersAction(){
+		$userParam = $_GET['param']??'';
+		$usersArr = [];
+		$msg = "";
+		try{
+			if(!$userParam){
+				throw new \Exception('No parameters');
+			};
+
+			$userObj = new User();
+
+			$userObj->setEmail($userParam);
+			$userObj->setFirstname($userParam);
+			$userObj->setLastName($userParam);
+
+			$users = $userObj->findAllLike('Id');
+
+			if(!$users){ 
+				throw new \Exception('No result');
+			}else{
+				$code = 200;
+				foreach($users as $user){
+					$usersArr[] = array(
+						'id' => $user['id'],
+						'name' => $user['firstname'] . ' '. $user['lastname'] ,
+						'image' => DOMAIN . '/' . $user['avatar'],
+					);
+				}
+			}
+		}catch(\Exception $e){
+			$code = 404;
+			$msg = $e->getMessage();
+		}
+
+        echo json_encode(array('msg' => $msg, 'code' => $code, 'users' => $usersArr));
+		//http_response_code($code);
+		exit();
+	} 
+
+
 }
