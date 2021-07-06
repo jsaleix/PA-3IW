@@ -4,6 +4,7 @@ namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
 use App\Models\Action;
+use App\Core\FormValidator;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
@@ -70,23 +71,18 @@ class DishCategoryController{
 		if(!empty($_POST) )
 		{
 			$errors = [];
-			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
-			
-			if( $name ){
-				//Verify the dishCategor submitted
-				$dishCatObj->setName($name);
-				$dishCatObj->setDescription($description);
-				$dishCatObj->setNotes($notes);
-				$dishCatObj->setIsActive($isActive??1);
-
-				$adding = $dishCatObj->save();
-				if($adding){
-					$message ='Dish category successfully added!';
-					$view->assign("message", $message);
-				}else{
-					$errors[] = "Cannot insert this dish category";
-					$view->assign("errors", $errors);
-				}
+			$errors = FormValidator::check($form, $_POST);
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			$pdoResult = $dishCatObj->populate($_POST, TRUE);
+			if( $pdoResult ){
+				$message = "Dish category successfully added!";
+				$view->assign("message", $message);
+			} else {
+				$errors[] = "Cannot insert this dish category";
+				$view->assign("errors", $errors);
 			}
 		}
 	}
@@ -118,24 +114,19 @@ class DishCategoryController{
 
 		if(!empty($_POST) ) {
 			$errors = [];
-			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
-			
-			if( $name ){
-				//Verify the dishCategor submitted
-				$dishCatObj->setName($name);
-				$dishCatObj->setDescription($description);
-				$dishCatObj->setNotes($notes);
-				$dishCatObj->setIsActive($isActive??1);
-
-				$adding = $dishCatObj->save();
-				if($adding){
-					$message ='Dish category successfully updated!';
-					$view->assign("message", $message);
-					\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
-				}else{
-					$errors[] = "Cannot update this dish category";
-					$view->assign("errors", $errors);
-				}
+			$errors = FormValidator::check($form, $_POST);
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			$pdoResult = $dishCatObj->populate($_POST, TRUE);
+			if($pdoResult){
+				$message ='Dish category successfully updated!';
+				$view->assign("message", $message);
+				\App\Core\Helpers::customRedirect('/admin/dishcategories?success', $site);
+			}else{
+				$errors[] = "Cannot update this dish category";
+				$view->assign("errors", $errors);
 			}
 		}
 	}

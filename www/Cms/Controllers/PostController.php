@@ -3,6 +3,7 @@
 namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
+use App\Core\FormValidator;
 
 use CMS\Models\Post;
 use CMS\Models\Page;
@@ -35,26 +36,23 @@ class PostController{
 		$view->assign('pageTitle', "Add an article");
 
 		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $content, "allowComment" => $allowComment ] = $_POST;
-			if($title && $content){
-				$insert = new Post($site['prefix']);
-				$insert->setTitle($title);
-				$insert->setContent($content);
-				$insert->setPublisher(Security::getUser());
-				$insert->setAllowComment($allowComment);
-				$adding = $insert->save();
-				if($adding){
-					$message ='Article successfully published!';
-					$view->assign("message", $message);
-					\App\Core\Helpers::customRedirect('/admin/articles?success', $site);
-				}else{
-					$errors = ["Impossible d\'inserer l'article"];
-					$view->assign("errors", $errors);
-				}
+			$errors = [];
+			$errors = FormValidator::check($form, $_POST);
+			$_POST = array_merge($_POST, [ "publisher" => Security::getUser() ] );
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			$pdoResult = $postObj->populate($_POST, TRUE);
+			if( $pdoResult ){
+				$message = "Article successfully published!";
+				$view->assign("message", $message);
+				\App\Core\Helpers::customRedirect('/admin/articles?success', $site);
+			} else {
+				$errors[] = "Cannot insert article";
+				$view->assign("errors", $errors);
 			}
 		}
-
-
 	}
 
 	public function manageArticlesAction($site){
@@ -94,34 +92,29 @@ class PostController{
 		}
 
 		$view = new View('create', 'back',  $site);
-
-		if(!empty($_POST) ) {
-			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
-			if($title && $postContent){
-				$contentObj->setTitle($title);
-				$contentObj->setContent($postContent);
-				$contentObj->setAllowComment($allowComment);
-				$adding = $contentObj->save();
-				if($adding){
-					$message ='Article successfully updated!';
-					$view->assign("message", $message);
-				}else{
-					$contentObj->setTitle(null);
-					$contentObj->setContent(null);
-					$contentObj->setAllowComment(null);
-					$errors = ["Error when updating this article"];
-					$view->assign("errors", $errors);
-				}
-				$content = $contentObj->findOne();
-			}else{
-				$errors = ["Missing required field(s)"];
-			}
-		}
-
 		$form = $contentObj->formEditContent($content);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 		$view->assign('errors', $errors??[]);
+
+		if(!empty($_POST) ) {
+			$errors = [];
+			$errors = FormValidator::check($form, $_POST);
+			$_POST = array_merge($_POST, [ "publisher" => Security::getUser() ] );
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			$pdoResult = $contentObj->populate($_POST, TRUE);
+			if( $pdoResult ){
+				\App\Core\Helpers::customRedirect('/admin/articles?success', $site);
+			} else {
+				$errors[] = "Cannot insert article";
+				$view->assign("errors", $errors);
+			}
+		}
+
+		
 
 	}
 

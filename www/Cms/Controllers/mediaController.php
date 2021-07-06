@@ -39,9 +39,9 @@ class MediaController{
 
 		if($media){
 			foreach($media as $item){
-				$img = '<img src='.DOMAIN.'/'.$item['path'].' width=100 height=80/>';
-				$buttonEdit = '<a href="medium/edit?id='.$item['id'].'">Go</a>';
-				$buttonDelete = '<a href="medium/delete?id='.$item['id'].'">Go</a>';
+				$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
+				$buttonEdit = "<a href=\"medium/edit?id=".$item['id']."\">Go</a>";
+				$buttonDelete = "<a href=\"medium/delete?id=".$item['id']."\">Go</a>";
 				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
 				$datas[] = $formalized;
 			}
@@ -65,29 +65,19 @@ class MediaController{
 
 		if( !empty($_POST)){
 			$errors = [];
-			[ "name" => $name, "type" => $type ] = $_POST;
-			[ "image" => $image ] = $_FILES;
-
-			$errors = FormValidator::check($form, $_POST, $_FILES);
-			if(count($errors) != 0){
+			$data = array_merge($_POST, $_FILES);
+			$errors = FormValidator::check($form, $data);
+			if( count($errors) > 0){
 				$view->assign("errors", $errors);
 				return;
 			}
 			$date = new \DateTime();
 			$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
 			$imgName = $date->format("Ymd_Hisu");
-			$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-			if($isUploaded != false){
-				$image = $isUploaded;
-			}else{
-				$image = null;
-			}
-
-			$mediumObj->setName($name);
-			$mediumObj->setType($type);
-			$mediumObj->setPath($image);
-			$mediumObj->setPublisher(Security::getUser());
-			$pdoResult = $mediumObj->save();
+			$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
+			$image = $isUploaded ? $isUploaded : null;
+			$data["image"] = $image;
+			$pdoResult = $mediumObj->populate($data, TRUE);
 			if( $pdoResult ){
 				$message = "Medium successfully added!";
 				$view->assign("message", $message);
@@ -95,7 +85,6 @@ class MediaController{
 				$errors[] = "Cannot insert this medium";
 				$view->assign("errors", $errors);
 			}
-				
 		}
 	}
 
@@ -108,7 +97,9 @@ class MediaController{
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
 		
-		print_r($medium);
+		//print_r($medium);
+		$CSRFtoken = bin2hex(random_bytes(54));
+		echo $CSRFtoken;
 
 	}
 
@@ -121,8 +112,8 @@ class MediaController{
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
 		echo "Would have delete Medium with id ".$mediumObj->getId()." but working on it tho it's disabled";
-		//$mediumObj->delete();
-		//\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		$mediumObj->delete();
+		\App\Core\Helpers::customRedirect('/admin/medium', $site);
 	}
 
 }
