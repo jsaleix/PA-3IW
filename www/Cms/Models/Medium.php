@@ -7,7 +7,7 @@ class Medium extends CMSModels
     protected $id;
     protected $name;
     protected $type;
-    protected $path;
+    protected $image;
     protected $publisher;
     protected $publicationDate;
 
@@ -43,12 +43,12 @@ class Medium extends CMSModels
         return $this->type;
     }
 
-    public function setPath($path){
-        $this->path = $path;
+    public function setImage($image){
+        $this->image = $image;
     }
 
-    public function getPath(){
-        return $this->path;
+    public function getImage(){
+        return $this->image;
     }
 
     public function setPublisher($publisher){

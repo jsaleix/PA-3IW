@@ -39,7 +39,7 @@ class MediaController{
 
 		if($media){
 			foreach($media as $item){
-				$img = "<img src=".DOMAIN."/".$item['path']." width=100 height=80/>";
+				$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
 				$buttonEdit = "<a href=\"medium/edit?id=".$item['id']."\">Go</a>";
 				$buttonDelete = "<a href=\"medium/delete?id=".$item['id']."\">Go</a>";
 				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
@@ -65,8 +65,6 @@ class MediaController{
 
 		if( !empty($_POST)){
 			$errors = [];
-			[ "name" => $name, "type" => $type ] = $_POST;
-			[ "image" => $image ] = $_FILES;
 			$data = array_merge($_POST, $_FILES);
 			$errors = FormValidator::check($form, $data);
 			if( count($errors) > 0){
@@ -76,17 +74,10 @@ class MediaController{
 			$date = new \DateTime();
 			$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
 			$imgName = $date->format("Ymd_Hisu");
-			$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-			if($isUploaded != false){
-				$image = $isUploaded;
-			}else{
-				$image = null;
-			}
-			$mediumObj->setName($data["name"]);
-			$mediumObj->setType($data["type"]);
-			$mediumObj->setPath($image);
-			$mediumObj->setPublisher(Security::getUser());
-			$pdoResult = $mediumObj->save();
+			$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
+			$image = $isUploaded ? $isUploaded : null;
+			$data["image"] = $image;
+			$pdoResult = $mediumObj->populate($data, TRUE);
 			if( $pdoResult ){
 				$message = "Medium successfully added!";
 				$view->assign("message", $message);
@@ -121,8 +112,8 @@ class MediaController{
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
 		echo "Would have delete Medium with id ".$mediumObj->getId()." but working on it tho it's disabled";
-		//$mediumObj->delete();
-		//\App\Core\Helpers::customRedirect('/admin/medium', $site);
+		$mediumObj->delete();
+		\App\Core\Helpers::customRedirect('/admin/medium', $site);
 	}
 
 }
