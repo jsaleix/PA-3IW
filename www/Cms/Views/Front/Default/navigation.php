@@ -1,4 +1,3 @@
-
 <nav class="default-navbar">
     <h2><?=$site->getName()?></h2>
     

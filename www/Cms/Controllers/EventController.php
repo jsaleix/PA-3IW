@@ -14,7 +14,7 @@ use CMS\Core\NavbarBuilder;
 class EventController{
 
 	public function manageEventsAction($site){
-		$view = new View('back/createEvent', 'back', $site);
+		$view = new View('createEvent', 'back', $site);
 		/*$view->assign("fields", $fields);
 		$view->assign("datas", $datas);*/
 		$view->assign('pageTitle', "Manage the events");

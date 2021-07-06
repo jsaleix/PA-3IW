@@ -30,7 +30,7 @@ class PostController{
 		$postObj = new Post($site['prefix']);
 
 		$form = $postObj->formAddContent();
-		$view = new View('back/create', 'back',  $site);
+		$view = new View('create', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
@@ -73,7 +73,7 @@ class PostController{
 			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
 		}
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'article/create'];
-		$view = new View('back/list', 'back',  $site);
+		$view = new View('list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -93,7 +93,7 @@ class PostController{
 			exit();
 		}
 
-		$view = new View('back/create', 'back',  $site);
+		$view = new View('create', 'back',  $site);
 
 		if(!empty($_POST) ) {
 			[ "title" => $title, "content" => $postContent, "allowComment" => $allowComment] = $_POST;
@@ -197,7 +197,7 @@ class PostController{
 
 	//$site is an instance of Site
 	public function renderPostAction($site, $filter = null){
-		if($filter){
+		if(!empty($filter)){
             $filter = json_decode($filter, true);
             if(isset($filter['post'])){
                 $postId = $filter['post'];
@@ -209,6 +209,7 @@ class PostController{
 		}else{
 			return 'article not set ';
 		}
+
 		$user = Security::getUser();
         $userObj = new User();
 
@@ -267,7 +268,7 @@ class PostController{
 		
 		$errors = [];
 
-		$view = new View('front/post', 'front',  $site);
+		$view = new View('post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));

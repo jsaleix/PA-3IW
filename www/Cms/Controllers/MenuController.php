@@ -33,7 +33,7 @@ class MenuController{
 
 		$addCatButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
 		
-		$view = new View('back/list', 'back', $site);
+		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -47,7 +47,7 @@ class MenuController{
             exit();
 		}
 
-        $view = new View('back/menu', 'back', $site);
+        $view = new View('menu', 'back', $site);
 
         if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ){
             $action = $_POST['action'];
@@ -191,7 +191,7 @@ class MenuController{
 
 		$form = $menuObj->formAdd();
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a new menu");
 
@@ -231,7 +231,7 @@ class MenuController{
 	* returns html for pageRenderer
 	*/
     public function renderMenus($site, $filter = null){
-        $view = new View('front/menus', 'front', $site);
+        $view = new View('menus', 'front', $site);
         $view->assign('pageTitle', 'Menus');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 
@@ -334,7 +334,7 @@ class MenuController{
                 }
             }
         }
-		$view = new View('front/menu', 'front', $site);
+		$view = new View('menu', 'front', $site);
 		$view->assign('pageTitle', 'MENU ' . $menu['name']);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
         $view->assign('menu', $menu);

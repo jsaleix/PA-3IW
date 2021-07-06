@@ -48,7 +48,7 @@ class MediaController{
 		}
 		$addMediumButton = ['label' => 'Add a new Medium', 'link' => 'medium/create'];
 
-		$view = new View('back/list', 'back', $site);
+		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $addMediumButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -59,7 +59,7 @@ class MediaController{
 		$mediumObj = new Medium($site['prefix']);
 		$form = $mediumObj->formAdd();
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign("pageTitle", "Add a medium");
 

@@ -101,7 +101,6 @@ class DynamicRouter extends Router implements RouterInterface
 			$c = $this->getController();
 			$a = $this->getAction();
 			$f = $this->getFilter();
-
 			$debug = 'debug: ' . $a . ' - ' . $c . ' - ' . $f . '<br>';
 			// echo $debug;
 

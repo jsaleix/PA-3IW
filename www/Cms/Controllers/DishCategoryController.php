@@ -49,7 +49,7 @@ class DishCategoryController{
 
 		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'dishcategory/create'];
 		
-		$view = new View('back/list', 'back', $site);
+		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -63,7 +63,7 @@ class DishCategoryController{
 
 		$form = $dishCatObj->formAdd($dishCatArr);
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a dish category");
 
@@ -112,7 +112,7 @@ class DishCategoryController{
 		$dishArr = (array)$dish;
 		$form = $dishCatObj->formEdit($dishArr);
 
-		$view = new View('back/create', 'back', $site);
+		$view = new View('create', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a dish catergory");
 
@@ -188,7 +188,7 @@ class DishCategoryController{
 			$categories[] = $tmpCategory;
 		}
 
-		$view = new View('front/dishes', 'front', $site);
+		$view = new View('dishes', 'front', $site);
 		$view->assign('pageTitle', 'Dish page');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('categories', $categories);

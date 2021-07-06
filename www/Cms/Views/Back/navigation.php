@@ -172,7 +172,7 @@
             </a>
         </li>
     </ul>
-    <a href="/site/<?= $site['subDomain']?>">
+    <a target="_blank" href="/site/<?= $site['subDomain']?>">
         <button class="btnPreview">Visit</button>
     </a>
 </nav>

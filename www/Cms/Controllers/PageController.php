@@ -75,7 +75,7 @@ class PageController{
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'page/create'];
 
-		$view = new View('back/list', 'back', $site);
+		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $createPageBtn);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
@@ -96,7 +96,7 @@ class PageController{
 
 		$form = $pageObj->formAddContent($actionArr);
 
-		$view = new View('back/page', 'back', $site);
+		$view = new View('page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
         $view->assign('subDomain', $site['subDomain']);
@@ -108,18 +108,19 @@ class PageController{
 				if( !empty($action) && $action !== '0'){
 					$pageObj->setAction($action);
 				}
+
 				$actionObj->setId($action);
 				$check = $actionObj->findOne();
 				if(!$check){
 					return;
 				}
-				$contentAction = json_encode(array( $check['filters'] => $filters));
-				$pageObj->setFilters(($contentAction));
 				
 				$pageObj->setName($name);
 				$pageObj->setCreator(Security::getUser());
+
 				if($filters){
-					$pageOb->setFilters(htmlspecialchar($filters));
+					$contentAction = json_encode(array( $check['filters'] => $filters));
+					$pageObj->setFilters(($contentAction));
 				}
 				$adding = $pageObj->save();
 				if($adding){
@@ -181,7 +182,7 @@ class PageController{
 
 		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
 
-		$view = new View('back/page', 'back', $site);
+		$view = new View('page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
         $view->assign('subDomain', $site['subDomain']);
