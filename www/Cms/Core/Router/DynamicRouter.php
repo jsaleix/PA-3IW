@@ -47,9 +47,20 @@ class DynamicRouter extends Router implements RouterInterface
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
 				$pageObj->setPrefix($site['prefix']);
 				$pageObj->setMain(true);
-				$page = $pageObj->findOne();
-				$requestedPage = $page['name'];
-				\App\Core\Helpers::customRedirect('/' . $requestedPage, $site);
+				$requestedPage = $pageObj->findOne();
+				if(!$requestedPage){
+					$pageObj->setMain(null);
+					$page = $pageObj->findAll();
+					if($page){
+						$requestedPage = $page[0];
+					}
+				}
+
+				if($requestedPage){
+					\App\Core\Helpers::customRedirect('/' . $requestedPage['name'], $site);
+				}else{
+					\App\Core\Helpers::customRedirect('/');
+				}				
 			}
 
 			$pageObj->setName($requestedPage);
