@@ -30,13 +30,13 @@ class PageController{
 		$pageObj = new Page();
 		$pageObj->setPrefix($site['prefix']);
 		$pages = $pageObj->findAll();
-		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'edit', 'delete'];
+		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'visible in navigation', 'edit', 'delete', 'see'];
 		$datas = [];
 
 		$contentObj = new Content($site['prefix']);
 
-		$actionObj = new Action();
-		$userObj = new User();
+		$actionObj 	= new Action();
+		$userObj 	= new User();
 
 		$categoryObj = new Category($site['prefix']);
 
@@ -67,10 +67,11 @@ class PageController{
 				$item['creator'] = $user['firstname'] . ' ' . $user['lastname'];
 			}
 
-
-			$buttonEdit = '<a href="page/edit?id=' . $item['id'] . '">Go</a>';
-			$buttonDelete = '<a href="page/delete?id=' . $item['id'] . '">Go</a>';
-			$datas[] = "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $buttonEdit . "','" . $buttonDelete ."'";
+			$buttonEdit 	= '<a href="page/edit?id=' . $item['id'] . '">Go</a>';
+			$buttonDelete	= '<a href="page/delete?id=' . $item['id'] . '">Go</a>';
+			$buttonVisit 	= '<a href="'. \App\Core\Helpers::renderCMSLink($item['name'], $site) .'">Go</a>';
+			$visible		= $item['visible'] ? 'visible' : 'hidden';
+			$datas[] 		= "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $visible . "','" . $buttonEdit . "','" . $buttonDelete . "','" . $buttonVisit."'";
 
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'page/create'];
@@ -102,8 +103,8 @@ class PageController{
         $view->assign('subDomain', $site['subDomain']);
 
 		if(!empty($_POST) ) {
-			$erros = [];
-			[ "name" => $name, "action" => $action, "filters" => $filters ] = $_POST;
+			$errors = [];
+			[ "name" => $name, "action" => $action, "filters" => $filters, "visible" => $visible ] = $_POST;
 			if( $name ){
 				if( !empty($action) && $action !== '0'){
 					$pageObj->setAction($action);
@@ -117,12 +118,14 @@ class PageController{
 				
 				$pageObj->setName($name);
 				$pageObj->setCreator(Security::getUser());
+				$pageObj->setVisible($visible??null);
 
 				if($filters){
 					$contentAction = json_encode(array( $check['filters'] => $filters));
 					$pageObj->setFilters(($contentAction));
 				}
 				$adding = $pageObj->save();
+
 				if($adding){
 					$message ='Page successfully published!';
 					$view->assign("message", $message);
@@ -175,7 +178,7 @@ class PageController{
 			}
 		}
 		
-		$pageArr = (array)$page;
+		$pageArr 	= (array)$page;
 		$contentArr = (array)$content;
 		$contentArr = [ 'action' => $contentArr['method'] ];		
 		$pageArr = array_merge((array)$page, $contentArr);
@@ -188,11 +191,12 @@ class PageController{
         $view->assign('subDomain', $site['subDomain']);
 		if(!empty($_POST) ) {
 			try{
-				[ "name" => $name, "category" => $category, "action" => $action, "filters" => $filters] = $_POST;
+				[ "name" => $name, "category" => $category, "action" => $action, "filters" => $filters, "visible" => $visible] = $_POST;
 				if( $name ){
 					$pageObj->setName($name);
 					$pageObj->setCategory($category??null);
 					$pageObj->setAction($action??null);
+					$pageObj->setVisible($visible);
 
 					$actionObj->setId($action);
 					$check = $actionObj->findOne();

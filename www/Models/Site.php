@@ -146,6 +146,7 @@ class Site extends Database
             $insert = new Page();
             $insert->setName('home');
             $insert->setPrefix($this->prefix);
+            $insert->setCreator(Security::getUser());
             $insert->save();
 
             FileUploader::createCMSDirs($this->subDomain);

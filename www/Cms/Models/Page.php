@@ -15,6 +15,7 @@ class Page extends Database
 	protected $category = null;
     protected $creationDate = null;
     protected $creator;
+    protected $visible;
     private $filters;
     private $action = null;
 
@@ -105,6 +106,14 @@ class Page extends Database
         return $this->creator;
     }
 
+    public function setVisible($visible){
+		$this->visible = $visible == 0 ? 'IS FALSE' : 1;
+    }
+
+    public function getVisible(){
+        return $this->visible;
+    }
+
     public function save(){
         if($this->action){
             //Verify if action exists
@@ -144,7 +153,7 @@ class Page extends Database
             if($this->filters ){
                 $contentObj->setFilter($this->filters);
             }else{
-                echo 'no filter';
+                //echo 'no filter';
             }
             $content = $contentObj->save();
         }
@@ -193,8 +202,21 @@ class Page extends Database
 					"label"=>"filters associated",
 					"id"=>"filters",
 					"class"=>"input-filters",
-					]
+                ],
+                "visible"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Should this page appear in the navigation",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "do not display",
+						1 => "display"
+					],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify if the page appears in the navigation",
+                    "required"=>true,
                 ]
+            ]
         ];
     }
 
@@ -284,7 +306,21 @@ class Page extends Database
 					"id"=>"filters",
 					"class"=>"input-filters",
                     "value"=> $filters
-					]
+                ],
+                "visible"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Should this page appear in the navigation",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "do not display",
+						1 => "display"
+					],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify if the page appears in the navigation",
+                    "required"=>true,
+                    "value"=> $content['visible']
+                ]
             ]
         ];
     }

@@ -11,6 +11,7 @@ class NavbarBuilder
 		$pageObj = new Page();
 		$pageObj->setPrefix($site->getPrefix());
         $pageObj->setCategory('IS NULL');
+		$pageObj->setVisible(true);
         $pagesToShow = $pageObj->findAll();
 
 		$theme = $site->getTheme()??"Default";
