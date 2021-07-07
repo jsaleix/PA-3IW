@@ -45,6 +45,7 @@ class EntityRouter extends Router implements RouterInterface
 			$siteObj->setSubDomain($site['subDomain']);
 			$siteObj->setPrefix($site['prefix']);
 			$siteObj->setType($site['type']);
+			$siteObj->setTheme($site['theme']);
 
 			$uri = array_slice($url, 1);
 			if(empty($uri[0])){

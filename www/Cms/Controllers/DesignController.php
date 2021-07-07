@@ -12,8 +12,10 @@ class DesignController{
         $siteObj = new Site();
         $siteObj->setId($site['id']);
 
-
         $themes = [];
+
+        $view = new View("design", "back", $site);
+        $view->assign("title","Design | Themes | Styles");
 
         foreach (glob("Cms/Views/Front/*") as $theme){
             $tmpTheme = explode("/", $theme)[3];
@@ -22,22 +24,17 @@ class DesignController{
 
         $form = $siteObj->formThemeEdit($themes);
 
-        $view = new View("design", "back", $site);
-
-        $view->assign("title","Design | Themes | Styles");
-        $view->assign("site", $site);
-        $view->assign("form", $form);
-
         if(!empty($_POST)){
             if(($_POST['theme'] !== $site['theme']) && array_search($_POST['theme'], $themes)){
                 $siteObj->setTheme($_POST['theme']);
                 $siteObj->save();
-                
-                header("Refresh:0");
+                $site = $siteObj->findOne();
             }
             
         }
 
+        $view->assign("site", $site);
+        $view->assign("form", $form);
         
     }
 
