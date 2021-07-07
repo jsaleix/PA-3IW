@@ -16,6 +16,7 @@ class Page extends Database
     protected $creationDate = null;
     protected $creator;
     protected $visible;
+    protected $main;
     private $filters;
     private $action = null;
 
@@ -114,6 +115,14 @@ class Page extends Database
         return $this->visible;
     }
 
+    public function setMain($main){
+		$this->main = $main == 0 ? 'IS FALSE' : 1;
+    }
+
+    public function getMain(){
+        return $this->main;
+    }
+
     public function save(){
         if($this->action){
             //Verify if action exists
@@ -202,6 +211,18 @@ class Page extends Database
 					"label"=>"filters associated",
 					"id"=>"filters",
 					"class"=>"input-filters",
+                ],
+                "main"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Make this page the default one",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "no",
+						1 => "yes"
+					],
+                    "class"=>"input-content",
+                    "required"=>false,
                 ],
                 "visible"=>[ 
                     "type"=>"radio",
@@ -306,6 +327,18 @@ class Page extends Database
 					"id"=>"filters",
 					"class"=>"input-filters",
                     "value"=> $filters
+                ],
+                "main"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Make this page the default one",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "no",
+						1 => "yes"
+					],
+                    "class"=>"input-content",
+                    "required"=>false,
                 ],
                 "visible"=>[ 
                     "type"=>"radio",

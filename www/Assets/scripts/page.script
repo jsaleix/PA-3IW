@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Page` (
   `creator` INT NULL,
   `creationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `visible` TINYINT NOT NULL DEFAULT TRUE,
+  `main` TINYINT NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`),
   INDEX `fk_page_creator_idx` (`creator` ASC),
   INDEX `fk_page_category_idx` (`category` ASC),
