@@ -13,6 +13,7 @@ class FormValidator
 			return $errors;
 		}
 		unset($data["CSRF"]);
+
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
 				if($configInput["type"] == "radio" &&

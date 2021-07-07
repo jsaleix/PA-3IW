@@ -297,16 +297,6 @@ class Page extends CMSModels
                     "required"=>true,
 					"value"=> $content['name']
                 ],
-				"category"=>[ 
-					"type"=>"select",
-					"label"=>"Page associated",
-					"id"=>"page",
-					"class"=>"input-page-select",
-					"error"=>"A page needs to be associated with your article!",
-					"required"=>true,
-					"options" => $dataArr,
-					"value"=> $content['category']
-                ],
                 empty($actionArr) ? null :"action"=>[
                     "type"=>"select",
 					"label"=>"Action associated",

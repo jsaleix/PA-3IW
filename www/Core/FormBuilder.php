@@ -191,16 +191,19 @@ class FormBuilder
 	}
 
 	public static function renderRadio($name, $configInput){
-		$html = '';
+		$html = '<div class="radio">';
 		foreach($configInput['options'] as $key => $value)
 		{
+			$html .= '<div class="radio-option">';
 			if(isset($configInput['value']) && !is_null($configInput['value']) && ($key === $configInput['value'])){
 				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '" checked="checked"/>';
 			}else{
 				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '"/>';
 			}
 			$html .= '<label class="'.($configInput["labelClass"]??"").'" for="'.($configInput["id"]??"").'">'.($value).'</label>';
+			$html .= '</div>';
 		}
+		$html .= '</div>';
 		return $html;
 	}
 

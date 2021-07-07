@@ -34,8 +34,8 @@
         </div>
 
 <script>
-let filterVal = document.getElementById('filters');
-if(filterVal) filterVal.remove();
+//form id:           #form_content
+//filter input id:   #filters
 
 getFilters();
 
@@ -45,6 +45,31 @@ selector.addEventListener("change", async function() {
         await getFilters(selector.value);
     }
 });
+
+//remove the name from the original filters input
+function hideInput(){
+    let domInput = document.getElementById('filters');
+    if(domInput){
+        domInput.setAttribute('name', domInput.getAttribute('name') + '_hidden');
+    }
+    let filterSelectInput = document.getElementById('filterSelector');
+    if(filterSelectInput && filterSelectInput !== undefined){
+        filterSelectInput.setAttribute('name', 'filters');
+    }
+}
+
+//gives back the right name to the original filters input
+function showInput(){
+    let domInput = document.getElementById('filters');
+    if(domInput){
+        domInput.setAttribute('name', 'filters');
+    }
+    let filterSelectInput = document.getElementById('filterSelector');
+
+    if(filterSelectInput && filterSelectInput !== undefined){
+        filterSelectInput.setAttribute('name', 'filters_select');
+    }
+}
 
 async function getFilters(value){
     if(!value){
@@ -60,7 +85,6 @@ async function getFilters(value){
             },
         })
         .then( (res) => res.json())
-        .catch( err => eraseSelector());
         eraseSelector();
 
         if(res.code === 200){
@@ -83,6 +107,7 @@ async function getFilters(value){
 
 
 function createSelector(){
+    hideInput();
     let selector = document.getElementById('filterSelector');
     if(selector) return;
     selector = document.createElement('select');
@@ -94,6 +119,7 @@ function createSelector(){
 }
 
 function eraseSelector(){
+    showInput();
     let selector = document.getElementById('filterSelector');
     if(selector){
         selector.remove();
@@ -109,10 +135,22 @@ function addItem(item){
     selector.append(option);
 }
 
-function copyLink(link){
-    /*link.select();
-    link.setSelectionRange(0, 99999);
-    document.execCommand("copy");*/
-    alert('Saved');
-}
 </script>
+
+<style>
+    .radio{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    /*.radio-option{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }*/
+
+    input[type="radio"]{
+        -webkit-appearance: auto !important;
+    }
+</style>

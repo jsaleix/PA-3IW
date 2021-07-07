@@ -36,4 +36,17 @@
             ]
         } );
     } );
+
+    
+function copyLink(link){
+    /*link.select();
+    link.setSelectionRange(0, 99999);
+    document.execCommand("copy");*/
+    navigator.clipboard.writeText(link)
+    .then(function() {
+        alert('Saved in clipboard');
+    }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+    });
+}
 </script>
