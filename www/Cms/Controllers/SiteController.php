@@ -4,6 +4,7 @@ namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Site;
 use App\Core\FileUploader;
+use App\Core\Security;
 
 use CMS\Models\Post;
 use CMS\Models\Page;
@@ -68,6 +69,20 @@ class SiteController{
 
 		
 
+	}
+
+	public function deleteSiteAction($site){
+		$siteObj = new Site();
+		$siteObj->setPrefix($site['prefix']);
+		$site = $siteObj->findOne();
+		if(!$site){
+			return;
+		}
+		if( $site['creator'] != Security::getUser()){
+			return;
+		}
+		$siteObj->deleteTables();
+		\App\Core\Helpers::customRedirect('/');
 	}
 
 	/*

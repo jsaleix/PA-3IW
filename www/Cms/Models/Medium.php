@@ -107,4 +107,60 @@ class Medium extends CMSModels
             ]
         ];
     }
+
+    public function formEdit($medium, $posts, $post){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Add",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+				"enctype"=>"multipart/form-data"
+            ],
+            "inputs"=>[
+                "name"=>[
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input-content",
+                    "placeholder"=>"New medium",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
+                    "value"=>$medium["name"]
+                ],
+                "type"=>[
+                    "type"=>"text",
+                    "label"=>"Type",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"type",
+                    "class"=>"input-content",
+                    "placeholder"=>"Type",
+                    "error"=>"The type cannot be empty!",
+                    "required"=>true,
+                    "value"=>$medium["type"]
+                ],
+                "image"=>[ 
+                    "type"=>"file",
+                    "label"=>"image",
+                    "id"=>"image",
+                    "class"=>"input-file",
+                    "required"=>false,
+                    "value"=>$medium["image"]
+                ],
+                "post"=>[
+                    "type"=>"select",
+                    "label"=>"Post associated",
+                    "id"=>"post",
+                    "class"=>"input-category-select",
+                    "options"=>$posts,
+                    "value"=> $post,
+                ]   
+            ]
+        ];
+    }
 }

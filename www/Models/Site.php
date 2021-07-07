@@ -135,7 +135,7 @@ class Site extends Database
         $replaceBy = [$this->prefix, DBPREFIXE];
         $tableToCreate = [ 
             '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', 
-            '/medium.script', '/post.script', '/content.script', '/comment.script', '/menu.script', '/menu_dish_association.script'
+            '/medium.script', '/post.script', '/content.script', '/comment.script', '/menu.script', '/menu_dish_association.script', '/post_medium_association.script'
         ];
         try{
             foreach( $tableToCreate as $table){
@@ -173,7 +173,7 @@ class Site extends Database
     public function returnData() : array{
 		return get_object_vars($this);
 	}
-
+    
     public function formEdit($content){
         return [
 

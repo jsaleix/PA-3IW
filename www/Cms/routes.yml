@@ -103,6 +103,10 @@
   controller: sitecontroller
   action: editsite
 
+/settings/delete:
+  controller: sitecontroller
+  action: deletesite
+
 /medium:
   controller: mediacontroller
   action: listMedias

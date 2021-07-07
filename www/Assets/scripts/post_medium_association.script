@@ -3,14 +3,13 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Post_medium_association` (
     `medium` INT NULL,
     `post` INT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_post_association`
-        FOREING KEY (`post`)
+    CONSTRAINT `fk_post_association_:X`
+        FOREIGN KEY (`post`)
         REFERENCES `easymeal`.`:X_Post` (`id`)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    CONSTRAINT `fk_medium_association`
-        FOREING KEY (`medium`)
+    CONSTRAINT `fk_medium_association_:X`
+        FOREIGN KEY (`medium`)
         REFERENCES `easymeal`.`:X_Medium` (`id`)
         ON DELETE CASCADE
-        ON UPDATE CASCADE,
-)
+        ON UPDATE CASCADE);

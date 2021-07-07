@@ -10,6 +10,8 @@ use App\Core\Security;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
+use CMS\Models\Post;
+use CMS\Models\Post_Medium_Association as PMAssoc;
 use CMS\Models\Category;
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
@@ -96,10 +98,12 @@ class MediaController{
 		$medium = $mediumObj->findOne();
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		
-		//print_r($medium);
-		$CSRFtoken = bin2hex(random_bytes(54));
-		echo $CSRFtoken;
+		$postObj = new Post($site['prefix']);
+		$posts = $postObj->findAll();
+		/*$postAssoc = new PMAssoc($site['prefix']);
+		$postAssoc->set
+		print_r($post);*/
+		//$mediumObj->formEdit($medium, $posts, $post);
 
 	}
 

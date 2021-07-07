@@ -324,6 +324,34 @@ class Database
 		}
 	}
 
+	public function deleteTables(){
+		if(get_class($this) != "App\Models\Site")
+			return false;
+		try{
+			$tables = array(
+				$this->prefix."_Menu_dish_association",
+				$this->prefix."_Menu",
+				$this->prefix."_Dish",
+				$this->prefix."_DishCategory",
+				$this->prefix."_Comment",
+				$this->prefix."_Post_medium_association",
+				$this->prefix."_Post",
+				$this->prefix."_Medium",
+				$this->prefix."_Content",
+				$this->prefix."_Page",
+				$this->prefix."_Category",
+				$this->prefix."_Booking",
+			);
+			$query = "DROP TABLE IF EXISTS `easymeal`.`";
+			foreach($tables as $table){
+				$this->pdo->query($query.$table."`;");
+			}
+			$this->delete();
+		} catch(\Exception $e){
+			print_r($e);
+		}
+	}
+
 	public function getLastId(){
 		return $this->pdo->lastInsertId();
 	}
