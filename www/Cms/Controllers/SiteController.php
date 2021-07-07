@@ -39,6 +39,7 @@ class SiteController{
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . '/';
 					$imgName = 'banner';
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+					
 					if($isUploaded != false){
 						$image = $isUploaded;
 					}else{

@@ -35,7 +35,7 @@
   controller: pagecontroller
   action: editpage
 
-/deletepage:
+/page/delete:
   controller: pagecontroller
   action: deletepage
 
@@ -106,6 +106,10 @@
 /settings/delete:
   controller: sitecontroller
   action: deletesite
+  
+/design:
+  controller: designController
+  action: default
 
 /medium:
   controller: mediacontroller

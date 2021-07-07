@@ -48,6 +48,9 @@ class FormBuilder
 				case 'file':
 					$html .= self::renderFileInput($name, $configInput);
 					break;
+				case 'file-img':
+					$html .= self::renderFileImgInput($name, $configInput);
+					break;
 
 				default:
 					$html .= self::renderInput($name, $configInput);
@@ -123,6 +126,7 @@ class FormBuilder
 	}
 
 	public static function renderFileInput($name, $configInput){
+
 		$html =  "<input 
 						name=\"".$name."\" 
 						type=\"".($configInput["type"]??"text")."\" 
@@ -140,6 +144,37 @@ class FormBuilder
 
 			}
 		}
+		return $html;
+	}
+
+
+	public static function renderFileImgInput($name, $configInput){
+
+		$html =  "<div class='input-banner-container'>
+					<input 
+						name=\"".$name."\" 
+						type=\"file\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
+
+		if(!empty($configInput["type"]) && $configInput["type"] === 'file-img' && !empty($configInput["value"])){
+			if(strpos($configInput['value'], 'http') === false ){
+
+				$html .= '<img src="'. DOMAIN . '/'. $configInput['value'] .'"/>';
+
+			}else{
+
+				$html .= '<img src="'. $configInput['value'] .'"/>';
+			}
+		}
+
+		$html .= '<label for="'.($configInput['id']??"").'">'.($configInput['label']??"").'</label>
+				</div>';
+				
 		return $html;
 	}
 

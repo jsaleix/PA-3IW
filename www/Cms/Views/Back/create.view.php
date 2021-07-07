@@ -22,5 +22,7 @@
     <?php if(isset($message)):?>
         <h3> <?=$message?> </h3>
     <?php endif;?>
-
-    <?php App\Core\FormBuilder::render($form)?>
+    <div class="row" style="justify-content: center;">
+        <?php App\Core\FormBuilder::render($form)?>    
+    </div>
+    

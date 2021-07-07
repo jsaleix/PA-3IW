@@ -173,7 +173,27 @@ class Site extends Database
     public function returnData() : array{
 		return get_object_vars($this);
 	}
-    
+
+
+    public function formThemeEdit($themes){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-4 col-sm-12",
+                "submit"=>"Change theme",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "theme"=>[
+                    "type"=>"select",
+                    "class"=>"input input-100 input-select",
+                    "options"=>$themes
+                ]
+            ]
+        ];
+    }
+
     public function formEdit($content){
         return [
 
@@ -181,10 +201,10 @@ class Site extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_content",
-                "class"=>"form-content",
+                "class"=>"edit-site col-5 col-sm-12",
                 "submit"=>"Apply",
                 "submitClass"=>"cta-blue width-80 last-sm-elem",
-                "enctype"=>"multipart/form-data"
+                "enctype"=>"multipart/form-data",
             ],
             "inputs"=>[
                 "name"=>[ 
@@ -193,24 +213,34 @@ class Site extends Database
                     "minLength"=>2,
                     "maxLength"=>45,
                     "id"=>"name",
-                    "class"=>"input-content",
-                    "placeholder"=>"New article",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Website name",
                     "error"=>"The name cannot be empty!",
                     "required"=>true,
 					"value"=> $content['name']
                 ],
 				"description"=>[ 
 					"type"=>"text",
-					"label"=>"Description",
+					"placeholder"=>"Description",
 					"id"=>"description",
-					"class"=>"input-content",
+					"class"=>"input input-100",
                     "error"=>"The description cannot be empty!",
 					"required"=> false,
 					"value"=> $content['description']
                 ],
+                "type"=>[ 
+					"type"=>"text",
+					"label"=>"type",
+					"id"=>"type",
+					"class"=>"input input-100",
+                    "placeholder"=>"Restaurant food type",
+                    "error"=>"The type cannot be empty!",
+					"required"=> false,
+					"value"=> $content['type'],
+                ],
 				"image"=>[ 
-					"type"=>"file",
-					"label"=>"image",
+					"type"=>"file-img",
+					"label"=>"New banner",
 					"id"=>"image",
 					"class"=>"input-file",
                     "error"=>"",
@@ -221,26 +251,18 @@ class Site extends Database
 					"type"=>"text",
 					"label"=>"subDomain",
 					"id"=>"subDomain",
-					"class"=>"input-content",
+					"class"=>"input input-100",
                     "error"=>"The subDomain cannot be empty!",
 					"required"=> false,
 					"value"=> $content['subDomain'],
                     "disabled" => true
                 ],
-                "type"=>[ 
-					"type"=>"text",
-					"label"=>"type",
-					"id"=>"type",
-					"class"=>"input-content",
-                    "error"=>"The type cannot be empty!",
-					"required"=> false,
-					"value"=> $content['type'],
-                ],
                 "creationDate"=>[ 
 					"type"=>"text",
 					"label"=>"creationDate",
 					"id"=>"creationDate",
-					"class"=>"input-content",
+                    "placeholder"=>"Creation date",
+					"class"=>"input input-100",
                     "error"=>"The creationDate cannot be empty!",
 					"required"=> false,
 					"value"=> $content['creationDate'],

@@ -10,30 +10,24 @@
     }
 ?>
 
-<section id="about-page-section">
-    <div id="site-banner"> 
-    </div>
-    <div id="site-content">
-        <h1><?= $site['name']?></h1>
-        <p><?= $site['description']?></p>
-        <p>Type of food: <?= $site['type'] ?></p>
-        <div>
-            <p>Created by <?= $site['creator'] ?></p>
+<main class="main-container">
+    <div class="row" style="width:100%;">
+        <div class="col-6 col-sm-12 info-left">
+            <img src="<?= $imgLink ?>"/>
+        </div>
+        <div class="col-6 col-sm-12 info-right">
+            <h1><?= $site['name']?></h1>
+            <p class="info-type"><?= $site['type'] ?></p>
+            <p class="info-description"><?= $site['description']?></p>
+            <br/>
+            <h2>Contact Us</h2>
+            <div class="infos col-9 col-sm-12">
+                <ul>
+                    <li><img src="<?= DOMAIN . '/Assets/images/icons/phone.png'?>"/> 01 93 32 64 18</li>
+                    <li><img src="<?= DOMAIN . '/Assets/images/icons/mail.png'?>"/> <a href="mailto:contact@legorille.fr">contact@legorille.fr</a></li>
+                    <li><img src="<?= DOMAIN . '/Assets/images/icons/map-pin.png'?>"/> <a title="Open in google maps" href="#map">3 Rue de la piraterie, Tortuga, Océan Pacifique</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-    
-</section>
-
-<style>
-    #site-banner{
-        width: 100vw;
-        height: 40vh;
-        background-repeat: no-repeat;
-        background-image: url("<?=  $imgLink ?>");
-        background-size: cover;
-    }
-
-    #site-content{
-        /*margin-top: -10vh;*/
-    }
-</style>
+   </main>

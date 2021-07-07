@@ -48,5 +48,6 @@ function displayRows(type) {
 }
 
 $("#openBtn").click(function () {
+  $("#navbar").toggle();
   $("#navbar").toggleClass("collapsed");
 });
