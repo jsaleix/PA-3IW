@@ -203,7 +203,7 @@ class PageController{
 					$pageObj->setName($name);
 					$pageObj->setCategory($category??null);
 					$pageObj->setAction($action??null);
-					$pageObj->setVisible($main??null);
+					$pageObj->setVisible($visible??null);
 					$pageObj->setMain($main??null);
 
 					$actionObj->setId($action);

@@ -335,6 +335,8 @@ class Page extends CMSModels
 					],
                     "class"=>"input-content",
                     "required"=>false,
+                    "value"=> $content['main']
+
                 ],
                 "visible"=>[ 
                     "type"=>"radio",
