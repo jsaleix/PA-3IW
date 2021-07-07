@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Dish` (
   CONSTRAINT `fk_dish_category_:X`
     FOREIGN KEY (`category`)
     REFERENCES `easymeal`.`:X_DishCategory` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)

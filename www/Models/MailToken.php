@@ -19,9 +19,7 @@ class MailToken extends Database
         parent::__construct();
     }
 
-    public function sendConfirmationMail($mail){
-        if( !$this->token || !$this->userId || !$this->expiresDate)
-            return;
+    public function createTransporter(){
         $mailing = new PHPMailer(True);
         $mailing->isSMTP();
         $mailing->Host = MAIL_SMTP;
@@ -30,7 +28,13 @@ class MailToken extends Database
         $mailing->Password = MAIL_PWD;
         $mailing->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mailing->Port = 465;
+        return $mailing;
+    }
 
+    public function sendConfirmationMail($mail){
+        if( !$this->token || !$this->userId || !$this->expiresDate)
+            return;
+        $mailing = $this->createTransporter();
         $mailing->setFrom(MAIL, 'Mailer');
         $mailing->addAddress($mail);
         $mailing->isHTML(true);
