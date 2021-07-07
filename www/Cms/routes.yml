@@ -103,6 +103,10 @@
   controller: sitecontroller
   action: editsite
 
+/design:
+  controller: designController
+  action: default
+
 /medium:
   controller: mediacontroller
   action: listMedias

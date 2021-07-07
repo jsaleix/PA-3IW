@@ -30,7 +30,7 @@ class FileUploader
 			return false;
 		} 
 
-		if ($file["size"] > 500000) {
+		if ($file["size"] > 5000000) {
 			return false;
 		}
 

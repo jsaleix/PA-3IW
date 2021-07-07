@@ -30,7 +30,7 @@ class FormValidator
 					return $errors;
 				}
 
-				if($configInput["type"] == "file" ){
+				if($configInput["type"] == "file" || $configInput["type"] == "file-img"){
 					if( !self::verifyFileSize($data[$name])){
 						$errors[] = "Le fichier est trop gros";
 					}
