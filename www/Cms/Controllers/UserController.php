@@ -5,6 +5,7 @@ namespace CMS\Controller;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\Whitelist;
+use App\Core\Security;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
@@ -39,41 +40,53 @@ class UserController{
 		$view->assign("createButton", $addDishButton);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
-		$view->assign('pageTitle', "Manage the dishes");
+		$view->assign('pageTitle', "Users allowed to manage this site");
     }
 
     public function addAdminAction($site){
         $wlistObj = new Whitelist();
 		$wlistObj->setIdSite($site['id']);
 
-		//$form = $wlistObj->formAdd();
+		$form = $wlistObj->formAdd();
 
-		$view = new View('create', 'back', $site);
+		$view = new View('whitelist', 'back', $site);
 		$view->assign("form", $form);
-		$view->assign('pageTitle', "Add a dish category");
+		$view->assign('pageTitle', "Allow a user to manage your site");
 
-		if(!empty($_POST) )
-		{
-			$errors = [];
-			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
-			
-			if( $name ){
-				//Verify the dishCategor submitted
-				$dishCatObj->setName($name);
-				$dishCatObj->setDescription($description);
-				$dishCatObj->setNotes($notes);
-				$dishCatObj->setIsActive($isActive??1);
+		try{
+			if(!empty($_POST) )
+			{
+				$errors = [];
+				var_dump($_POST);
+				[ "user" => $user] = $_POST;
+				if(empty($user)){ 
+					throw new \Exception('No user'); 
+				}
+				if($user == Security::getUser()){
+					throw new \Exception('Cannot add yourself'); 
+				}
 
-				$adding = $dishCatObj->save();
+				$wlistObj->setIdUser($user);
+				$wlistObj->setIdSite($site['id']);
+				$check = $wlistObj->findOne();
+				if($check) { 
+					throw new \Exception('User already authorized'); 
+				}
+				$adding = $wlistObj->save();
 				if($adding){
-					$message ='Dish category successfully added!';
+					$message ='User successfully added!';
 					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 				}else{
-					$errors[] = "Cannot insert this dish category";
+					$errors[] = "Cannot add this user";
 					$view->assign("errors", $errors);
+					\App\Core\Helpers::customRedirect('/admin/users?error', $site);
 				}
 			}
+		}catch(\Exception $e){
+			\App\Core\Helpers::customRedirect('/admin/users?error', $site);
 		}
+		
     }
 
     public function deleteAdminAction($site){

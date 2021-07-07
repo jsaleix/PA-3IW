@@ -1,54 +1,39 @@
-<h2><?=$post['title']?></h2>
-<p id='<?=$publisher['id']?>'>By <?=$post['author']?></p>
-<p><?=$post['content']?></p>
-<hr>
-<?php if(isset($errors) && !empty($errors)):?>
-    <?php foreach ($errors as $error):?>
-        <li style="color:red"><?=$error;?></li>
-    <?php endforeach;?>
-<?php endif ?>
+<main class="main-container">
+       <div class="col-10 article-container">
+            <h1><?=$post['title']?></h1>
+            <h2>By <span><?=$post['author']?></span> the <span><?= (new DateTime($post['publicationDate']))->format("d/m/y")?></span> at <span><?= (new DateTime($post['publicationDate']))->format("H:i")?></span></h2>
+            <hr/>
+            <p>
+                <?=$post['content']?>
+            </p>
 
-<?php if($post['allowComment']):?>
-    <?php if($canPostComment): ?>
-        <button onClick="toggleBox()">Publish a comment</button>
-        <form id="commentBox" action="" method="POST">
-            <input name="message"/>
-            <input type="submit" value="Publish"/>
-        </form>
-    <?php else: ?>
-        <button>You must be logged in to post a comment</button>
-    <?php endif;?>
-<?php endif;?>
 
-<?php if(isset($comments) && !empty($comments)):?>
-    <?php foreach ($comments as $comment):?>
-        <p><?=$comment['message']?></p>
-        <i>Published by <?= $comment['author'] ?> - <?=$comment['date']?></i>
-        <p>###############</p>
-    <?php endforeach;?>
-<?php endif ?>
+            <?php if($post['allowComment']):?>
+                <hr/>
+                <?php if($canPostComment): ?>
+                    <form action="" method="POST">
+                        <input name="message" class="input input-100 comment-input" placeholder="Write a comment"/>
+                        <button type="submit" class="btn comment-btn">Publish</button>
+                    </form>
+                <?php endif;?>
+            <?php endif;?>
 
-<script>
-    function toggleBox(){
-        let box = document.getElementById('commentBox');
-        let style = getComputedStyle(box);
-        if(style.display === 'none'){
-            box.style.display = 'flex';
-        }else{
-            box.style.display = 'none';
-        }
-    }
-</script>
+            <?php if(isset($errors) && !empty($errors)):?>
+                <?php foreach ($errors as $error):?>
+                    <li style="color:red"><?=$error;?></li>
+                <?php endforeach;?>
+            <?php endif ?>
 
-<style>
-    #commentBox{
-        display: none;
-        flex-direction: row;
-        justify-items: flex-start;
-        align-items: flex-end;
-    }
+            <?php if(isset($comments) && !empty($comments)):?>
+                <h3>Comments</h3>
+                <?php foreach ($comments as $comment):?>
+                    <div class="comment col-6 col-md-10 col-sm-12">
+                        <h2><span><?=$comment['author']?></span> the <b><?= $comment['date'] ?> </b></h2>
+                        <p><?=$comment['message']?></p>
+                    </div>
+                <?php endforeach;?>
+            <?php endif ?>
 
-    #commentBox:nth-child(1){
-        padding-bottom: 2em;
-    }
-</style>
+
+       </div>
+</main>
