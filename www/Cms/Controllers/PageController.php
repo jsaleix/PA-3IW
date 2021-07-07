@@ -30,7 +30,7 @@ class PageController{
 		$pageObj = new Page();
 		$pageObj->setPrefix($site['prefix']);
 		$pages = $pageObj->findAll();
-		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'visible in navigation', 'edit', 'delete', 'see'];
+		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'visible in navigation', 'edit', 'delete', 'see', 'copyLink'];
 		$datas = [];
 
 		$contentObj = new Content($site['prefix']);
@@ -71,7 +71,12 @@ class PageController{
 			$buttonDelete	= '<a href="page/delete?id=' . $item['id'] . '">Go</a>';
 			$buttonVisit 	= '<a href="'. \App\Core\Helpers::renderCMSLink($item['name'], $site) .'">Go</a>';
 			$visible		= $item['visible'] ? 'visible' : 'hidden';
-			$datas[] 		= "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $visible . "','" . $buttonEdit . "','" . $buttonDelete . "','" . $buttonVisit."'";
+			//$copyLink		= '<button type="button" onClick="copyLink(\\\'' . \App\Core\Helpers::renderCMSLink($item['name'], $site) . '\\\')">Copy</button>';
+			$link = \App\Core\Helpers::renderCMSLink($item['name'], $site);
+			//$copyLink = "<button type=\"button\" onClick=\"copyLink(\\'${link}\\')\" ></button>";
+			$copyLink = "<button type=\"button\" onClick=\"copyLink()\" >Copy</button>";
+
+			$datas[] 		= "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $visible . "','" . $buttonEdit . "','" . $buttonDelete . "','" . $buttonVisit. "','" . $copyLink."'";
 
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'page/create'];
