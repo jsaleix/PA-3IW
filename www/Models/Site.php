@@ -173,6 +173,26 @@ class Site extends Database
 		return get_object_vars($this);
 	}
 
+
+    public function formThemeEdit($themes){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-4 col-sm-12",
+                "submit"=>"Change theme",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "theme"=>[
+                    "type"=>"select",
+                    "class"=>"input input-100 input-select",
+                    "options"=>$themes
+                ]
+            ]
+        ];
+    }
+
     public function formEdit($content){
         return [
 

@@ -83,3 +83,36 @@
   .input-banner-container input {
     display: none;
   }
+
+
+  .btn {
+    display: flex;
+    margin: 5px;
+    border: none;
+    color: white;
+    background-color: #2DC091;
+    font-size: 16px;
+    padding: 0.5em;
+    padding-left: 2em;
+    padding-right: 2em;
+    transition: 0.5s;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-100{
+    width: 100%;
+  }
+  
+  .btn-light {
+    color: #2DC091;
+    border: 1px solid #2DC091;
+    background-color: transparent;
+  }
+  
+  .btn:hover {
+    transition: 0.5s;
+    transform: scale(1.05);
+    cursor: pointer;
+  }
