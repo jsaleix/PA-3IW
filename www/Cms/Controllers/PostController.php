@@ -113,9 +113,6 @@ class PostController{
 				$view->assign("errors", $errors);
 			}
 		}
-
-		
-
 	}
 
 	public function deleteArticleAction($site){
