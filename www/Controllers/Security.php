@@ -63,8 +63,13 @@ class Security{
 				$user->setLastname(htmlspecialchars($_POST["lastname"]));
 				$user->setEmail(htmlspecialchars($_POST["email"]));
 				$user->setPwd( password_hash(htmlspecialchars($_POST["pwd"]), PASSWORD_BCRYPT) );
-				$user->save();
-				$userFetch = $user->findOne();
+				$res = $user->save();
+				if( !$res){
+					$errors[] = "This email is already taken try something else";
+					$view->assign("errors", $errors);
+					$view->assign("form", $form);
+					return;
+				}$userFetch = $user->findOne();
 				$mail = new MailToken();
 				$mail->setUserId($userFetch["id"]);
 				$mail->setExpiresDate(new \DateTime('now'));
@@ -79,7 +84,6 @@ class Security{
 
 		}
 		$view->assign("form", $form);
-
 	}
 
 	public function logoutAction(){
