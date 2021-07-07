@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Comment` (
   INDEX `fk_comment_creator_idx` (`idUser` ASC),
   CONSTRAINT `fk_comment_post_:X`
     FOREIGN KEY (`idPost`)
-    REFERENCES `easymeal`.`:X_Post` (`id`),
+    REFERENCES `easymeal`.`:X_Post` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_creator_:X`
     FOREIGN KEY (`idUser`)
     REFERENCES `easymeal`.`:prefixUser` (`id`)

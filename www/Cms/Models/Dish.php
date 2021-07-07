@@ -15,10 +15,6 @@ class Dish extends CMSModels
 	protected $allergens;
 	protected $isActive;
 
-	public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
 	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}

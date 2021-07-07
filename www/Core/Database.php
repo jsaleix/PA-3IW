@@ -255,6 +255,64 @@ class Database
 		return !isset($result[0]) ? false : $result;
 	}
 
+	public function updateAll(array $setValues, array $whereEquals, array $whereDifferents): bool{
+		$req = 'UPDATE '.$this->table;
+		
+		if(count($setValues) == 0){
+			return false;
+		}
+
+		foreach($setValues as $field => $value){
+			$len = count($setValues);
+			$idx = 1;
+			$req .= ' SET ' . $field . ' = ' . $value;
+			if($idx < $len){
+				$req .= ', ';
+			}
+			$idx++;
+		}
+
+		if(count($whereEquals) != 0){
+			$len = count($whereEquals);
+			$idx = 1;
+			$req .= ' WHERE ';
+			foreach($whereEquals as $field => $value){
+				$req .= $field . ' = ' . $value;
+				if($idx < $len){
+					$req .= ' AND ';
+				}
+				$idx++;
+			}
+		}
+
+		if(count($whereDifferents) != 0){
+			$len = count($whereDifferents);
+			$idx = 1;
+			if(count($whereEquals) == 0){
+				$req .= ' WHERE ';
+			}else{
+				$req .= ' AND ';
+			}
+			foreach($whereDifferents as $field => $value){
+				$req .= $field . ' <> ' . $value;
+				if($idx < $len){
+					$req .= ' AND ';
+				}
+				$idx++;
+			}
+		}
+
+		try{
+			$query 	= $this->pdo->prepare($req);
+			$query->execute();
+			return true;
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			return false;
+		}
+
+	}
+
 	public function createTable($req){
 		try{
 			$query = $this->pdo->prepare($req);

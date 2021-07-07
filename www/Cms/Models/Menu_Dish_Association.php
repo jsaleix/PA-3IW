@@ -9,10 +9,6 @@ class Menu_dish_association extends CMSModels
 	protected $dish;
 	protected $menu;
 
-	public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
 	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}

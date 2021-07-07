@@ -11,10 +11,6 @@ class Menu extends CMSModels
 	protected $notes;
 	protected $isActive;
 
-	public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
 	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}

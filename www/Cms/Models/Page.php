@@ -7,7 +7,7 @@ use App\Core\Database;
 use App\Models\Action;
 
 
-class Page extends Database
+class Page extends CMSModels
 {
 
 	protected $id = null;
@@ -15,12 +15,10 @@ class Page extends Database
 	protected $category = null;
     protected $creationDate = null;
     protected $creator;
+    protected $visible;
+    protected $main;
     private $filters;
     private $action = null;
-
-	public function __construct(){
-        parent::__construct();
-	}
 
     public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
@@ -105,6 +103,22 @@ class Page extends Database
         return $this->creator;
     }
 
+    public function setVisible($visible){
+		$this->visible = $visible == 0 ? 'IS FALSE' : 1;
+    }
+
+    public function getVisible(){
+        return $this->visible;
+    }
+
+    public function setMain($main){
+		$this->main = $main == 0 ? 'IS FALSE' : 1;
+    }
+
+    public function getMain(){
+        return $this->main;
+    }
+
     public function save(){
         if($this->action){
             //Verify if action exists
@@ -144,7 +158,7 @@ class Page extends Database
             if($this->filters ){
                 $contentObj->setFilter($this->filters);
             }else{
-                echo 'no filter';
+                //echo 'no filter';
             }
             $content = $contentObj->save();
         }
@@ -193,8 +207,33 @@ class Page extends Database
 					"label"=>"filters associated",
 					"id"=>"filters",
 					"class"=>"input-filters",
-					]
+                ],
+                "main"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Make this page the default one",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "no",
+						1 => "yes"
+					],
+                    "class"=>"input-content",
+                    "required"=>false,
+                ],
+                "visible"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Should this page appear in the navigation",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "do not display",
+						1 => "display"
+					],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify if the page appears in the navigation",
+                    "required"=>true,
                 ]
+            ]
         ];
     }
 
@@ -284,7 +323,35 @@ class Page extends Database
 					"id"=>"filters",
 					"class"=>"input-filters",
                     "value"=> $filters
-					]
+                ],
+                "main"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Make this page the default one",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "no",
+						1 => "yes"
+					],
+                    "class"=>"input-content",
+                    "required"=>false,
+                    "value"=> $content['main']
+
+                ],
+                "visible"=>[ 
+                    "type"=>"radio",
+                    "label"=>"Should this page appear in the navigation",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+					"options" => [
+						0 => "do not display",
+						1 => "display"
+					],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify if the page appears in the navigation",
+                    "required"=>true,
+                    "value"=> $content['visible']
+                ]
             ]
         ];
     }

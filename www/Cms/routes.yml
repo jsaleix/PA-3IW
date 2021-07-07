@@ -35,7 +35,7 @@
   controller: pagecontroller
   action: editpage
 
-/deletepage:
+/page/delete:
   controller: pagecontroller
   action: deletepage
 

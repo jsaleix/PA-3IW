@@ -107,6 +107,12 @@ function addItem(item){
 
     let selector = document.getElementById('filterSelector');
     selector.append(option);
+}
 
+function copyLink(link){
+    /*link.select();
+    link.setSelectionRange(0, 99999);
+    document.execCommand("copy");*/
+    alert('Saved');
 }
 </script>

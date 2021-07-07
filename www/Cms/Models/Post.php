@@ -13,10 +13,6 @@ class Post extends CMSModels
 	protected $publicationDate;
 	protected $allowComment;
 
-	public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
 	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}
