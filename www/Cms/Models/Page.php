@@ -7,7 +7,7 @@ use App\Core\Database;
 use App\Models\Action;
 
 
-class Page extends Database
+class Page extends CMSModels
 {
 
 	protected $id = null;
@@ -19,10 +19,6 @@ class Page extends Database
     protected $main;
     private $filters;
     private $action = null;
-
-	public function __construct(){
-        parent::__construct();
-	}
 
     public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');

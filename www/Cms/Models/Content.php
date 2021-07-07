@@ -10,10 +10,6 @@ class Content extends CMSModels
 	protected $method;
     protected $filter;
 
-	public function __construct($prefix = null){
-        parent::__construct($prefix);
-	}
-
     public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}

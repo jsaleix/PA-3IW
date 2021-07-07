@@ -9,10 +9,6 @@ class Post_medium_association extends CMSModels
     protected $post;
     protected $medium;
 
-    public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
     public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}

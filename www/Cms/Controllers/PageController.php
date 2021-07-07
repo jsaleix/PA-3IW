@@ -27,8 +27,7 @@ class PageController{
 	}
 
 	public function managePagesAction($site){
-		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
+		$pageObj = new Page($site['prefix']);
 		$pages = $pageObj->findAll();
 		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'main page', 'visible in navigation', 'edit', 'delete', 'see', 'copyLink'];
 		$datas = [];
@@ -90,8 +89,7 @@ class PageController{
 	}
 
 	public function createPageAction($site){
-		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
+		$pageObj = new Page($site['prefix']);
 		$actionObj = new Action();
 		$actions = $actionObj->findAll();
 		$actionArr = [];
@@ -152,8 +150,7 @@ class PageController{
 			exit();
 		}
 
-		$pageObj = new Page();
-		$pageObj->setPrefix($site['prefix']);
+		$pageObj = new Page($site['prefix']);
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
@@ -174,8 +171,7 @@ class PageController{
 			}
 		}
 
-		$categoryObj = new Category();
-		$categoryObj->setPrefix($site['prefix']);
+		$categoryObj = new Category($site['prefix']);
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
@@ -236,8 +232,7 @@ class PageController{
 	public function deletePageAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('page not set');}
-			$pageObj = new Page();
-			$pageObj->setPrefix($site['prefix']);
+			$pageObj = new Page($site['prefix']);
 			$pageObj->setId($_GET['id']??0);
 			$page = $pageObj->findOne();
 

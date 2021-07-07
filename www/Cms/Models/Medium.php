@@ -11,10 +11,6 @@ class Medium extends CMSModels
     protected $publisher;
     protected $publicationDate;
 
-    public function __construct ($prefix = null){
-		parent::__construct($prefix);
-	}
-
 	public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
 	}
