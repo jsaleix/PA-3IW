@@ -255,7 +255,7 @@ class Database
 		return !isset($result[0]) ? false : $result;
 	}
 
-	public function updateAll(array $whereEquals, array $whereDifferents, array $setValues): bool{
+	public function updateAll(array $setValues, array $whereEquals, array $whereDifferents): bool{
 		$req = 'UPDATE '.$this->table;
 		
 		if(count($setValues) == 0){

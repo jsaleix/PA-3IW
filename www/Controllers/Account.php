@@ -56,16 +56,16 @@ class Account{
 		if($wlists){
 			foreach($wlists as $wlist){
 				$siteObj->setId($wlist["idSite"]);
-				$site = $siteObj->findOne();
-				array_push($sites, $site);
+				$sites = $siteObj->findOne();
 			}
 		}
 		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
 		$datas = [];
 
-		if($sites){
+		if($sites == true){
 			foreach($sites as $item){
                 $userObj->setId($item['creator']);
+				echo $item['creator'] . '<hr>';
                 $creator = $userObj->findOne();
 				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				$editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';

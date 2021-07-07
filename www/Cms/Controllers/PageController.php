@@ -131,6 +131,10 @@ class PageController{
 				}
 				$adding = $pageObj->save();
 
+				if($main == true){
+					$pageObj->updateAll(['main' => 'false'], ['main' => 'true'], ['id' => $pageObj->getLastId()]);
+				}
+
 				if($adding){
 					$message ='Page successfully published!';
 					$view->assign("message", $message);
@@ -211,8 +215,7 @@ class PageController{
 					$pageObj->setFilters(($contentAction));
 					$adding = $pageObj->save();
 					if($main == true){
-						//WHERE =, <>, & SET
-						$pageObj->updateAll(['main' => 'true'], ['id' => $pageObj->getId()], ['main' => 'false']);
+						$pageObj->updateAll(['main' => 'false'], ['main' => 'true'], ['id' => $pageObj->getId()]);
 					}
 					if($adding){
 						$message ='Page successfully updated!';
