@@ -29,23 +29,13 @@ class DynamicRouter extends Router implements RouterInterface
 			$requestedPage = $url[1];
 
 			$siteObj->setSubDomain($domain);
-			$site = $siteObj->findOne();
-			if(empty($site['id']) || !$site){ throw new \Exception('This site does not exist'); }
-
-			$siteObj->setId($site['id']);
-			$siteObj->setName($site['name']);
-			$siteObj->setDescription($site['description']);
-			$siteObj->setImage($site['image']);
-			$siteObj->setCreator($site['creator']);
-			$siteObj->setSubDomain($site['subDomain']);
-			$siteObj->setPrefix($site['prefix']);
-			$siteObj->setType($site['type']);
-			$siteObj->setTheme($site['theme']);
+			$siteCheck = $siteObj->findOne(TRUE);
+			if(!$siteCheck){ throw new \Exception('This site does not exist'); }
 			
 			$this->site = $siteObj;
 
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
-				$pageObj->setPrefix($site['prefix']);
+				$pageObj->setPrefix($site->getPrefix());
 				$pageObj->setMain(true);
 				$requestedPage = $pageObj->findOne();
 				if(!$requestedPage){
@@ -57,14 +47,14 @@ class DynamicRouter extends Router implements RouterInterface
 				}
 
 				if($requestedPage){
-					\App\Core\Helpers::customRedirect('/' . $requestedPage['name'], $site);
+					\App\Core\Helpers::customRedirect('/' . $requestedPage['name'], $siteObj);
 				}else{
 					\App\Core\Helpers::customRedirect('/');
 				}				
 			}
 
 			$pageObj->setName($requestedPage);
-			$pageObj->setPrefix($this->site->getPrefix());
+			$pageObj->setPrefix($siteObj->getPrefix());
 			$pageData = $pageObj->findOne();
 			if(empty($pageData['id'])){ //The page is not found
 				\App\Core\Helpers::errorStatus();
@@ -73,7 +63,7 @@ class DynamicRouter extends Router implements RouterInterface
 			$this->page = $pageObj;
 
 			$contentObj = new Content();
-			$contentObj->setPrefix($site['prefix']);
+			$contentObj->setPrefix($siteObj->getPrefix());
 			$contentObj->setPage($pageData['id']);
 			$content = $contentObj->findOne();
 
