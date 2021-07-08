@@ -9,6 +9,7 @@ use App\Core\ConstantMaker as c;
 use App\Core\FileUploader;
 
 use App\Models\User;
+use App\Models\Role;
 use App\Models\Site;
 use App\Models\Whitelist;
 
@@ -19,7 +20,6 @@ class Admin{
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
 		$view = new View('back/default', 'back');
-		//$view->assign("navbar", NavbarBuilder::renderNavBar($site, 'back'));
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -137,6 +137,67 @@ class Admin{
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the users");
+	}
+
+	public function displayRolesAction(){
+		$roleObj = new Role();
+		$roles = $roleObj->findAll();
+		$fields = [ 'name', 'description', 'icon', 'edit'];
+		$datas = [];
+
+		if($roles){
+			foreach($roles as $item){
+				$icon = '<img src=' . DOMAIN . '/' . $item['icon'] . ' width=100 height=80/>';
+				$editBtn = '<a href="role?id=' . $item['id'] . '">Go</a>';
+				$description = strlen($item['description']) != 0 ? $item['description'] : 'No description yet';
+				$formalized = "'" . $item['name'] . "','" . $description . "','" . $icon . "','" . $editBtn ."'";
+				$datas[] = $formalized;
+			}
+		}
+
+		$view = new View('back/list', 'back');
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
+		$view->assign('pageTitle', "Manage the roles");
+	}
+
+	public function editRoleAction(){
+		if(!isset($_GET['id']) || empty($_GET['id']) ){
+			\App\Core\Helpers::customRedirect('/admin/roles?error');
+		}
+		$roleObj = new Role();
+		$roleObj->setId($_GET['id']);
+		$role = $roleObj->findOne(TRUE);
+		if(!$role){
+			\App\Core\Helpers::customRedirect('/admin/roles?error');
+		}
+
+		$form = $roleObj->formEdit($role);
+
+		$view = new View('back/form', 'back');
+		$view->assign('pageTitle', "Edit a role");
+		$view->assign("form", $form);
+		if(!empty($_POST)){
+			$errors = [];
+			$errors = FormValidator::check($form, $_POST);
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			if(isset($_POST['description']) && strlen($_POST['description']) == 0){
+				$_POST['description'] = 'IS NULL';
+			}
+
+			$saving = $roleObj->populate($_POST, TRUE);
+			if(!$saving){
+				$message = "Could not update this role!";
+				$view->assign("message", $message);
+				return;
+			}else{
+				\App\Core\Helpers::customRedirect('/admin/roles?success');
+			}
+		}
+
 	}
 
 }
