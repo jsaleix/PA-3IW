@@ -5,10 +5,12 @@ use App\Models\User;
 use App\Models\Site;
 use App\Core\FormValidator;
 
+use CMS\Models\Medium;
 use CMS\Models\Post;
 use CMS\Models\Page;
 use CMS\Models\Category;
 use CMS\Models\Comment;
+use CMS\Models\Post_Medium_Association as PMAssoc;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\NavbarBuilder;
@@ -90,12 +92,48 @@ class PostController{
 			header("Location: articles");
 			exit();
 		}
-
-		$view = new View('create', 'back',  $site);
+		$view = new View('post.association', 'back',  $site);
 		$form = $contentObj->formEditContent($content);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit an article");
 		$view->assign('errors', $errors??[]);
+
+		$contentObj->findOne(TRUE);
+		$PMAObj = new PMAssoc($site['prefix']);
+		$PMAObj->setPost($contentObj->getId());
+		$PMAS = $PMAObj->findAll();
+		$fields = ['name', 'image', 'Remove'];
+		$datas = [];
+		$mediumAssociated = [];
+		if($PMAS){
+			foreach($PMAS as $item){
+				$mediumObj = new Medium($site['prefix']);
+				$mediumObj->setId($item['medium']);
+				$mediumObj->findOne(TRUE);
+				$mediumAssociated [] = $mediumObj->getId();
+				$img = "<img src=".DOMAIN."/".$mediumObj->getImage()." width=100 height=80/>";
+				$buttonDelete = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/remove?id=".$item['id'], $site).">Go</a>";
+				$formalized = "'".$mediumObj->getName()."','".$img."','".$buttonDelete."'";
+				$datas[] = $formalized;
+			}
+			$lists[] = array( "title" => "Media on post", "datas" => $datas, "id" => "owned_media", "fields" => $fields );
+		}
+		$mediumObj = new Medium($site['prefix']);
+		$mediums = $mediumObj->findAll();
+		$fields = ['name', 'image', 'Add'];
+		$datas = [];
+		if($mediums){
+			foreach($mediums as $item){
+				if( !in_array($item['id'], $mediumAssociated) ){
+					$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
+					$buttonAdd = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/create?medium=".$item['id']."&post=".$contentObj->getId(), $site).">Go</a>";
+					$formalized = "'".$item['name']."','".$img."','".$buttonAdd."'";
+					$datas[] = $formalized;
+				}
+			}
+		}
+		$lists[] = array( "title" => "Media availables", "datas" => $datas, "id" => "available_media", "fields" => $fields );
+		$view->assign("lists", $lists);
 
 		if(!empty($_POST) ) {
 			$errors = [];

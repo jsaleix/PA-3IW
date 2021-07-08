@@ -131,6 +131,18 @@
   controller: mediacontroller
   action: createMedium
 
+/medium/assoc/delete:
+  controller: pmacontroller
+  action: deleteAssoc
+
+/medium/assoc/remove:
+  controller: pmacontroller
+  action: deleteAssocFromPost
+
+/medium/assoc/create:
+  controller: pmacontroller
+  action: createAssoc
+
 /users:
   controller: usercontroller
   action: listadmin
