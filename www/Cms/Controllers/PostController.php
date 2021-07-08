@@ -102,7 +102,7 @@ class PostController{
 		$PMAObj = new PMAssoc($site['prefix']);
 		$PMAObj->setPost($contentObj->getId());
 		$PMAS = $PMAObj->findAll();
-		$fields = ['name', 'image', 'Remove'];//, 'Delete'
+		$fields = ['name', 'image', 'Remove'];
 		$datas = [];
 		$mediumAssociated = [];
 		if($PMAS){
@@ -113,7 +113,7 @@ class PostController{
 				$mediumAssociated [] = $mediumObj->getId();
 				$img = "<img src=".DOMAIN."/".$mediumObj->getImage()." width=100 height=80/>";
 				$buttonDelete = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/remove?id=".$item['id'], $site).">Go</a>";
-				$formalized = "'".$mediumObj->getName()."','".$img."','".$buttonDelete."'";//"','".$buttonDelete.
+				$formalized = "'".$mediumObj->getName()."','".$img."','".$buttonDelete."'";
 				$datas[] = $formalized;
 			}
 			$lists[] = array( "title" => "Media on post", "datas" => $datas, "id" => "owned_media", "fields" => $fields );
@@ -122,16 +122,17 @@ class PostController{
 		$mediums = $mediumObj->findAll();
 		$fields = ['name', 'image', 'Add'];
 		$datas = [];
-		foreach($mediums as $item){
-			if( !in_array($item['id'], $mediumAssociated) ){
-				$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
-				$buttonAdd = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/create?medium=".$item['id']."&post=".$contentObj->getId(), $site).">Go</a>";
-				$formalized = "'".$item['name']."','".$img."','".$buttonAdd."'";
-				$datas[] = $formalized;
+		if($mediums){
+			foreach($mediums as $item){
+				if( !in_array($item['id'], $mediumAssociated) ){
+					$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
+					$buttonAdd = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/create?medium=".$item['id']."&post=".$contentObj->getId(), $site).">Go</a>";
+					$formalized = "'".$item['name']."','".$img."','".$buttonAdd."'";
+					$datas[] = $formalized;
+				}
 			}
 		}
 		$lists[] = array( "title" => "Media availables", "datas" => $datas, "id" => "available_media", "fields" => $fields );
-		
 		$view->assign("lists", $lists);
 
 		if(!empty($_POST) ) {
