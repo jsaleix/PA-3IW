@@ -8,6 +8,7 @@ class Role extends Model
     protected $name;
     protected $description;
     protected $icon;
+    protected $isAdmin;
     
 	public function __construct(){
 		parent::__construct();
@@ -76,6 +77,22 @@ class Role extends Model
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
+    /**
+     * @param mixed $mail
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
     }
 
     public function formEdit($data){

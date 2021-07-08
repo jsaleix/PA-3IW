@@ -142,15 +142,17 @@ class Admin{
 	public function displayRolesAction(){
 		$roleObj = new Role();
 		$roles = $roleObj->findAll();
-		$fields = [ 'name', 'description', 'icon', 'edit'];
+		$fields = [ 'name', 'description', 'icon', 'is admin', 'edit'];
 		$datas = [];
 
 		if($roles){
 			foreach($roles as $item){
-				$icon = '<img src=' . DOMAIN . '/' . $item['icon'] . ' width=100 height=80/>';
-				$editBtn = '<a href="role?id=' . $item['id'] . '">Go</a>';
-				$description = strlen($item['description']) != 0 ? $item['description'] : 'No description yet';
-				$formalized = "'" . $item['name'] . "','" . $description . "','" . $icon . "','" . $editBtn ."'";
+				$icon 			= '<img src=' . DOMAIN . '/' . $item['icon'] . ' width=100 height=80/>';
+				$editBtn 		= '<a href="role?id=' . $item['id'] . '">Go</a>';
+				$description 	= strlen($item['description']) != 0 ? $item['description'] : 'No description yet';
+				$isAdmin		= $item['isAdmin'] ? 'Yes' : 'No';
+
+				$formalized 	= "'" . $item['name'] . "','" . $description . "','" . $icon . "','" .  $isAdmin ."','" . $editBtn ."'";
 				$datas[] = $formalized;
 			}
 		}

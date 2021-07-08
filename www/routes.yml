@@ -47,28 +47,35 @@
 /admin:
   controller: Admin
   action: default
+  middleware: isAdmin
 
 /admin/sites:
   controller: Admin
   action: displaySites
+  middleware: isAdmin
 
 /admin/site:
   controller: Admin
   action: displaySite
+  middleware: isAdmin
 
 /admin/users:
   controller: Admin
   action: displayUsers
+  middleware: isAdmin
 
 /admin/user:
   controller: Admin
   action: displayUser
+  middleware: isAdmin
 
 /admin/roles:
   controller: Admin
   action: displayRoles
+  middleware: isAdmin
 
 /admin/role:
   controller: Admin
   action: editrole
+  middleware: isAdmin
 
