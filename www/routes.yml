@@ -27,6 +27,23 @@
   controller: Security
   action: mailconfirm
 
+# authenticated user routes
+/account:
+  controller: Account
+  action: default
+  middleware: auth
+  
+/account/mysites:
+  controller: Account
+  action: mysites
+  middleware: auth
+
+/api/users:
+  controller: Account
+  action: searchUsers
+  middleware: auth
+
+# admin routes
 /admin:
   controller: Admin
   action: default
@@ -47,17 +64,11 @@
   controller: Admin
   action: displayUser
 
-/account:
-  controller: Account
-  action: default
-  middleware: auth
-  
-/account/mysites:
-  controller: Account
-  action: mysites
-  middleware: auth
+/admin/roles:
+  controller: Admin
+  action: displayRoles
 
-/api/users:
-  controller: Account
-  action: searchUsers
-  middleware: auth
+/admin/role:
+  controller: Admin
+  action: editrole
+

@@ -54,6 +54,9 @@ class FormValidator
 				}
 				$data[$name] = self::sanitizeData($data[$name]);
 
+				if((empty($configInput["required"]) || $configInput["required"] == false) && strlen($data[$name]) == 0){
+					break;
+				}
 
 				if(!empty($configInput["minLength"]) &&
 					is_numeric($configInput["minLength"]) &&

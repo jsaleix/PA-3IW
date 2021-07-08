@@ -35,9 +35,8 @@ class Model extends Database
     public function findOne($fill = FALSE){
         $result = parent::findOne();
         if( $result && $fill){
-            return $this->populate($result);
+            $this->populate($result);
         }
-        else 
-            return $result;
+        return $result;
     }
 }
