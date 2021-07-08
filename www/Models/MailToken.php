@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use App\Core\Database;
+use App\Models\Mail;
 
 
-use PHPMailer\PHPMailer\PHPMailer;
-require_once __DIR__ . '/../vendor/autoload.php';
-
-class MailToken extends Database
+class MailToken extends Mail
 {
     private $id = null;
     protected $token;
@@ -19,23 +16,11 @@ class MailToken extends Database
         parent::__construct();
     }
 
-    public function createTransporter(){
-        $mailing = new PHPMailer(True);
-        $mailing->isSMTP();
-        $mailing->Host = MAIL_SMTP;
-        $mailing->SMTPAuth = true;
-        $mailing->Username = MAIL;
-        $mailing->Password = MAIL_PWD;
-        $mailing->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mailing->Port = 465;
-        return $mailing;
-    }
-
     public function sendConfirmationMail($mail){
         if( !$this->token || !$this->userId || !$this->expiresDate)
             return;
         $mailing = $this->createTransporter();
-        $mailing->setFrom(MAIL, 'Mailer');
+        $mailing->setFrom(MAIL, 'EasyMeal');
         $mailing->addAddress($mail);
         $mailing->isHTML(true);
         $mailing->Subject = 'Confirmez votre email';

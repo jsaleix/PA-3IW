@@ -167,6 +167,10 @@ class User extends Database
         $this->token = $token;
     }
 
+    public function getFullName(){
+        return $this->firstname . ' ' . $this->lastName();
+    }
+
     public function formRegister(){
         return [
 

@@ -8,6 +8,7 @@
 		<a href="account/mysites">My sites</a>
 	<?php else: ?>
 		<a href="login">Login</a>
+		<a href="register">Register</a>
 	<?php endif;?>
 </section>
 
