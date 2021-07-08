@@ -22,7 +22,6 @@ use CMS\Core\NavbarBuilder;
 
 class MediaController{
 
-
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
@@ -114,7 +113,8 @@ class MediaController{
 				$postObj = new Post($site['prefix']);
 				$postObj->setId($item['post']);
 				$postObj->findOne(TRUE);
-				$buttonDelete = "<a href=\"medium/assoc/delete?id=".$item['id']."\">Go</a>";
+				$buttonDelete = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/delete?id=".$item['id'], $site).">Go</a>";
+				//$buttonDelete = "<a href=\"medium/assoc/delete?id=".$item['id']."\">Go</a>";
 				$formalized = "'".$item['id']."','".$mediumObj->getName()."','".$postObj->getTitle()."','".$buttonDelete."'";
 				$datas[] = $formalized;
 			}
@@ -162,7 +162,6 @@ class MediaController{
 		$medium = $mediumObj->findOne();
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		echo "Would have delete Medium with id ".$mediumObj->getId()." but working on it tho it's disabled";
 		$mediumObj->delete();
 		\App\Core\Helpers::customRedirect('/admin/medium', $site);
 	}

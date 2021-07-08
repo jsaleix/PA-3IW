@@ -129,7 +129,11 @@
 
 /medium/assoc/delete:
   controller: pmacontroller
-  action: delete
+  action: deleteAssoc
+
+/medium/assoc/create:
+  controller: pmacontroller
+  action: createAssoc
 
 /users:
   controller: usercontroller

@@ -29,8 +29,28 @@ class PmaController{
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
-    
-    public function deleteAction($site){
-        echo "delete frere";
+
+    public function createAssocAction($site){
+        if(empty($_GET['post']) && empty($_GET['medium']))
+            \App\Core\Helpers::customRedirect('/admin/medium', $site);
+        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj->setMedium(htmlspecialchars($_GET['medium']));
+        $PMAObj->setPost(htmlspecialchars($_GET['post']));
+        $pma = $PMAObj->save();
+        if( $pma )
+            \App\Core\Helpers::customRedirect('/admin/article/edit?id='.$PMAObj->getPost(), $site);
+    }
+
+    public function deleteAssocAction($site){
+        if(empty($_GET['id']))
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj->setId($_GET['id']??0);
+        $pma = $PMAObj->findOne();
+        if(!$pma)
+            \App\Core\Helpers::customRedirect('/admin/medium', $site);
+        $link = "/admin/medium/edit?id=".$pma["medium"];
+        $PMAObj->delete();
+        \App\Core\Helpers::customRedirect($link, $site);
     }
 }
