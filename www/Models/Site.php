@@ -25,6 +25,13 @@ class Site extends Database
     protected $type;
     protected $theme;
 
+    protected $address;
+    protected $phoneNumber;
+    protected $emailPro;
+    protected $instagram;
+    protected $facebook;
+    protected $twitter;
+
 	public function __construct(){
 		parent::__construct();
 	}
@@ -48,6 +55,66 @@ class Site extends Database
     public function setTheme($theme)
     {
         $this->theme = $theme;
+    }
+
+    public function getEmailPro()
+    {
+        return $this->emailPro;
+    }
+
+    public function setEmailPro($emailPro)
+    {
+        $this->emailPro = $emailPro;
+    }
+
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    public function getTwitter()
+    {
+        return $this->twitter;
+    }
+
+    public function setTwitter($twitter)
+    {
+        $this->twitter = $twitter;
+    }
+
+    public function getInstagram()
+    {
+        return $this->instagram;
+    }
+
+    public function setInstagram($instagram)
+    {
+        $this->instagram = $instagram;
+    }
+
+    public function getFacebook()
+    {
+        return $this->facebook;
+    }
+
+    public function setFacebook($facebook)
+    {
+        $this->facebook = $facebook;
     }
 
     public function setName($name)
@@ -193,6 +260,81 @@ class Site extends Database
             ]
         ];
     }
+
+
+    public function formContactEdit($content){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10 form-90",
+                "submit"=>"Update contacts",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "phoneNumber"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Phone Number",
+                    "value"=>$content['phoneNumber']
+                ],
+                "action"=>[
+                    "type"=>"hidden",
+                    "value"=>"contact"
+                ],
+                "emailPro"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Email",
+                    "value"=>$content['emailPro']
+                ],
+                "address"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Restaurant address",
+                    "value"=>$content['address']
+                ],
+            ]
+        ];
+    }
+
+    public function formSocialEdit($content){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10 form-90",
+                "submit"=>"Update socials",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "action"=>[
+                    "type"=>"hidden",
+                    "value"=>"socials"
+                ],
+                "instagram"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Instagram",
+                    "value"=>$content['instagram']
+                ],
+                "twitter"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Twitter",
+                    "value"=>$content['twitter']
+                ],
+                "facebook"=>[
+                    "type"=>"text",
+                    "class"=>"input input-100 input-select",
+                    "placeholder"=>"Facebook",
+                    "value"=>$content['facebook']
+                ],
+            ]
+        ];
+    }
+
+    
 
     public function formEdit($content){
         return [

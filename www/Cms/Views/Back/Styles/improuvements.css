@@ -154,3 +154,10 @@
     vertical-align: middle;
     display: none;
   }
+
+  .form-100{
+    width: 100%;
+  }
+  .form-90{
+    width: 90%;
+  }

@@ -111,6 +111,10 @@
   controller: designController
   action: default
 
+/contacts:
+  controller: contactsController
+  action: default
+
 /medium:
   controller: mediacontroller
   action: listMedias
