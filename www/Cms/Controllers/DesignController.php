@@ -13,6 +13,7 @@ class DesignController{
         $siteObj->setId($site['id']);
 
         $themes = [];
+        $thumbnails = [];
 
         $view = new View("design", "back", $site);
         $view->assign("title","Design | Themes | Styles");
@@ -33,9 +34,13 @@ class DesignController{
             
         }
 
+        foreach (glob("Cms/Views/Front/".$site['theme']."/Thumbnails/*") as $thumbnail){
+            array_push($thumbnails, $thumbnail);
+        } 
+
         $view->assign("site", $site);
         $view->assign("form", $form);
-        
+        $view->assign("thumbnails", $thumbnails);
     }
 
 

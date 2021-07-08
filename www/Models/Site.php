@@ -180,7 +180,7 @@ class Site extends Database
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "class"=>"col-4 col-sm-12",
+                "class"=>"col-10",
                 "submit"=>"Change theme",
                 "submitClass"=>"btn btn-100 btn-light"
             ],
