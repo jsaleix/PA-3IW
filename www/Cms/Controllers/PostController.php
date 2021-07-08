@@ -102,7 +102,7 @@ class PostController{
 		$PMAObj = new PMAssoc($site['prefix']);
 		$PMAObj->setPost($contentObj->getId());
 		$PMAS = $PMAObj->findAll();
-		$fields = ['name', 'image'];//, 'Delete'
+		$fields = ['name', 'image', 'Remove'];//, 'Delete'
 		$datas = [];
 		$mediumAssociated = [];
 		if($PMAS){
@@ -112,7 +112,8 @@ class PostController{
 				$mediumObj->findOne(TRUE);
 				$mediumAssociated [] = $mediumObj->getId();
 				$img = "<img src=".DOMAIN."/".$mediumObj->getImage()." width=100 height=80/>";
-				$formalized = "'".$mediumObj->getName()."','".$img."'";//"','".$buttonDelete.
+				$buttonDelete = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/remove?id=".$item['id'], $site).">Go</a>";
+				$formalized = "'".$mediumObj->getName()."','".$img."','".$buttonDelete."'";//"','".$buttonDelete.
 				$datas[] = $formalized;
 			}
 			$lists[] = array( "title" => "Media on post", "datas" => $datas, "id" => "owned_media", "fields" => $fields );

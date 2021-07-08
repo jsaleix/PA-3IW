@@ -131,6 +131,10 @@
   controller: pmacontroller
   action: deleteAssoc
 
+/medium/assoc/remove:
+  controller: pmacontroller
+  action: deleteAssocFromPost
+
 /medium/assoc/create:
   controller: pmacontroller
   action: createAssoc
