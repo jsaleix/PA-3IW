@@ -35,7 +35,7 @@ class DynamicRouter extends Router implements RouterInterface
 			$this->site = $siteObj;
 
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
-				$pageObj->setPrefix($site->getPrefix());
+				$pageObj->setPrefix($siteObj->getPrefix());
 				$pageObj->setMain(true);
 				$requestedPage = $pageObj->findOne();
 				if(!$requestedPage){
@@ -47,7 +47,7 @@ class DynamicRouter extends Router implements RouterInterface
 				}
 
 				if($requestedPage){
-					\App\Core\Helpers::customRedirect('/' . $requestedPage['name'], $siteObj);
+					\App\Core\Helpers::customRedirect('/'. $requestedPage['name'], $siteObj);
 				}else{
 					\App\Core\Helpers::customRedirect('/');
 				}				
@@ -78,7 +78,7 @@ class DynamicRouter extends Router implements RouterInterface
 
 		}catch(\Exception $e){
 			echo $e->getMessage();
-			\App\Core\Helpers::customRedirect('/');
+			//\App\Core\Helpers::customRedirect('/');
 		}
 	}
 

@@ -21,7 +21,7 @@ class Helpers
 				$site = $site['subDomain'];
 				$newUrl .= '/site/' . $site . '/' . $url;
 			}
-			if(gettype($site) === '\App\Models\Site')
+			if(gettype($site) === 'object')
 			{
 				$site = $site->getSubDomain();
 				$newUrl .= '/site/' . $site . '/' . $url;
@@ -45,7 +45,7 @@ class Helpers
 		{
 			$url .= '/' . $site['subDomain'] . '/' . $path;
 		}
-		if(gettype($site) === '\App\Models\Site')
+		if(gettype($site) === 'object')
 		{
 			$url .= '/' . $site->getSubDomain() . '/' . $path;
 		}
