@@ -23,4 +23,15 @@ class CMSModels extends Database
             return $this->save();
         return;
     }
+
+    public function checkEdit(&$data){
+        foreach($data as $key => $attr){
+            if(property_exists($this, $key)){
+                $getter = "get".ucfirst($key);
+                if($attr == $this->$getter()){
+                    unset($data[$key]);
+                }
+            }
+        }
+    }
 }

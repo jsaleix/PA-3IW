@@ -36,7 +36,7 @@ class MediaController{
 		$media = $mediumObj->findAll();
 		$mediumList = [];
 		$content = "";
-		$fields = ['id', 'image', 'name', 'publicationDate', 'Edit', 'Delete'];
+		$fields = ['id', 'image', 'name', 'type', 'publisher', 'publicationDate', 'Edit', 'Delete'];
 		$datas = [];
 
 		if($media){
@@ -44,7 +44,7 @@ class MediaController{
 				$img = "<img src=".DOMAIN."/".$item['image']." width=100 height=80/>";
 				$buttonEdit = "<a href=\"medium/edit?id=".$item['id']."\">Go</a>";
 				$buttonDelete = "<a href=\"medium/delete?id=".$item['id']."\">Go</a>";
-				$formalized = "'".$item['id']."','".$img."','".$item['name']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
+				$formalized = "'".$item['id']."','".$img."','".$item['name']."','". $item['type']."','". $item['publisher']."','".$item['publicationDate']."','".$buttonEdit."','".$buttonDelete."'";
 				$datas[] = $formalized;
 			}
 		}
@@ -79,6 +79,7 @@ class MediaController{
 			$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
 			$image = $isUploaded ? $isUploaded : null;
 			$data["image"] = $image;
+			$data["publisher"] = Security::getUser();
 			$pdoResult = $mediumObj->populate($data, TRUE);
 			if( $pdoResult ){
 				$message = "Medium successfully added!";
@@ -98,13 +99,43 @@ class MediaController{
 		$medium = $mediumObj->findOne();
 		if(!$medium)
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$postObj = new Post($site['prefix']);
-		$posts = $postObj->findAll();
-		/*$postAssoc = new PMAssoc($site['prefix']);
-		$postAssoc->set
-		print_r($post);*/
-		//$mediumObj->formEdit($medium, $posts, $post);
+		$mediumObj->populate($medium);
+		$formEdit = $mediumObj->formEdit($medium);
+		$view = new View('create', 'back', $site);
+		$view->assign("form", $formEdit);
+		$view->assign("pageTitle", "Edit a medium");
 
+		if( !empty($_POST)){
+			$errors = [];
+			$data = array_merge($_POST, $_FILES);
+			$errors = FormValidator::check($formEdit, $data);
+			if( count($errors) > 0){
+				$view->assign("errors", $errors);
+				return;
+			}
+			if( !empty($data["image"]["name"])){
+				$date = new \DateTime();
+				$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
+				$imgName = $date->format("Ymd_Hisu");
+				$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
+				$image = $isUploaded ? $isUploaded : null;
+				$data["image"] = $image;
+			} else {
+				unset($data["image"]);
+			}
+			$mediumObj->checkEdit($data);
+			if(count($data) > 0){
+				$pdoResult = $mediumObj->populate($data, TRUE);
+				if( $pdoResult ){
+					$message = "Medium successfully modified!";
+					$view->assign("message", $message);
+					\App\Core\Helpers::customRedirect('/admin/medium', $site);
+				} else {
+					$errors[] = "Cannot insert this medium";
+					$view->assign("errors", $errors);
+				}
+			}
+		}
 	}
 
 	public function deleteMediumAction($site){

@@ -32,11 +32,13 @@ class FormValidator
 				}
 
 				if($configInput["type"] == "file" || $configInput["type"] == "file-img"){
-					if( !self::verifyFileSize($data[$name])){
-						$errors[] = "Le fichier est trop gros";
-					}
-					if( !self::verifyFileType($data[$name])){
-						$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
+					if( $configInput["required"] == true ){
+						if( !self::verifyFileSize($data[$name])){
+							$errors[] = "Le fichier est trop gros";
+						}
+						if( !self::verifyFileType($data[$name])){
+							$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
+						}
 					}
 					break;			
 				}

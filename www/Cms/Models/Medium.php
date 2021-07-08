@@ -108,14 +108,14 @@ class Medium extends CMSModels
         ];
     }
 
-    public function formEdit($medium, $posts, $post){
+    public function formEdit($medium){
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_content",
                 "class"=>"form-content",
-                "submit"=>"Add",
+                "submit"=>"Edit",
                 "submitClass"=>"cta-blue width-80 last-sm-elem",
 				"enctype"=>"multipart/form-data"
             ],
@@ -151,15 +151,7 @@ class Medium extends CMSModels
                     "class"=>"input-file",
                     "required"=>false,
                     "value"=>$medium["image"]
-                ],
-                "post"=>[
-                    "type"=>"select",
-                    "label"=>"Post associated",
-                    "id"=>"post",
-                    "class"=>"input-category-select",
-                    "options"=>$posts,
-                    "value"=> $post,
-                ]   
+                ]
             ]
         ];
     }
