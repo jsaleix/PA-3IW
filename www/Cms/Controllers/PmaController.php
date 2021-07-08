@@ -41,6 +41,19 @@ class PmaController{
             \App\Core\Helpers::customRedirect('/admin/article/edit?id='.$PMAObj->getPost(), $site);
     }
 
+    public function deleteAssocFromPostAction($site){
+        if(empty($_GET['id']))
+			\App\Core\Helpers::customRedirect('/admin/medium', $site);
+        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj->setId($_GET['id']??0);
+        $pma = $PMAObj->findOne();
+        if(!$pma)
+            \App\Core\Helpers::customRedirect('/admin/medium', $site);
+        $link = "/admin/article/edit?id=".$pma["post"];
+        $PMAObj->delete();
+        \App\Core\Helpers::customRedirect($link, $site);
+    }
+
     public function deleteAssocAction($site){
         if(empty($_GET['id']))
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
