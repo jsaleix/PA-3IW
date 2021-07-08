@@ -34,8 +34,10 @@ class Mail extends Database
         $mailing->Subject = $subject;
         $mailing->Body = $body;
 		if(!$mailing->send()){
+            echo "aqhuiaqhuiaze";
             return false;
         }
+        echo "keazozae";
         return true;
     }
 

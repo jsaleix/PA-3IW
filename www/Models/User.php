@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-
-class User extends Database
+class User extends Model
 {
 
 	protected $id = null;
@@ -168,7 +166,7 @@ class User extends Database
     }
 
     public function getFullName(){
-        return $this->firstname . ' ' . $this->lastName();
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function formRegister(){

@@ -76,20 +76,18 @@ class UserController{
 					/*Sending mail to inform the new administrator*/
 					$receiver = new User();
 					$receiver->setId($user);
-					$receiver = $receiver->findOne();
+					$receiver->findOne(TRUE);
 
 					$sender = new User();
 					$sender->setId(Security::getUser());
-					$sender = $sender->findOne();
-
+					$sender->findOne(TRUE);
 					$body = "<h3>EasyMeal</h3><br>";
-					$body .= "<h2>".$sender['firstname']." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site['name'] ."/" . $site['subDomain'] . "</a></h2>";
+					$body .= "<h2>".$sender->getFullName()." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site['name'] ."/" . $site['subDomain'] . "</a></h2>";
 					$body .= "<hr>";
 					$body .= "<p>To access the admin panel add in the url after the site domain /admin or click <a href='" . \App\Core\Helpers::renderCMSLink('admin', $site) . "'>here</a></p>";
-					$mail = array( 'from' => 'EasyMeal', 'to' => $receiver['email'], 'subject' => $sender['firstname'] .' allowed you on '.$site['name'] , 'body' => $body);
+					$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => $sender->getFullName() .' allowed you on '.$site['name'] , 'body' => $body);
 					$mailer = new Mail();
 					$mailer->sendMail($mail);
-
 					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 				}else{
 					$errors[] = "Cannot add this user";
