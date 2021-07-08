@@ -1,0 +1,36 @@
+<?php
+
+namespace CMS\Controller;
+use App\Models\User;
+use App\Models\Site;
+use App\Models\Action;
+use App\Core\FileUploader;
+use App\Core\FormValidator;
+use App\Core\Security;
+
+use CMS\Models\Content;
+use CMS\Models\Page;
+use CMS\Models\Post;
+use CMS\Models\Post_Medium_Association as PMAssoc;
+use CMS\Models\Category;
+use CMS\Models\Dish;
+use CMS\Models\DishCategory;
+use CMS\Models\Medium;
+
+use CMS\Core\CMSView as View;
+use CMS\Core\NavbarBuilder;
+
+class PmaController{
+
+    public function defaultAction($site){
+		$html = 'Default admin action on CMS <br>';
+		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
+		$view = new View('admin', 'back', $site);
+		$view->assign('pageTitle', "Dashboard");
+		$view->assign('content', $html);
+	}
+    
+    public function deleteAction($site){
+        echo "delete frere";
+    }
+}

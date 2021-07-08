@@ -127,6 +127,10 @@
   controller: mediacontroller
   action: createMedium
 
+/medium/assoc/delete:
+  controller: pmacontroller
+  action: delete
+
 /users:
   controller: usercontroller
   action: listadmin

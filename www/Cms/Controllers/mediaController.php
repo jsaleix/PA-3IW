@@ -34,8 +34,6 @@ class MediaController{
 	public function listMediasAction($site){
 		$mediumObj = new Medium($site['prefix']);
 		$media = $mediumObj->findAll();
-		$mediumList = [];
-		$content = "";
 		$fields = ['id', 'image', 'name', 'type', 'publisher', 'publicationDate', 'Edit', 'Delete'];
 		$datas = [];
 
@@ -101,9 +99,29 @@ class MediaController{
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
 		$mediumObj->populate($medium);
 		$formEdit = $mediumObj->formEdit($medium);
-		$view = new View('create', 'back', $site);
+		$view = new View('create.list', 'back', $site);
 		$view->assign("form", $formEdit);
 		$view->assign("pageTitle", "Edit a medium");
+
+		$PMAObj = new PMAssoc($site['prefix']);
+		$PMAObj->setMedium($mediumObj->getId());
+		$PMAS = $PMAObj->findAll();
+		$fields = ['id', 'medium', 'post', 'Delete'];
+		$datas = [];
+		
+		if($PMAS){
+			foreach($PMAS as $item){
+				$postObj = new Post($site['prefix']);
+				$postObj->setId($item['post']);
+				$postObj->findOne(TRUE);
+				$buttonDelete = "<a href=\"medium/assoc/delete?id=".$item['id']."\">Go</a>";
+				$formalized = "'".$item['id']."','".$mediumObj->getName()."','".$postObj->getTitle()."','".$buttonDelete."'";
+				$datas[] = $formalized;
+			}
+		}
+		
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
 
 		if( !empty($_POST)){
 			$errors = [];
