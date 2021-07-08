@@ -22,7 +22,6 @@ use CMS\Core\NavbarBuilder;
 
 class MediaController{
 
-
 	public function defaultAction($site){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
