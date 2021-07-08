@@ -238,7 +238,6 @@ class MenuController{
 		$menuObj = new Menu($site->getPrefix());
         $dishObj = new Dish($site->getPrefix());
         $dishCatObj = new DishCategory($site->getPrefix());
-        print_r($dishCatObj);
         $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
 
         $menuData = [];
