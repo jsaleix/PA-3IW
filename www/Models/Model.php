@@ -1,17 +1,10 @@
 <?php
 
-namespace CMS\Models;
-use App\Models\Model;
+namespace App\Models;
+use App\Core\Database;
 
-class CMSModels extends Model
+class Model extends Database
 {
-    public function __construct ($prefix = null){
-		parent::__construct();
-        if($prefix != null){
-            parent::setTableName($prefix."_");
-        }
-	}
-
     public function populate($data, $save = FALSE){
         foreach($data as $key => $attr){
             if(property_exists($this, $key)){
@@ -37,5 +30,14 @@ class CMSModels extends Model
             return $this->populate($data, TRUE);
         else 
             return;
+    }
+
+    public function findOne($fill = FALSE){
+        $result = parent::findOne();
+        if( $result && $fill){
+            return $this->populate($result);
+        }
+        else 
+            return $result;
     }
 }

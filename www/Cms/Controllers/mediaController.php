@@ -108,6 +108,7 @@ class MediaController{
 		if( !empty($_POST)){
 			$errors = [];
 			$data = array_merge($_POST, $_FILES);
+			print_r($_FILES);
 			$errors = FormValidator::check($formEdit, $data);
 			if( count($errors) > 0){
 				$view->assign("errors", $errors);
@@ -129,7 +130,7 @@ class MediaController{
 				$view->assign("message", $message);
 				\App\Core\Helpers::customRedirect('/admin/medium', $site);
 			} else {
-				$errors[] = "Cannot insert this medium";
+				$errors[] = "No modification made on this medium";
 				$view->assign("errors", $errors);
 			}
 		}
