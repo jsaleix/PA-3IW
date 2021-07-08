@@ -123,17 +123,14 @@ class MediaController{
 			} else {
 				unset($data["image"]);
 			}
-			$mediumObj->checkEdit($data);
-			if(count($data) > 0){
-				$pdoResult = $mediumObj->populate($data, TRUE);
-				if( $pdoResult ){
-					$message = "Medium successfully modified!";
-					$view->assign("message", $message);
-					\App\Core\Helpers::customRedirect('/admin/medium', $site);
-				} else {
-					$errors[] = "Cannot insert this medium";
-					$view->assign("errors", $errors);
-				}
+			$pdoResult = $mediumObj->edit($data);
+			if( $pdoResult ){
+				$message = "Medium successfully modified!";
+				$view->assign("message", $message);
+				\App\Core\Helpers::customRedirect('/admin/medium', $site);
+			} else {
+				$errors[] = "Cannot insert this medium";
+				$view->assign("errors", $errors);
 			}
 		}
 	}

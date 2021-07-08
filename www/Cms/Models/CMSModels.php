@@ -24,7 +24,7 @@ class CMSModels extends Database
         return;
     }
 
-    public function checkEdit(&$data){
+    public function edit(&$data){
         foreach($data as $key => $attr){
             if(property_exists($this, $key)){
                 $getter = "get".ucfirst($key);
@@ -33,5 +33,9 @@ class CMSModels extends Database
                 }
             }
         }
+        if(count($data) > 0 )
+            return $this->populate($data, TRUE);
+        else 
+            return;
     }
 }
