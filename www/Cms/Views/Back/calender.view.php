@@ -1,19 +1,17 @@
-
 <div class="row" >
-    <div class="col-12 col-sm-12 col-md-12 col-xl-12">
-            <div class="col-inner">
-                <div class="pageTitle">
-                    <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
-                    <?php if(isset($createButton)): ?>
-                        <a href="<?= $createButton['link']?>"><button class="cta-green"><?=$createButton['label']?></button></a>
-                    <?php endif; ?>
-                </div>
+<div class="col-12 col-sm-12 col-md-12 col-xl-12">
+        <div class="col-inner">
+            <div class="pageTitle">
+                <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
+                <?php if(isset($createButton)): ?>
+                    <a href="<?= $createButton['link']?>"><button class="cta-green"><?=$createButton['label']?></button></a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
+</div>
 
-
-    <div class="col-md-12">
+<div class="col-md-12">
         <div class="content w-100">
             <div class="calendar-container">
                 <div class="calendar"> 
@@ -81,5 +79,7 @@
     </div>
 
 </div>
+
+
 <script src="/Assets/js/calendar.js"></script>
 <link rel="stylesheet" href="/Assets/styles/calendar.css">

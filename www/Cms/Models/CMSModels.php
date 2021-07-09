@@ -16,7 +16,8 @@ class CMSModels extends Model
         foreach($data as $key => $attr){
             if(property_exists($this, $key)){
                 $key = "set".ucfirst($key);
-                $this->$key($attr);
+                if(method_exists($this, $key))
+                    $this->$key($attr);
             }
         }
         if($save == TRUE)
@@ -28,7 +29,9 @@ class CMSModels extends Model
         foreach($data as $key => $attr){
             if(property_exists($this, $key)){
                 $getter = "get".ucfirst($key);
-                if($attr == $this->$getter()){
+                $setter = "set".ucfirst($key);
+                if(method_exists($this, $getter) && $attr == $this->$getter()){
+                    $this->$setter(null);
                     unset($data[$key]);
                 }
             }

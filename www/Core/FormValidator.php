@@ -17,10 +17,12 @@ class FormValidator
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
 				if($configInput["type"] == "radio" &&
-					$configInput["required"] == true &&
 					isset($data[$name])
 				){
-					break;
+					if($data[$name] == 0){
+						$data[$name] = "IS FALSE";
+					}
+					continue;
 				}
 
 				if(!empty($configInput["required"]) &&
@@ -39,7 +41,7 @@ class FormValidator
 						if( !self::verifyFileType($data[$name])){
 							$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
 						}
-						break;
+						continue;
 					} else if( !empty($data[$name]["name"]) ) {
 						if( !self::verifyFileSize($data[$name])){
 							$errors[] = "Le fichier est trop gros";
@@ -47,15 +49,15 @@ class FormValidator
 						if( !self::verifyFileType($data[$name])){
 							$errors[] = "Le fichier doit etre de type png, jpg ou jpeg";
 						}
-						break;
+						continue;
 					} else{
-						break;
+						continue;
 					}
 				}
 				$data[$name] = self::sanitizeData($data[$name]);
 
 				if((empty($configInput["required"]) || $configInput["required"] == false) && strlen($data[$name]) == 0){
-					break;
+					continue;
 				}
 
 				if(!empty($configInput["minLength"]) &&

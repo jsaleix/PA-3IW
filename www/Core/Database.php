@@ -76,6 +76,7 @@ class Database
 						implode(",:", array_keys($columns))
 					." );");	
 			}else{
+				//var_dump($columns);
 				//UPDATE
 				unset($columns["id"]);
 				foreach($columns as $key => $col){
@@ -199,12 +200,15 @@ class Database
 			if( empty($col) || $col === NULL )
 				unset($columns[$key]);
 		}
-		/*echo "SELECT * FROM ".$this->table." WHERE " .  implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		$req = "SELECT * FROM ".$this->table;
+		if(count($columns) > 0 ){
+			$req .= " WHERE " . 
+			implode(" = ? AND ", array_keys($columns)) . " = ? ";
+		} 
+		$query = $this->pdo->prepare($req);
+		/*echo $req;
 		echo var_dump(array_values($columns));
 		echo '<br><br>';*/
-		$query = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE " . 
-		implode(" = ? AND ", array_keys($columns)) . " = ? ");
-
 		$query->execute(array_values($columns));
 		$result = $query->fetch();	
 

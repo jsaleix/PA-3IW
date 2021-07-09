@@ -95,9 +95,9 @@
   controller: menuController
   action: deleteMenu
 
-/events:
-  controller: eventController
-  action: manageevents
+/booking:
+  controller: bookingSettingsController
+  action: manageBookingSettings
 
 /settings:
   controller: sitecontroller
