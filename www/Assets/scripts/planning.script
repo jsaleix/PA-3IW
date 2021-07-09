@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `date` DATETIME NOT NULL,
-    `available` TINYINT NOT NULL,
-    PRIMARY KEY (`id`)
-)

@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking_planning` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `day` VARCHAR(20) NOT NULL ,
+  `start` TIME NOT NULL,
+  `end` TIME NOT NULL,
+  `notes` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_booking_planning_day_:X`
+    UNIQUE (day)
+  )

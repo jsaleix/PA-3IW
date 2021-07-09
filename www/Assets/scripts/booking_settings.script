@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking_settings` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `enabled` TINYINT NOT NULL DEFAULT FALSE,
+  `timePerReservation` FLOAT NOT NULL,
+  `totalNumberPerReservation` INT NOT NULL,
+  `maxNumberPerReservation` INT NOT NULL,
+  `available` TINYINT NOT NULL DEFAULT TRUE,
+  `notes` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`))
