@@ -253,15 +253,17 @@ a {
   width: 100%;
 }
 
+.dish-col {
+  padding: 0.5em;
+}
+
 .dish {
   display: flex;
   flex-direction: column;
   background: white;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   width: 100%;
-  margin-bottom: 3em;
   transition: 0.5s;
-  margin: 0.5em;
 }
 
 .dish:hover {
