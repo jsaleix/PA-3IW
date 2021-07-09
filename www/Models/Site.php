@@ -315,19 +315,19 @@ class Site extends Database
                 "instagram"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
-                    "placeholder"=>"Instagram",
+                    "placeholder"=>"Instagram (Account link)",
                     "value"=>$content['instagram']
                 ],
                 "twitter"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
-                    "placeholder"=>"Twitter",
+                    "placeholder"=>"Twitter (Account link)",
                     "value"=>$content['twitter']
                 ],
                 "facebook"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
-                    "placeholder"=>"Facebook",
+                    "placeholder"=>"Facebook (Page link)",
                     "value"=>$content['facebook']
                 ],
             ]

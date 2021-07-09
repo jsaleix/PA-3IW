@@ -41,6 +41,12 @@ class DynamicRouter extends Router implements RouterInterface
 			$siteObj->setPrefix($site['prefix']);
 			$siteObj->setType($site['type']);
 			$siteObj->setTheme($site['theme']);
+			$siteObj->setInstagram($site['instagram']);
+			$siteObj->setFacebook($site['facebook']);
+			$siteObj->setTwitter($site['twitter']);
+			$siteObj->setPhoneNumber($site['phoneNumber']);
+			$siteObj->setEmailPro($site['emailPro']);
+			$siteObj->setAddress($site['address']);
 			
 			$this->site = $siteObj;
 
