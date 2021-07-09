@@ -2,14 +2,11 @@
 
 namespace CMS\Controller;
 use App\Models\User;
-use App\Models\Site;
 
-use CMS\Models\Page;
 use CMS\Models\Comment;
 use CMS\Models\Post;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 
 class CommentController{
 

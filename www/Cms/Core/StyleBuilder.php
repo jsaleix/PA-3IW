@@ -1,7 +1,6 @@
 <?php
 
 namespace CMS\Core;
-use CMS\Models\Page;
 
 class StyleBuilder
 {

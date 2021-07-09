@@ -7,12 +7,11 @@ use App\Core\FileUploader;
 use App\Core\Security;
 
 use CMS\Models\Page;
-use CMS\Models\Content;
 use CMS\Models\Post;
 use CMS\Models\DishCategory;
 
 
-class Site extends Database
+class Site extends Model
 {
 
 	protected $id = null;
@@ -183,8 +182,8 @@ class Site extends Database
     }
 
     public function initializeSite(){
-        if(!$this->name){ throw new InvalidArgumentException("missing fields"); }
-        if($this->id){ throw new InvalidArgumentException("The site already exists"); }
+        if(!$this->name){ throw new \InvalidArgumentException("missing fields"); }
+        if($this->id){ throw new \InvalidArgumentException("The site already exists"); }
         if(!($this->save())){ return false; }
         // Creation of new tables 
         $dir = basename(__DIR__) . '/../Assets/scripts';

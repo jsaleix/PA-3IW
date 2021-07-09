@@ -1,15 +1,8 @@
 <?php
 
 namespace CMS\Controller;
-use App\Models\User;
-use App\Models\Site;
-
-use CMS\Models\Content;
-use CMS\Models\Page;
-use CMS\Models\Category;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 
 class Admin{
 

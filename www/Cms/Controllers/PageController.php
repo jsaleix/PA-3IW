@@ -1,10 +1,8 @@
 <?php
 
 namespace CMS\Controller;
-use App\Core\Security;
 
 use App\Models\User;
-use App\Models\Site;
 use App\Models\Action;
 
 use CMS\Models\Content;
@@ -12,7 +10,6 @@ use CMS\Models\Page;
 use CMS\Models\Category;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 use App\Core\FormValidator;
 
 class PageController{

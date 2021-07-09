@@ -2,16 +2,12 @@
 
 namespace App\Controller;
 
-use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
-use App\Core\ConstantMaker as c;
-use App\Core\FileUploader;
 
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Site;
-use App\Models\Whitelist;
 
 class Admin{
 

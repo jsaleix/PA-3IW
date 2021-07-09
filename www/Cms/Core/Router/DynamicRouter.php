@@ -4,14 +4,10 @@ use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
 use App\Models\Site;
-use App\Models\Whitelist;
-use App\Core\Security;
 
 use App\Models\Action;
 
-use CMS\Core\PageRenderer;
 use CMS\Models\Page;
-use CMS\Models\Post;
 use CMS\Models\Content;
 
 class DynamicRouter extends Router implements RouterInterface
@@ -47,11 +43,13 @@ class DynamicRouter extends Router implements RouterInterface
 			$siteObj->setPhoneNumber($site['phoneNumber']);
 			$siteObj->setEmailPro($site['emailPro']);
 			$siteObj->setAddress($site['address']);
+			$siteCheck = $siteObj->findOne(TRUE);
+			if(!$siteCheck){ throw new \Exception('This site does not exist'); }
 			
 			$this->site = $siteObj;
 
 			if(empty($requestedPage)){ //Verifying what is the default page of the site
-				$pageObj->setPrefix($site['prefix']);
+				$pageObj->setPrefix($siteObj->getPrefix());
 				$pageObj->setMain(true);
 				$requestedPage = $pageObj->findOne();
 				if(!$requestedPage){
@@ -63,14 +61,14 @@ class DynamicRouter extends Router implements RouterInterface
 				}
 
 				if($requestedPage){
-					\App\Core\Helpers::customRedirect('/' . $requestedPage['name'], $site);
+					\App\Core\Helpers::customRedirect('/'. $requestedPage['name'], $siteObj);
 				}else{
 					\App\Core\Helpers::customRedirect('/');
 				}				
 			}
 
 			$pageObj->setName($requestedPage);
-			$pageObj->setPrefix($this->site->getPrefix());
+			$pageObj->setPrefix($siteObj->getPrefix());
 			$pageData = $pageObj->findOne();
 			if(empty($pageData['id'])){ //The page is not found
 				\App\Core\Helpers::errorStatus();
@@ -79,7 +77,7 @@ class DynamicRouter extends Router implements RouterInterface
 			$this->page = $pageObj;
 
 			$contentObj = new Content();
-			$contentObj->setPrefix($site['prefix']);
+			$contentObj->setPrefix($siteObj->getPrefix());
 			$contentObj->setPage($pageData['id']);
 			$content = $contentObj->findOne();
 
@@ -94,7 +92,7 @@ class DynamicRouter extends Router implements RouterInterface
 
 		}catch(\Exception $e){
 			echo $e->getMessage();
-			\App\Core\Helpers::customRedirect('/');
+			//\App\Core\Helpers::customRedirect('/');
 		}
 	}
 

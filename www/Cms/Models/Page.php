@@ -3,7 +3,6 @@
 namespace CMS\Models;
 use CMS\Models\Content;
 
-use App\Core\Database;
 use App\Models\Action;
 
 
