@@ -20,4 +20,18 @@ class Middleware{
             exit();
         }
     }
+
+    public function isAdmin(){
+        try{
+            self::auth();
+            $role = Security::getRole();
+            if(!$role) throw new \Exception('No role found');
+            if($role->getIsAdmin() != 1) throw new \Exception('Not allowed');
+        }catch(\Exception $e){
+            echo $e->getMessage();
+            header('Location: '.DOMAIN . '?notAllowed');
+            exit();
+        }
+    }
+
 }

@@ -11,7 +11,7 @@ use CMS\Models\Post;
 use CMS\Models\DishCategory;
 
 
-class Site extends Database
+class Site extends Model
 {
 
 	protected $id = null;

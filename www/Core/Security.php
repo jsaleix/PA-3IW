@@ -4,6 +4,8 @@ namespace App\Core;
 
 use App\Core\Token;
 use App\Models\User;
+use App\Models\Role;
+
 class Security
 {
 
@@ -32,5 +34,28 @@ class Security
 		$user->setToken($_SESSION['token']);
 		$result = $user->findOne();
 		return $result['id'];
+	}
+
+	public function getRole(){
+		try{
+			$userId = self::getUser();
+			if (!$userId) throw new \Exception('No user defined'); 
+	
+			$usrObj = new User();
+			$usrObj->setId($userId);
+			$check = $usrObj->findOne(TRUE);
+			if(!$check) throw new \Exception('User not found'); 
+	
+			$roleObj = new Role();
+			$roleObj->setId($usrObj->getRole());
+			$exists = $roleObj->findOne(TRUE);
+
+			if(!$exists) throw new \Exception('Role not found'); 
+
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			return false;
+		}
+		return $roleObj;
 	}
 }
