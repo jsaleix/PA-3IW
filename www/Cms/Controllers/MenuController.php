@@ -1,9 +1,6 @@
 <?php
 
 namespace CMS\Controller;
-use App\Models\User;
-use App\Models\Site;
-use App\Models\Action;
 
 use CMS\Models\Dish;
 use CMS\Models\Menu;
@@ -11,7 +8,6 @@ use CMS\Models\DishCategory;
 use CMS\Models\Menu_dish_association;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
 class MenuController{

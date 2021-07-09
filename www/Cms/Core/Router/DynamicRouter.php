@@ -4,14 +4,10 @@ use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
 use App\Models\Site;
-use App\Models\Whitelist;
-use App\Core\Security;
 
 use App\Models\Action;
 
-use CMS\Core\PageRenderer;
 use CMS\Models\Page;
-use CMS\Models\Post;
 use CMS\Models\Content;
 
 class DynamicRouter extends Router implements RouterInterface

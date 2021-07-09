@@ -2,15 +2,12 @@
 
 namespace CMS\Controller;
 
-use App\Models\Site;
 use App\Models\User;
 use App\Models\Whitelist;
 use App\Core\Security;
 use App\Models\Mail;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
-use CMS\Core\StyleBuilder;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 

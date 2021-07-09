@@ -5,15 +5,9 @@ namespace App\Controller;
 use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
-use App\Core\ConstantMaker as c;
-use App\Core\Token;
 
 use App\Models\User;
 use App\Models\MailToken;
-
-
-use PHPMailer\PHPMailer\PHPMailer;
-require_once __DIR__ . '/../vendor/autoload.php';
 
 class Security{
 

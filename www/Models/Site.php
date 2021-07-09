@@ -7,7 +7,6 @@ use App\Core\FileUploader;
 use App\Core\Security;
 
 use CMS\Models\Page;
-use CMS\Models\Content;
 use CMS\Models\Post;
 use CMS\Models\DishCategory;
 
@@ -116,8 +115,8 @@ class Site extends Model
     }
 
     public function initializeSite(){
-        if(!$this->name){ throw new InvalidArgumentException("missing fields"); }
-        if($this->id){ throw new InvalidArgumentException("The site already exists"); }
+        if(!$this->name){ throw new \InvalidArgumentException("missing fields"); }
+        if($this->id){ throw new \InvalidArgumentException("The site already exists"); }
         if(!($this->save())){ return false; }
 
 

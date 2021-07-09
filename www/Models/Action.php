@@ -4,9 +4,6 @@ namespace App\Models;
 
 use App\Core\Database;
 
-use CMS\Models\Page;
-use CMS\Models\Content;
-
 class Action extends Database
 {
 

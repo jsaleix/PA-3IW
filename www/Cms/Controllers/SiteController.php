@@ -6,12 +6,7 @@ use App\Models\Site;
 use App\Core\FileUploader;
 use App\Core\Security;
 
-use CMS\Models\Post;
-use CMS\Models\Page;
-use CMS\Models\Category;
-
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
 class SiteController{

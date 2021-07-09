@@ -2,7 +2,6 @@
 
 namespace CMS\Core;
 use App\Core\View;
-use CMS\Core\NavbarBuilder;
 
 class CMSView extends View
 {
