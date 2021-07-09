@@ -70,7 +70,7 @@ class Booking_settings extends CMSModels
     }
 
     public function setIsSetUp($isSetUp){
-        $this->$isSetUp = $isSetUp;    
+        $this->isSetUp = $isSetUp;    
     }
 
     public function getIsSetUp(){

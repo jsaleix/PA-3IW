@@ -13,7 +13,11 @@ class FormValidator
 			return $errors;
 		}
 		unset($data["CSRF"]);
-
+		foreach ($form["inputs"] as $name => $configInput) {
+			if( !empty($configInput["disabled"])){
+				unset($form["inputs"][$name]);
+			}
+		}
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
 				if($configInput["type"] == "radio" &&

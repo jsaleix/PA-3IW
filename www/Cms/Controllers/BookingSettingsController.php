@@ -25,57 +25,6 @@ class BookingSettingsController{
         $this->setupCalendar($site, $bookingSettingsObj);
         return;
         
-
-        /*if( $bookingSettingsObj->findOne(TRUE)){
-            //MODIFY
-            $formEdit = $bookingSettingsObj->formEdit();
-            $view = new View('editEvent', 'back', $site);
-		    $view->assign('pageTitle', "Manage the events");
-            $view->assign("form", $formEdit);
-            $step = "settings";
-            if( !empty($_POST)){
-                $errors = FormValidator::check($formEdit, $_POST);
-                if( count($errors) > 0){
-                    $view->assign("errors", $errors);
-                    return;
-                }
-                $pdoResult = $bookingSettingsObj->edit($_POST);
-                if( $pdoResult ){
-                    $message = "Settings modified !";
-                    $view->assign("message", $message);
-                    \App\Core\Helpers::customRedirect('/admin/events', $site);
-                } else {
-                    $errors[] = "Cannot set these settings";
-                    $view->assign("errors", $errors);
-                }
-            }
-        } else {
-            //ADD
-            $formAdd = $bookingSettingsObj->formAdd();
-            $view = new View('create', 'back', $site);
-            $view->assign("form", $formAdd);
-		    $view->assign('pageTitle', "Manage the events");
-            $step = "create";
-            if( !empty($_POST)){
-                $errors = FormValidator::check($formAdd, $_POST);
-                if( count($errors) > 0){
-                    $view->assign("errors", $errors);
-                    return;
-                }
-                $_POST['enabled'] = 1;
-                $pdoResult = $bookingSettingsObj->populate($_POST, TRUE);
-                if( $pdoResult ){
-                    $message = "Settings added !";
-                    $view->assign("message", $message);
-                    \App\Core\Helpers::customRedirect('/admin/events', $site);
-                } else {
-                    $errors[] = "Cannot set these settings";
-                    $view->assign("errors", $errors);
-                }
-            }
-        }
-        
-        $view->assign('step', $step);*/
     }
 
     public function addBookingSettingAction($site){
@@ -140,6 +89,7 @@ class BookingSettingsController{
             $plan->populate($p);
             $forms[] = $plan;
         }
+        $fieldNumber = count($plans);
 
         $view = new View('booking', 'back', $site);
         $view->assign('pageTitle', "Set up planning");
@@ -147,24 +97,47 @@ class BookingSettingsController{
         $form = $planObj->form($forms);
         $view->assign("f", $form);
         if( !empty($_POST)){
-            echo "ahahaha";
             $errors = FormValidator::check($form, $_POST);
-            var_dump($_POST["available-1"]);
-            echo "data : ".count($_POST)." form : ".count($form["inputs"]);
             if( count($errors) > 0){
                 $view->assign("errors", $errors);
                 return;
             }
-            var_dump($_POST);
-            /*$pdoResult = $planObj->edit($_POST);
-            if( $pdoResult ){
-                $message = "Booking planning !";
-                $view->assign("message", $message);
-                \App\Core\Helpers::customRedirect('/admin/booking', $site);
-            } else {
-                $errors[] = "Booking planning not modified";
-                $view->assign("errors", $errors);
-            }*/
+            $savedPlans = [];
+            $totalPost = count($_POST);
+            $currArray = [];
+            $index = 1;
+            for($i=1; $i<=$totalPost; $i++){
+                if( $i % ( $totalPost/$fieldNumber ) == 0 ){
+                    $planObj = new Planning($site['prefix']);
+                    $currArray = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));
+                    $this->sanatizeAssociativeKeys($currArray, "-".$index);
+                    $currArray[ "id" ] = $index ;
+                    $pdoResult = $planObj->edit($currArray);
+                    if( !$pdoResult ){
+                        echo "aha";
+                        $errors = "Booking planning not modified!";
+                        $view->assign("errors", $errors);
+                        break;
+                    }
+                    $index++;
+                }
+            }
+            $bsObj = new Booking_settings($site['prefix']);
+            $bsObj->setId($bookingSettingsObj->getId());
+            $bsObj->setIsSetUp(1);
+            $bsObj->save();
+            $message = "Booking planning created !";
+            $view->assign("message", $message);
+            \App\Core\Helpers::customRedirect('/admin/booking', $site);
+            return;
+        }
+    }
+
+    private function sanatizeAssociativeKeys(&$array, $sanatizer){
+        foreach($array as $key => $value){
+            $newKey = str_replace($sanatizer, "", $key);
+            $array[$newKey] = $array[$key];
+            unset($array[$key]);
         }
     }
 
