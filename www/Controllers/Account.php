@@ -49,6 +49,7 @@ class Account{
 		}
 
 		//Fetching all the sites on which the user is whitelisted on
+		$siteObj->setCreator(null);
 		$wlistObj = new Whitelist();
 		$wlistObj->setIdUser(Secu::getUser());
 		$wlists = $wlistObj->findAll();
@@ -56,7 +57,7 @@ class Account{
 		if($wlists){
 			foreach($wlists as $wlist){
 				$siteObj->setId($wlist["idSite"]);
-				$sites = $siteObj->findOne();
+				$sites[] = $siteObj->findOne();
 			}
 		}
 		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
@@ -65,7 +66,6 @@ class Account{
 		if($sites == true){
 			foreach($sites as $item){
                 $userObj->setId($item['creator']);
-				echo $item['creator'] . '<hr>';
                 $creator = $userObj->findOne();
 				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				$editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';

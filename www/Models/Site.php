@@ -185,28 +185,31 @@ class Site extends Model
         if(!$this->name){ throw new \InvalidArgumentException("missing fields"); }
         if($this->id){ throw new \InvalidArgumentException("The site already exists"); }
         if(!($this->save())){ return false; }
+
+
         // Creation of new tables 
         $dir = basename(__DIR__) . '/../Assets/scripts';
-
         clearstatcache();
-        if( !file_exists($dir . '/booking.script') || !file_exists($dir . '/category.script') || !file_exists($dir . '/content.script') || !file_exists($dir . '/dish_category.script') ||
-            !file_exists($dir . '/dish.script') || !file_exists($dir . '/medium.script') || !file_exists($dir . '/page.script') || !file_exists($dir . '/post.script') || !file_exists($dir . '/comment.script') ||
-            !file_exists($dir . '/menu.script') || !file_exists($dir . '/menu_dish_association.script') )
+        $sqlFiles = array(
+            'dish_category', 'dish', 'booking', 'booking_settings', 'booking_planning', 'category', 'page', 'medium', 'post', 'content', 'comment', 'menu', 'menu_dish_association', 'post_medium_association'
+        );
+
+        foreach($sqlFiles as $file)
         {
-			die("Missing required file");
-            return false;
-		}
+            if(!file_exists($dir . '/' . $file .'.script' )){
+                die("Missing required file " . $file);
+                return false;
+            }
+        }
 
         $toReplace = [':X', ':prefix'];
         $replaceBy = [$this->prefix, DBPREFIXE];
-        $tableToCreate = [ 
-            '/dish_category.script', '/dish.script', '/booking.script', '/category.script', '/page.script', 
-            '/medium.script', '/post.script', '/content.script', '/comment.script', '/menu.script', '/menu_dish_association.script', '/post_medium_association.script'
-        ];
+
         try{
-            foreach( $tableToCreate as $table){
-                $table = file_get_contents($dir . $table);
-                $create = $this->createTable(str_replace($toReplace, $replaceBy, $table));
+            foreach( $sqlFiles as $table){
+                $table = file_get_contents($dir . '/'.$table.'.script');
+                $script = str_replace($toReplace, $replaceBy, $table);
+                $create = $this->createTable($script);
                 if(!$create){ echo $table; return false; }
             }
             $insert = new Page();

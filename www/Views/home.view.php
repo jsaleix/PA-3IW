@@ -5,7 +5,7 @@
 		<h2>Welcome <?= $pseudo;?></h2>
 		<a href="logout">Logout</a>
 		<a href="account">My account</a>
-		<a href="account/mysites">My sites</a>
+		<a href="account/sites">My sites</a>
 	<?php else: ?>
 		<a href="login">Login</a>
 		<a href="register">Register</a>
