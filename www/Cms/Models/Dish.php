@@ -30,8 +30,7 @@ class Dish extends CMSModels
 	public function setName($name){
 		$name = htmlspecialchars($name);
         //$name = preg_replace("/\s+/", "", $name);//removes spaces
-        $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
-
+        //$name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
         $this->name = $name;
 	}
 

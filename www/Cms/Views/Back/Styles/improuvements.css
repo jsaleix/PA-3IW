@@ -25,7 +25,7 @@
     font-weight: normal;
     outline: none;
     font-size: 16px;
-    margin: 5px;
+    margin-bottom: 10px;
   }
 
   .input:disabled{
@@ -87,7 +87,6 @@
 
   .btn {
     display: flex;
-    margin: 5px;
     border: none;
     color: white;
     background-color: #2DC091;
@@ -99,6 +98,7 @@
     font-weight: bold;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
   }
 
   .btn-100{
@@ -160,4 +160,15 @@
   }
   .form-90{
     width: 90%;
+  }
+
+  .alignedInputs{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .alignedInputs .input{
+    width: 48%;
   }

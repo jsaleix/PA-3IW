@@ -238,6 +238,68 @@ a {
   text-decoration: none;
 }
 
+.dishes-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dishes-container h1 {
+  margin-bottom: 0;
+}
+
+.dishes-container .dish-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.dish {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  margin-bottom: 3em;
+  transition: 0.5s;
+  margin: 0.5em;
+}
+
+.dish:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  transform: scale(1.05);
+}
+
+.dish img {
+  width: 100%;
+  aspect-ratio: 1;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.dish .dish-name {
+  color: black;
+  font-size: 16px;
+  margin-top: 0.5em;
+  margin-left: 0.5rem;
+}
+
+.dish .dish-category {
+  color: black;
+  font-size: 12px;
+  margin-top: 0.5em;
+  margin-left: 0.5rem;
+}
+
+.dish .dish-price {
+  color: #2DC091;
+  font-weight: bold;
+  font-size: 18px;
+  width: 100%;
+  text-align: right;
+  padding: 0.5em;
+}
+
 .main-container {
   display: flex;
   width: 100%;
