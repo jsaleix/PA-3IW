@@ -7,25 +7,25 @@ use App\Models\User;
 class Security
 {
 
-	public function isConnected(){
+	public static function isConnected(){
 		if( ($uid = Token::verifyToken()) != 0)
 			return $uid;
 		return 0;
 	}
 
-	public function connect($userPDO){
+	public static function connect($userPDO){
 		$token = new Token();
 		if( $uid = $token->createToken($userPDO) != null)
 			return $uid;
 		return 0;
 	}
 
-	public function disconnect(){
+	public static function disconnect(){
 		$uid = Security::isConnected();
 		return $uid == 0 ? 0 : Token::destroyToken($uid);
 	}
 
-	public function getUser(){
+	public static function getUser(){
 		if ( session_status() === PHP_SESSION_NONE || !isset($_SESSION['token']) )
 			return 0;
 		$user = new User();

@@ -2,9 +2,6 @@
 
 namespace CMS\Controller;
 
-use App\Core\Security;
-use App\Core\View;
-
 use App\Models\Action;
 
 class ActionController{

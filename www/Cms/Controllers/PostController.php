@@ -2,18 +2,14 @@
 
 namespace CMS\Controller;
 use App\Models\User;
-use App\Models\Site;
 use App\Core\FormValidator;
 
 use CMS\Models\Medium;
 use CMS\Models\Post;
-use CMS\Models\Page;
-use CMS\Models\Category;
 use CMS\Models\Comment;
 use CMS\Models\Post_Medium_Association as PMAssoc;
 
 use CMS\Core\CMSView as View;
-use CMS\Core\NavbarBuilder;
 use CMS\Core\StyleBuilder;
 
 use App\Core\Security;
