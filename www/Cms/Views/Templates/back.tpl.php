@@ -32,7 +32,7 @@
 		<main>
 			<?= CMS\Core\navbarBuilder::renderBackNavigation($this->site) ?>
 
-			<div class="container">
+			<div class="container" style="padding: 1em;">
 				<?php include $this->view ;?>
 			</div>
 		</main>

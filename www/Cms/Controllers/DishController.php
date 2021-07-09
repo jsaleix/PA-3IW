@@ -78,15 +78,18 @@ class DishController{
 
 		if(!empty($_POST) ) {
 			$errors = [];
-			print_r($_FILES);
+
 			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
 			[ "image" => $image ] = $_FILES;
-			if( $name ){
-				//Verify the dishCategor submitted
+
+			if(!empty($name) && !is_null($name)){
+
 				if(isset($image) && !empty($image) && $image['size'] != 0){
+
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-					$imgName = $site['subDomain'].'_'. trim($name);
+					$imgName = $site['subDomain'] . '_' . preg_replace("/\s+/", "_", $name);
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
+
 					if($isUploaded != false){
 						$image = $isUploaded;
 					}else{
@@ -95,8 +98,8 @@ class DishController{
 				}else{
 					$image = null;
 				}
-				echo $dishCat;
-				$dishCat = ($dishCat == 0) ? null : $dishCat ; 		
+				
+				$dishCat = ($dishCat == 0) ? null : $dishCat ;
 				$dishObj->setName($name);
 				$dishObj->setImage($image);
 				$dishObj->setDescription($description);
@@ -153,7 +156,7 @@ class DishController{
 		$view->assign("name", $dish['name']);
 		$view->assign("image", (DOMAIN . '/' . $dish['image']));
 		$view->assign("notes", $dish['notes']);
-		$view->assign("allergens", $dish['name']);
+		$view->assign("allergens", $dish['allergens']);
 		$view->assign("description", $dish['description']);
 		$view->assign("price", $dish['price']);
 		$view->assign("category", $dish['category']);

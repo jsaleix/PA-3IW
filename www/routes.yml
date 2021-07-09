@@ -33,7 +33,7 @@
   action: default
   middleware: auth
   
-/account/mysites:
+/account/sites:
   controller: Account
   action: mysites
   middleware: auth
