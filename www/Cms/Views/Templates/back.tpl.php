@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="<?= DOMAIN."/Cms/Views/Back/Styles/improuvements.css" ?>"/>
 </head>
 <body>
+	<div class="alert-container" id="alert-container">
+
+	</div>
 	<div class="pageContainer">
 		<div class="navbarTop">
 			<div class="topHead">

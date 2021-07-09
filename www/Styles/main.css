@@ -2743,3 +2743,45 @@ main {
   width: 100%;
 }
 
+.alert-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  top: 0;
+  max-width: 400px;
+  padding: 1em;
+  z-index: 100000 !important;
+}
+
+.alert-container .alert {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  padding: 1em;
+  color: white;
+  margin-bottom: 0.5em;
+  background-color: #B6B6B6;
+  border: 2px solid #6F6F6F;
+}
+
+.alert-container .alert-warn {
+  background-color: #DBBA88;
+  border: 2px solid #BD985F;
+}
+
+.alert-container .alert-error {
+  background-color: #BC5858;
+  border: 2px solid #822D2D;
+}
+
+.alert-container .alert-success {
+  background-color: #92C7B6;
+  border: 2px solid #3B826B;
+}
+
+.alert-container .alert-info {
+  background-color: #96BACE;
+  border: 2px solid #4C7F9B;
+}

@@ -52,4 +52,9 @@ class Helpers
 		return $url;
 	}
 
+	public static function displayAlert($type, $message, $time){
+
+		echo "<script>displayAlert(".$type.", ".$message.", ".$time.")</script>";
+
+	}
 }

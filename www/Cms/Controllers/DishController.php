@@ -8,6 +8,7 @@ use CMS\Models\DishCategory;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
+use App\Core\Helpers as Helpers;
 
 class DishController{
 
@@ -87,7 +88,11 @@ class DishController{
 				if(isset($image) && !empty($image) && $image['size'] != 0){
 
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-					$imgName = $site['subDomain'] . '_' . preg_replace("/\s+/", "_", $name);
+
+					$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+					$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
+					
+					$imgName = $site['subDomain'] . '_' . $imgTmpName;
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
 
 					if($isUploaded != false){
@@ -111,8 +116,9 @@ class DishController{
 
 				$adding = $dishObj->save();
 				if($adding){
-					$message ='Dish successfully added!';
-					$view->assign("message", $message);
+					// $message ='Dish successfully added!';
+					// $view->assign("message", $message);
+					Helpers::displayAlert("success","Dish successfully added!",2500);
 				}else{
 					$errors[] = "Cannot insert this dish";
 					$view->assign("errors", $errors);
@@ -181,7 +187,7 @@ class DishController{
 					$image = null;
 				}
 				//Verify the dishCategor submitted
-				$dishObj->setName($name);
+				$dishObj->setName(htmlspecialchars($name));
 				$dishObj->setImage($image);
 				$dishObj->setDescription($description);
 				$dishObj->setPrice($price);
@@ -194,6 +200,7 @@ class DishController{
 				if($adding){
 					$message ='Dish successfully updated!';
 					$view->assign("message", $message);
+					Helpers::displayAlert("success","Dish successfully added!",2500);
 				}else{
 					$errors[] = "Cannot update this dish";
 					$view->assign("errors", $errors);
