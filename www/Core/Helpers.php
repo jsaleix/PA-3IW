@@ -54,7 +54,7 @@ class Helpers
 
 	public static function displayAlert($type, $message, $time){
 
-		echo "<script>displayAlert(".$type.", ".$message.", ".$time.")</script>";
+		return '<script>displayAlert("'.$type.'", "'.$message.'", '.$time.');</script>';
 
 	}
 }

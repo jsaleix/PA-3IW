@@ -12,13 +12,14 @@
                             <div class="dish-col col-3 col-sm-12">
                                 <div class="dish">
                                     <a href="ent/dish?id=<?= $dish['id'] ?>" ><img alt="Dish" src='<?=  DOMAIN . '/' . $dish['image'] ?>'/></a>
-                                    <span class="dish-name"><?= $dish['name'] ?></span>
+                                    <span class="dish-name"><?= preg_replace("/\\\+/", "", $dish['name']) ?></span>
                                     <span class="dish-price"><?= $dish['price'] ?>$</span>
                                 </div>
                             </div>
                             
                         <?php endforeach; ?>
                     </div>
+                    <br/>
                 <?php endif; ?>
             <?php endforeach;?>
         <?php endif; ?>
