@@ -103,6 +103,14 @@
   controller: bookingController
   action: addBooking
 
+/booking/accept:
+  controller: bookingSettingsController
+  action: acceptBooking
+
+/booking/decline:
+  controller: bookingSettingsController
+  action: declineBooking
+
 /settings:
   controller: sitecontroller
   action: editsite

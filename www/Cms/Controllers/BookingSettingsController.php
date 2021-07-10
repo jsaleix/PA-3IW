@@ -6,6 +6,7 @@ use App\Core\FormValidator;
 
 use CMS\Core\CMSView as View;
 
+use CMS\Models\Booking;
 use CMS\Models\Booking_settings;
 use CMS\Models\Booking_planning as Planning;
 
@@ -142,6 +143,55 @@ class BookingSettingsController{
     }
 
     private function setupCalendar($site, $bookingSettingsObj){
-        echo "AQUIIIIIII";
+        //print_r($bookingSettingsObj);
+        $bookingObj = new Booking($site['prefix']);
+        $bookingObj->setStatus("IS FALSE");
+        $booking = $bookingObj->findAll();
+
+        $fields = [ 'client', 'date', 'number', 'accept', 'delete' ];
+		$datas = [];
+
+        if($booking){
+            foreach($booking as $item){
+                $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
+                $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
+                $buttonAccept = '<a href="' . $accept . '">Go</a>';
+                $buttonDelete = '<a href="' . $decline . '">Go</a>';
+                $formalized = "'" . $item['client'] . "','" . $item['date'] . "','" . $item['number'] .  "','" . $buttonAccept . "','" . $buttonDelete . "'";
+				$datas[] = $formalized;
+            }
+        }
+        $view = new View('list', 'back', $site);
+		$view->assign("fields", $fields);
+		$view->assign("datas", $datas);
+		$view->assign('pageTitle', "Manage the comments");
+    }
+
+    public function acceptBookingAction($site){
+        if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'Booking not found ';
+			exit();
+		}
+        $bookingObj = new Booking($site['prefix']);
+        $bookingObj->setId($_GET['id']);
+        if( $bookingObj->findOne(TRUE)){
+            $bookingObj->setStatus(1);
+            $bookingObj->save();
+        }
+        print_r($bookingObj);
+    }
+
+    public function deleteBookingAction($site){
+        if(!isset($_GET['id']) || empty($_GET['id']) ){
+			echo 'Booking not found ';
+			exit();
+		}
+        $bookingObj = new Booking($site['prefix']);
+        $bookingObj->setId($_GET['id']);
+        if( $bookingObj->findOne(TRUE)){
+            echo "Should delete";
+            //$bookingObj->delete();
+        }
+        print_r($bookingObj);
     }
 }
