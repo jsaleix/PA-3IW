@@ -51,3 +51,14 @@ $("#openBtn").click(function () {
   $("#navbar").toggle();
   $("#navbar").toggleClass("collapsed");
 });
+
+
+function displayAlert(type, message, time=2000){
+  var alert = $("<div></div>").addClass("alert alert-"+type).append(message);
+  $("#alert-container").append(alert);
+
+  setTimeout(function (){
+    alert.remove();
+  }, time);
+
+}

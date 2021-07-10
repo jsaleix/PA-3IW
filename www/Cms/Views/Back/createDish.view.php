@@ -7,15 +7,9 @@
     </div>
 
     <?php if(isset($errors)):?>
-
-    <?php foreach ($errors as $error):?>
-        <li style="color:red"><?=$error;?></li>
-    <?php endforeach;?>
-
-    <?php endif;?>
-
-    <?php if(isset($message)):?>
-        <h3> <?=$message?> </h3>
+        <?php foreach ($errors as $error):?>
+            <?= App\Core\Helpers::displayAlert("error",$error,2500) ?>
+        <?php endforeach;?>
     <?php endif;?>
 
     <div class="row" style="justify-content: space-between;">
@@ -51,8 +45,9 @@
                 </select>
             </div>
             <input class="input input-100" name="notes" type="text" placeholder="Notes" value="<?=$notes??''?>"/>
-            <button type="submit" class="btn btn-light btn-100" >Add / Edit</button>
+            <button type="submit" class="btn btn-light btn-100" ><?= $submitLabel ?></button>
         </div>
 
     </div>
 </form>
+<?= $alert??''; ?>

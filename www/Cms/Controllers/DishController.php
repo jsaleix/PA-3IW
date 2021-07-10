@@ -8,6 +8,7 @@ use CMS\Models\DishCategory;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
+use App\Core\Helpers as Helpers;
 
 class DishController{
 
@@ -74,6 +75,7 @@ class DishController{
 
 		$view = new View('createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
+		$view->assign('submitLabel', "Add");
 		$view->assign('pageTitle', "Add a dish");
 
 		if(!empty($_POST) ) {
@@ -87,7 +89,11 @@ class DishController{
 				if(isset($image) && !empty($image) && $image['size'] != 0){
 
 					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-					$imgName = $site['subDomain'] . '_' . preg_replace("/\s+/", "_", $name);
+
+					$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+					$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
+
+					$imgName = $site['subDomain'] . '_' . $imgTmpName;
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
 
 					if($isUploaded != false){
@@ -110,9 +116,10 @@ class DishController{
 				$dishObj->setIsActive($isActive??1);
 
 				$adding = $dishObj->save();
+
 				if($adding){
 					$message ='Dish successfully added!';
-					$view->assign("message", $message);
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
 				}else{
 					$errors[] = "Cannot insert this dish";
 					$view->assign("errors", $errors);
@@ -153,14 +160,15 @@ class DishController{
 
 		$view = new View('createDish', 'back', $site);
 		$view->assign("categories", $dishCatArr);
-		$view->assign("name", $dish['name']);
+		$view->assign("name", preg_replace("/\\\+/", "", $dish['name']));
 		$view->assign("image", (DOMAIN . '/' . $dish['image']));
 		$view->assign("notes", $dish['notes']);
 		$view->assign("allergens", $dish['allergens']);
 		$view->assign("description", $dish['description']);
 		$view->assign("price", $dish['price']);
 		$view->assign("category", $dish['category']);
-		$view->assign('pageTitle', "Add a dish");
+		$view->assign('submitLabel', "Edit");
+		$view->assign('pageTitle', "Update a dish");
 
 		if(!empty($_POST) ) {
 			$errors = [];
@@ -180,8 +188,8 @@ class DishController{
 				}else{
 					$image = null;
 				}
-				//Verify the dishCategor submitted
-				$dishObj->setName($name);
+
+				$dishObj->setName(htmlspecialchars($name));
 				$dishObj->setImage($image);
 				$dishObj->setDescription($description);
 				$dishObj->setPrice($price);
@@ -193,7 +201,7 @@ class DishController{
 				$adding = $dishObj->save();
 				if($adding){
 					$message ='Dish successfully updated!';
-					$view->assign("message", $message);
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
 				}else{
 					$errors[] = "Cannot update this dish";
 					$view->assign("errors", $errors);
@@ -235,7 +243,7 @@ class DishController{
 			foreach($dishes as $dish){
 				$dishArr[] = array(
 					'id' => $dish['id'],
-					'name' => $dish['name'],
+					'name' => preg_replace("/\\\+/", "", $dish['name']),
 					'image' => DOMAIN . '/' . $dish['image'],
 					'price' => $dish['price']
 				);
