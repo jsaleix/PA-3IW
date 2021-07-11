@@ -33,6 +33,11 @@
   action: default
   middleware: auth
   
+/account/password:
+  controller: Account
+  action: updatePassword
+  middleware: auth
+
 /account/sites:
   controller: Account
   action: mysites

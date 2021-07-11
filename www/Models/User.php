@@ -106,15 +106,15 @@ class User extends Model
      */
     public function getAvatar()
     {
-        return $this->pwd;
+        return $this->avatar;
     }
 
     /**
      * @param mixed $password
      */
-    public function setAvatar($password)
+    public function setAvatar($avatar)
     {
-        $this->pwd = $password;
+        $this->avatar = $avatar;
     }
 
     /**
@@ -284,7 +284,7 @@ class User extends Model
         ];
     }
 
-    public function formEdit($content){
+    public function formEdit(){
         return [
 
             "config"=>[
@@ -292,8 +292,9 @@ class User extends Model
                 "action"=>"",
                 "id"=>"",
                 "class"=>"",
-                "submit"=>"Appliquer",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype" => "multipart/form-data"
             ],
             "inputs"=>[
                 "firstname"=>[ 
@@ -306,7 +307,7 @@ class User extends Model
                     "placeholder"=>"Exemple: Yves",
                     "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
                     "required"=>true,
-                    "value"=> $content['firstname']
+                    "value"=> $this->getFirstname()
                 ],
                 "lastname"=>[ 
                     "type"=>"text",
@@ -318,7 +319,7 @@ class User extends Model
                     "placeholder"=>"Exemple: SKRZYPCZYK",
                     "error"=>"Votre nom doit faire entre 2 et 255 caractères",
                     "required"=>true,
-                    "value"=> $content['lastname']
+                    "value"=> $this->getLastname()
                 ],
                 "email"=>[ 
                     "type"=>"email",
@@ -330,10 +331,65 @@ class User extends Model
                     "placeholder"=>"Exemple: nom@gmail.com",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true,
-                    "value"=> $content['email']
+                    "value"=> $this->getEmail()
+                ],
+                "avatar"=>[ 
+					"type"=>"file-img",
+					"label"=>"Avatar",
+					"id"=>"avatar",
+					"class"=>"input-file",
+                    "error"=>"",
+					"required"=> false,
+					"value"=> $this->getAvatar()
                 ],
             ]
 
+        ];
+    }
+
+    public function formPwd(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_pwd",
+                "class"=>"form-pwd",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "oldPwd"=>[ 
+                    "type"=>"password",
+                    "label"=>"Your current password",
+                    "minLength"=>8,
+                    "id"=>"pwd",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Your current password",
+                    "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
+                    "required"=>true
+                ],
+                "pwd"=>[ 
+                    "type"=>"password",
+                    "label"=>"New password",
+                    "minLength"=>8,
+                    "id"=>"pwd",
+                    "class"=>"input-auth",
+                    "placeholder"=>"New password",
+                    "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
+                    "required"=>true
+                ],
+                "pwdConfirm"=>[ 
+                    "type"=>"password",
+                    "label"=>"Confirmation",
+                    "confirm"=>"pwd",
+                    "id"=>"pwdConfirm",
+                    "class"=>"input-auth",
+                    "placeholder"=>"New password confirmation",
+                    "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
+                    "required"=>true
+                ]
+            ]
         ];
     }
 

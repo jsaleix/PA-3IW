@@ -94,7 +94,7 @@ class FormBuilder
 		$_SESSION["CSRF"]=$CSRFtoken;
 		$html = "<input
 					name=\"CSRF\"
-					type=\"text\"
+					type=\"hidden\"
 					id=\"CSRF\"
 					style=\"visibility: hidden\"
 					value=\"".$CSRFtoken."\">";
