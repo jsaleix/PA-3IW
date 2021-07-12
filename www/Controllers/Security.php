@@ -63,7 +63,8 @@ class Security{
 					$view->assign("errors", $errors);
 					$view->assign("form", $form);
 					return;
-				}$userFetch = $user->findOne();
+				}
+				$userFetch = $user->findOne();
 				$mail = new MailToken();
 				$mail->setUserId($userFetch["id"]);
 				$mail->setExpiresDate(new \DateTime('now'));
