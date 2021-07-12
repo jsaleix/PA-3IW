@@ -12,6 +12,10 @@ class FileUploader
 		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library');
 	}
 
+	public static function createUserDirs($user){
+		mkdir($_SERVER['DOCUMENT_ROOT']. '/uploads/users/' . $user);
+	}
+
 	public static function uploadImage($file, $name, $dir){
 		try{
 			if(!isset($file)){ 	
