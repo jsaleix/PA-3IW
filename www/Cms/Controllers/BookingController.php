@@ -152,10 +152,6 @@ class BookingController{
             $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
             $date = \DateTime::createFromFormat('Y-m-d H:i:s.u', $_GET['date'].' 23:59:59.999999');
             $today = new \DateTime();
-            if($bookingSettingsObj->getMaxNumberPerReservation() < $number){//CHECK THAT THEY DONT TRY TO RESERVE FOR MORE PERSONS THAN ALLOWED
-                $code = 422;
-                $errors [] = "You are trying to reserve for more persons than the restaurant enables. Please follow the instructions on the inputs.";
-            }
             if($date <= $today){ //CHECK THAT USER DOESNT TRY TO RESERVE FOR A PAST DAY
                 $code = 422;
                 $errors[] = "Enter a valid date";
@@ -167,6 +163,10 @@ class BookingController{
                 $bookingPlanningObj->setId($date->format('N'));
                 $bookingPlanningObj->findOne(TRUE);
 
+                if($bookingSettingsObj->getMaxNumberPerReservation() < $number){//CHECK THAT THEY DONT TRY TO RESERVE FOR MORE PERSONS THAN ALLOWED
+                    $code = 422;
+                    $errors [] = "You are trying to reserve for more persons than the restaurant enables. Please follow the instructions on the inputs.";
+                }
                 if( $bookingPlanningObj->getDisabled() == 0){//CHECK IF RESTAURANT IS WORKING THIS DAY
                     $errors[] = "We don't work this day, try another one";
                     $code = 422;
