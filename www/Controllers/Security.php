@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\Security as Secu;
 use App\Core\View;
 use App\Core\FormValidator;
+use App\Core\FileUploader;
 
 use App\Models\User;
 use App\Models\MailToken;
@@ -70,7 +71,10 @@ class Security{
 				$mail->setExpiresDate(new \DateTime('now'));
 				$mail->setToken(bin2hex(random_bytes(128)));
 				$mail->save();
+				FileUploader::createUserDirs($user->getLastId());
 				$mail->sendConfirmationMail($user->getEmail());
+				
+
 				header('Location: '.DOMAIN);
 				exit();
 			}else{
