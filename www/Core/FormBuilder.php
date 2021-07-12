@@ -121,6 +121,8 @@ class FormBuilder
 						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
 						(!empty($configInput["required"])?"required=\"required\"":"") .
 						(!empty($configInput["disabled"])?"disabled":"").
+						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
+						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
 						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
 		return $html;
 	}

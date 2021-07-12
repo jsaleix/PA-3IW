@@ -53,6 +53,10 @@ class Booking extends CMSModels
     }
 
     public function form($bookingSettings){
+        $today = new \DateTime();
+        $max = new \DateTime();
+        date_add($max, date_interval_create_from_date_string('1 month'));
+
         return [
             "config"=>[
                 "method"=>"POST",
@@ -70,7 +74,9 @@ class Booking extends CMSModels
                     "class"=>"input-content",
                     "placeholder"=>"date",
                     "required"=>true,
-                    "value"=>"2021-07-11"
+                    "value"=>$today->format("Y-m-d"),
+                    "min"=>$today->format("Y-m-d"),
+                    "max"=>$max->format("Y-m-d")
                 ],
                 "time"=>[
                     "type"=>"time",
