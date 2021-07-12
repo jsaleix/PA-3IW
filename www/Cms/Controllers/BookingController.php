@@ -170,6 +170,7 @@ class BookingController{
                 } else { 
                     $start = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getStart());
                     $end = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getEnd());
+                    $end->add(new \DateInterval("PT".$bookingSettingsObj->getTimePerReservation()."M")); //ADDING ONE RESERVATION SCHEDULE MORE TO GET EVEN THE LAST RESERVATION SCHEDULE
                     $period = new \DatePeriod($start, \DateInterval::createFromDateString($bookingSettingsObj->getTimePerReservation()."minutes"), $end); 
                     // CREATE A PERIOD FOR FUTURE LOOP WHICH WILL RETURN PLANNINGS THAT CAN BE BOOKED
 
