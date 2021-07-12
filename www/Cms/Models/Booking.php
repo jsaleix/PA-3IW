@@ -67,6 +67,17 @@ class Booking extends CMSModels
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
+                "number"=>[
+                    "type"=>"number",
+                    "label"=>"Nombre de personnes pour la reservation",
+                    "id"=>"number",
+                    "class"=>"input-content",
+                    "placeholder"=>"10",
+                    "required"=>true,
+                    "max"=>$bookingSettings->getMaxNumberPerReservation(),
+                    "min"=>0,
+                    "value"=>5
+                ],
                 "date"=>[
                     "type"=>"date",
                     "label"=>"heure de reservation",
@@ -86,16 +97,6 @@ class Booking extends CMSModels
                     "placeholder"=>"time",
                     "required"=>true,
                     "value"=>"10:30"
-                ],
-                "number"=>[
-                    "type"=>"number",
-                    "label"=>"Nombre de personnes pour la reservation",
-                    "id"=>"number",
-                    "class"=>"input-content",
-                    "placeholder"=>"10",
-                    "required"=>true,
-                    "max"=>$bookingSettings->getMaxNumberPerReservation(),
-                    "value"=>5
                 ]
             ]
         ];

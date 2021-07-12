@@ -18,4 +18,6 @@
     </div>
 </main>    
     
-    
+<script>
+ alert("ceci est un script");
+</script>

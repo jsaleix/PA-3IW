@@ -115,7 +115,6 @@ class BookingSettingsController{
                     $currArray[ "id" ] = $index ;
                     $pdoResult = $planObj->edit($currArray);
                     if( !$pdoResult ){
-                        echo "aha";
                         $errors = "Booking planning not modified!";
                         $view->assign("errors", $errors);
                         break;
