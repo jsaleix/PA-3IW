@@ -87,7 +87,7 @@ class BookingController{
     }
 
     public function apiCheckPersonNumberAction($site){
-        if( !empty($_GET)){
+        if( !empty($_GET['number'])){
             $bookingSettingsObj = new Booking_settings($site->getPrefix());
             $bookingSettingsObj->findOne(TRUE);
             $message;
@@ -151,9 +151,9 @@ class BookingController{
         }
         else {
             $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
-            $date = \DateTime::createFromFormat('Y-m-d', $_GET['date']);
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s.u', $_GET['date'].' 23:59:59.999999');
             $today = new \DateTime();
-            if($date < $today){
+            if($date <= $today){
                 $code = 422;
                 $errors[] = "Enter a valid date";
             }else {
