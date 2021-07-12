@@ -118,10 +118,10 @@ class BookingSettingsController{
                         $view->assign("errors", $errors);
                         break;
                     }
-                    $index++;
+                    $index++;//INCREMENT THE INDEX TO PASS TO THE NEXT OBJECT WHEN WE ENTER IN THE IF
                 }
             }
-            $bsObj = new Booking_settings($site['prefix']);
+            $bsObj = new Booking_settings($site['prefix']);//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
             $bsObj->setId($bookingSettingsObj->getId());
             $bsObj->setIsSetUp(1);
             $bsObj->save();
@@ -132,8 +132,8 @@ class BookingSettingsController{
         }
     }
 
-    private function sanatizeAssociativeKeys(&$array, $sanatizer){
-        foreach($array as $key => $value){
+    private function sanatizeAssociativeKeys(&$array, $sanatizer){//THE "&" IS TO SAVE THE MODIFICATIONS ON THE VARIABLE THAT IS PAST TO THE FUNCTION, AS A POINTEUR WOULD WORK
+        foreach($array as $key => $value){//GET OFF THE SANATIZER FROM EVERY KEYS IN THE ARRAY,
             $newKey = str_replace($sanatizer, "", $key);
             $array[$newKey] = $array[$key];
             unset($array[$key]);
@@ -141,15 +141,14 @@ class BookingSettingsController{
     }
 
     private function setupCalendar($site, $bookingSettingsObj){
-        //print_r($bookingSettingsObj);
-        $bookingObj = new Booking($site['prefix']);
+        $bookingObj = new Booking($site['prefix']);//TRY TO FIND RESERVATIONS FOR THE RESTAURANT
         $bookingObj->setStatus("IS FALSE");
         $booking = $bookingObj->findAll();
 
         $fields = [ 'client', 'date', 'number', 'accept', 'delete' ];
 		$datas = [];
 
-        if($booking){
+        if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
             foreach($booking as $item){
                 $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
                 $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
