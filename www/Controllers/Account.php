@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Core\Security as Secu;
 use App\Core\View;
+use App\Core\FormValidator;
+use App\Core\FileUploader;
 
 use App\Models\User;
 use App\Models\Site;
@@ -15,13 +17,104 @@ class Account{
 	public function defaultAction(){
         $userObj = new User();
 		$userObj->setId(Secu::getUser());
-		$user = $userObj->findOne();
+		$userObj->findOne(TRUE);
 
-		$view = new View('front/form', 'front');
+		$view = new View('front/account', 'front');
 
-		$form = $userObj->formEdit($user);
-		$view->assign('pageTitle', "Account");
+		$form = $userObj->formEdit();
+
+		if(!empty($_POST)){
+			$errors = [];
+
+			$data = array_merge($_POST, $_FILES);
+			try{
+				$errors = FormValidator::check($form, $data);
+				if( count($errors) > 0)
+				{
+					$view->assign("errors", $errors);
+					throw new \Exception('Invalid form');
+				}
+
+				if($data['email'] !== $userObj->getEmail()){
+					$newUser = new User();
+					$newUser->setEmail(htmlspecialchars($data['email']));
+					if($newUser->findOne()){
+						$errors[] = "Mail already taken";
+						$view->assign("errors", $errors);
+						throw new \Exception('Invalid mail');
+					}
+				}
+
+				if(isset($_FILES['avatar']))
+				{
+					$imgDir = "/uploads/users/" . $userObj->getId() . '/';
+					$imgName = 'avatar';
+					$isUploaded = FileUploader::uploadImage($_FILES["avatar"], $imgName, $imgDir);
+					$data['avatar'] = $isUploaded ? $isUploaded : null;
+				}
+
+				if(  $userObj->populate($data, TRUE) ){
+					$message = "Profile successfully updated!";
+					$view->assign("message", $message);
+					$form = $userObj->formEdit();
+
+				} else {
+					$errors[] = "Cannot update your profile";
+					$view->assign("errors", $errors);
+				}
+			}catch(\Exception $e){
+				//echo $e->getMessage();
+			}
+			
+		}
+
 		$view->assign("form", $form);
+	}
+
+	public function updatePasswordAction(){
+        $userObj = new User();
+		$userObj->setId(Secu::getUser());
+		$userObj->findOne(TRUE);
+
+		$view = new View('front/account.pwd', 'front');
+		$form = $userObj->formPwd();
+		$view->assign("form", $form);
+
+		if(!empty($_POST)){
+			try{
+				$errors = [];
+				$errors = FormValidator::check($form, $_POST);
+				if( count($errors) > 0)
+				{
+					$view->assign("errors", $errors);
+					throw new \Exception('Invalid form');
+				}
+				if($_POST['pwd'] != $_POST['pwdConfirm']){
+					$errors[] = 'Passwords do not match';
+					throw new \Exception('Passwords do no match');
+				}
+
+				if( !password_verify(htmlspecialchars($_POST['oldPwd']), $userObj->getPwd()))
+				{
+					$errors[] = 'Wrong password';
+					throw new \Exception('Wrong password');
+				}
+
+				$newPwd = password_hash(htmlspecialchars($_POST["pwd"]), PASSWORD_BCRYPT);
+				$userObj->setPwd($newPwd);
+				if($userObj->save()){
+					$message = "Password successfully updated!";
+					$view->assign("message", $message);
+				} else {
+					$errors[] = "Cannot update your profile";
+					$view->assign("errors", $errors);
+				}
+			}catch(\Exception $e){
+				echo $e->getMessage();
+			}
+		}
+
+
 	}
 
 	public function mysitesAction(){		
