@@ -85,12 +85,14 @@ class BookingSettingsController{
         $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
         $plans = $planObj->findAll();
         $forms = [];
-        foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
-            $plan = new Planning($site['prefix']);
-            $plan->populate($p);
-            $forms[] = $plan;
+        if( $plans && count($plans) > 0){
+            foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
+                $plan = new Planning($site['prefix']);
+                $plan->populate($p);
+                $forms[] = $plan;
+            }
+            $fieldNumber = count($plans);
         }
-        $fieldNumber = count($plans);
 
         $view = new View('booking', 'back', $site);//CREATE THE VIEW AND FORM TO MODIFY EVERY DAYS'S PLANNING
         $view->assign('pageTitle', "Set up planning");
@@ -164,31 +166,31 @@ class BookingSettingsController{
 		$view->assign('pageTitle', "Manage the comments");
     }
 
-    public function acceptBookingAction($site){
+    public function acceptBookingAction($site){//CHECK IF AN ID IS GIVEN
         if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'Booking not found ';
 			exit();
 		}
         $bookingObj = new Booking($site['prefix']);
         $bookingObj->setId($_GET['id']);
-        if( $bookingObj->findOne(TRUE)){
+        if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, ACCEPT IT
             $bookingObj->setStatus(1);
             $bookingObj->save();
         }
-        print_r($bookingObj);
     }
 
-    public function deleteBookingAction($site){
+    public function deleteBookingAction($site){//CHECK IF AN ID IS GIVEN
         if(!isset($_GET['id']) || empty($_GET['id']) ){
 			echo 'Booking not found ';
 			exit();
 		}
         $bookingObj = new Booking($site['prefix']);
         $bookingObj->setId($_GET['id']);
-        if( $bookingObj->findOne(TRUE)){
+        if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
             echo "Should delete";
             //$bookingObj->delete();
         }
-        print_r($bookingObj);
+        \App\Core\Helpers::customRedirect('/admin/booking', $site);
+        return;
     }
 }
