@@ -28,16 +28,14 @@ class BookingSettingsController{
         
     }
 
-    public function addBookingSettingAction($site){
-        $bookingSettingsObj = new Booking_settings($site['prefix']);
-    }
-
     public function editSettingsAction($site){
         $bookingSettingsObj = new Booking_settings($site['prefix']);//CREATE VIEW AND FORM TO EDIT THE BOOKING SETTINGS
+        $bookingSettingsObj->findOne(TRUE);
         $formEdit = $bookingSettingsObj->form();
         $view = new View('booking', 'back', $site);
         $view->assign('pageTitle', "Manage the events");
         $view->assign("form", $formEdit);
+        $view->assign("settings", true);
         if( !empty($_POST)){
             $errors = FormValidator::check($formEdit, $_POST);//CHECK AND SANATIZE THE FORM
             if( count($errors) > 0){
@@ -53,6 +51,58 @@ class BookingSettingsController{
                 $errors[] = "Cannot set these settings";
                 $view->assign("errors", $errors);
             }
+        }
+    }
+
+    public function editPlanningsAction($site){
+        $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
+        $plans = $planObj->findAll();
+        $forms = [];
+        if( $plans && count($plans) > 0){
+            foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
+                $plan = new Planning($site['prefix']);
+                $plan->populate($p);//POPULATE AN OBJECT WITH THE ARRAY VALUES
+                $forms[] = $plan;
+            }
+            $fieldNumber = count($plans);
+        }
+
+        $view = new View('booking', 'back', $site);//CREATE THE VIEW AND FORM TO MODIFY EVERY DAYS'S PLANNING
+        $view->assign('pageTitle', "Set up planning");
+        $view->assign("planning", TRUE);
+        $form = $planObj->form($forms);
+        $view->assign("f", $form);
+        if( !empty($_POST)){
+            $errors = FormValidator::check($form, $_POST);//CHECK AND SANATIZE THE FORM
+            if( count($errors) > 0){
+                $view->assign("errors", $errors);
+                return;
+            }
+            $savedPlans = [];//CREATE AN ARRAY TO STORE THE MODIFIED PLANNINGS
+            $totalPost = count($_POST);//GET ALL INPUTS THAT CAN BE MODIFIED 
+            $index = 1;//INDEX THAT WILL BE INCREMENTED DEPENDING THE NUMBER OF INPUTS PER OBJECT, STARTS ON ONE FOR DB'S IDS
+            for($i=1; $i<=$totalPost; $i++){//LOOP ON ALL THE MODIFIABLE INPUTS
+                if( $i % ( $totalPost/$fieldNumber ) == 0 ){//EVERY 4 INPUTS(BECAUSE WE HAVE 4 FIELDS MODIFIABLE BY OBJECT)
+                    $planObj = new Planning($site['prefix']);//WE CREATE A NEW PLAN OBJ
+                    $savedPlans = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));//AND SAVE THE 4 INPUTS IN OUR ARRAY
+                    $this->sanatizeAssociativeKeys($savedPlans, "-".$index);//SANATIZE THE DATA OF OUR ARRAY
+                    $savedPlans[ "id" ] = $index ;//SET ARRAY ID TO USE THE EDIT DB FUNCTION
+                    $pdoResult = $planObj->edit($savedPlans);//TRY TO EDIT THE DAY CURRENTLY ASSOCIATED
+                    if( !$pdoResult ){
+                        $errors = "Booking planning not modified!";
+                        $view->assign("errors", $errors);
+                        break;
+                    }
+                    $index++;//INCREMENT THE INDEX TO PASS TO THE NEXT OBJECT WHEN WE ENTER IN THE IF
+                }
+            }
+            $bsObj = new Booking_settings($site['prefix']);//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
+            $bsObj->setIsSetUp(1);
+            $bsObj->save();
+            $message = "Booking planning created !";
+            $view->assign("message", $message);
+            \App\Core\Helpers::customRedirect('/admin/booking/planning', $site);
+            return;
         }
     }
 
@@ -88,7 +138,7 @@ class BookingSettingsController{
         if( $plans && count($plans) > 0){
             foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
                 $plan = new Planning($site['prefix']);
-                $plan->populate($p);
+                $plan->populate($p);//POPULATE AN OBJECT WITH THE ARRAY VALUES
                 $forms[] = $plan;
             }
             $fieldNumber = count($plans);
@@ -160,10 +210,11 @@ class BookingSettingsController{
 				$datas[] = $formalized;
             }
         }
-        $view = new View('list', 'back', $site);
+        $view = new View('booking.list', 'back', $site);
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the comments");
+        $view->assign('calendar', true);
     }
 
     public function acceptBookingAction($site){//CHECK IF AN ID IS GIVEN

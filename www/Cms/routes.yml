@@ -99,6 +99,14 @@
   controller: bookingSettingsController
   action: manageBookingSettings
 
+/booking/settings:
+  controller: bookingSettingsController
+  action: editSettings
+
+/booking/planning:
+  controller: bookingSettingsController
+  action: editPlannings
+
 /booking/front:
   controller: bookingController
   action: addBooking
