@@ -42,14 +42,14 @@
         let nextBtn = document.createElement('input');
         nextBtn.setAttribute('id', 'step1');
         nextBtn.setAttribute('type', 'button');
-        nextBtn.setAttribute('onclick', 'step2(' + bookPplNumber.value + ')');
+        nextBtn.setAttribute('onclick', 'step2()');
         nextBtn.value = 'Next';
         form.append(nextBtn);
     }
 
     //Step 2: checks number of people
-    async function step2(nb){
-        let res = await fetchNumber(nb);
+    async function step2(){
+        let res = await fetchNumber(bookPplNumber?.value);
         if(!res)
         {
             return;
@@ -113,6 +113,7 @@
 
     async function fetchNumber(value){
         try{
+            console.log('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/booking/number?number=' + value)
             let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/booking/number?number=' + value, 
             {
                 method: 'GET',
@@ -127,15 +128,12 @@
                 throw new Error('Wrong response code');
             }
         }catch(e){
-            console.error(e);
             return false;
         }
     }
 
 
     async function fetchHours(date, number){
-        console.log('date= ' + date);
-        console.log('time= ' + number);
         try{
             let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/booking/time?date=' + date +'&number=' + number, 
             {
@@ -151,7 +149,6 @@
                 throw new Error('Wrong response code');
             }
         }catch(e){
-            console.error(e);
             return false;
         }
     }

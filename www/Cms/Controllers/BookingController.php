@@ -22,7 +22,10 @@ class BookingController{
         $bookingSettingsObj = new Booking_settings($site->getPrefix());
         $bookingPlanningObj = new Booking_planning($site->getPrefix());
         if( !$bookingSettingsObj->findOne(TRUE))
+        {
+            $view = new View('featureNotAvailable', 'front', $site);
             return;
+        }
         $form = $bookingObj->form($bookingSettingsObj); //CREATE FORM AND VIEW
         $view = new View('booking', 'front', $site);
 		$view->assign("form", $form);
