@@ -99,11 +99,11 @@
   controller: bookingSettingsController
   action: manageBookingSettings
 
-/booking/settings:
+/booking/edit/settings:
   controller: bookingSettingsController
   action: editSettings
 
-/booking/planning:
+/booking/edit/planning:
   controller: bookingSettingsController
   action: editPlannings
 
@@ -117,7 +117,7 @@
 
 /booking/decline:
   controller: bookingSettingsController
-  action: declineBooking
+  action: deleteBooking
 
 /settings:
   controller: sitecontroller

@@ -237,11 +237,13 @@ class BookingSettingsController{
 		}
         $bookingObj = new Booking($site['prefix']);
         $bookingObj->setId($_GET['id']);
+        $bookingObj->findOne(TRUE);
+        print_r($bookingObj);
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
-            echo "Should delete";
-            //$bookingObj->delete();
+            $bookingObj->delete();
+            echo "ah";
         }
-        \App\Core\Helpers::customRedirect('/admin/booking', $site);
+        //\App\Core\Helpers::customRedirect('/admin/booking', $site);
         return;
     }
 }
