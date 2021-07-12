@@ -152,40 +152,45 @@ class BookingController{
         else {
             $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
             $date = \DateTime::createFromFormat('Y-m-d', $_GET['date']);
-
-            $bookingSettingsObj = new Booking_settings($site->getPrefix());
-            $bookingSettingsObj->findOne(TRUE);
-
-            $bookingPlanningObj = new Booking_planning($site->getPrefix());
-            $bookingPlanningObj->setId($date->format('N'));
-            $bookingPlanningObj->findOne(TRUE);
-
-            if( $bookingPlanningObj->getDisabled() == 0){//CHECK IF RESTAURANT IS WORKING THIS DAY
-                $errors[] = "We don't work this day, try another one";
+            $today = new \DateTime();
+            if($date < $today){
                 $code = 422;
-            } else { 
-                $start = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getStart());
-                $end = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getEnd());
-                $period = new \DatePeriod($start, \DateInterval::createFromDateString($bookingSettingsObj->getTimePerReservation()."minutes"), $end); 
-                // CREATE A PERIOD FOR FUTURE LOOP WHICH WILL RETURN PLANNINGS THAT CAN BE BOOKED
+                $errors[] = "Enter a valid date";
+            }else {
+                $bookingSettingsObj = new Booking_settings($site->getPrefix());
+                $bookingSettingsObj->findOne(TRUE);
 
-                $acceptedTimes = [];
-                foreach($period as $p){ // LOOPING ON PERIOD TO CHECK
-                    $plan = new Booking($site->getPrefix());
-                    $plan->setDate($p->format('Y-m-d H:i:s'));
-                    $plans = $plan->findAll();
-                    $currentReservationNumber = 0;
-                    if( $plans && count($plans) > 0){ // CHECK IF THERE IS ALREADY RESERVATIONS ON THIS TIME
-                        foreach( $plans as $plan){ //LOOP ON RESERVATIONS AT THIS TIME
-                            $currentReservationNumber += $plan['number']; //NUMBER OF PEOPLE ALREADY BOOKED
+                $bookingPlanningObj = new Booking_planning($site->getPrefix());
+                $bookingPlanningObj->setId($date->format('N'));
+                $bookingPlanningObj->findOne(TRUE);
+
+                if( $bookingPlanningObj->getDisabled() == 0){//CHECK IF RESTAURANT IS WORKING THIS DAY
+                    $errors[] = "We don't work this day, try another one";
+                    $code = 422;
+                } else { 
+                    $start = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getStart());
+                    $end = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getEnd());
+                    $period = new \DatePeriod($start, \DateInterval::createFromDateString($bookingSettingsObj->getTimePerReservation()."minutes"), $end); 
+                    // CREATE A PERIOD FOR FUTURE LOOP WHICH WILL RETURN PLANNINGS THAT CAN BE BOOKED
+
+                    $acceptedTimes = [];
+                    foreach($period as $p){ // LOOPING ON PERIOD TO CHECK
+                        $plan = new Booking($site->getPrefix());
+                        $plan->setDate($p->format('Y-m-d H:i:s'));
+                        $plans = $plan->findAll();
+                        $currentReservationNumber = 0;
+                        if( $plans && count($plans) > 0){ // CHECK IF THERE IS ALREADY RESERVATIONS ON THIS TIME
+                            foreach( $plans as $plan){ //LOOP ON RESERVATIONS AT THIS TIME
+                                $currentReservationNumber += $plan['number']; //NUMBER OF PEOPLE ALREADY BOOKED
+                            }
+                        }
+                        if( ($currentReservationNumber + $number ) < $bookingSettingsObj->getTotalNumberPerReservation()){//IF WE DONT EXCEED THE MAX NUMBER OF RESERVATION, STOCK IT IN ARRAY
+                            array_push($acceptedTimes, $p);
                         }
                     }
-                    if( ($currentReservationNumber + $number ) < $bookingSettingsObj->getTotalNumberPerReservation()){//IF WE DONT EXCEED THE MAX NUMBER OF RESERVATION, STOCK IT IN ARRAY
-                        array_push($acceptedTimes, $p);
+                    foreach($acceptedTimes as $key => $value){ //CHANGE FORMAT TO GET ACCEPTED BY FRONT
+                        $acceptedTimes[$key] = $value->format('H:i:s');
                     }
-                }
-                foreach($acceptedTimes as $key => $value){ //CHANGE FORMAT TO GET ACCEPTED BY FRONT
-                    $acceptedTimes[$key] = $value->format('H:i:s');
                 }
             }
         }
