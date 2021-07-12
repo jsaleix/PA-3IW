@@ -23,14 +23,21 @@
     var bookPplNumber   = form.elements['number'];
     var bookDate        = form.elements['date'];
     var bookTime        = form.elements['time'];
-    var bookSubmit      = form.elements[form.elements.length - 1]
+    var bookSubmit      = form.elements[form.elements.length - 1];
+
+    bookDate.addEventListener("change", async function() {
+        displaysTimes();
+    });
+
     step1();
 
+    //Step 1: hide inputs / allow to write number of people to book / create nextBtn
     function step1(){
         bookDate.setAttribute('type', 'hidden');
         bookTime.setAttribute('type', 'hidden');
         bookTime.remove();
         bookSubmit.setAttribute('type', 'hidden');
+        bookSubmit.setAttribute('disabled', 'true');
 
         let nextBtn = document.createElement('input');
         nextBtn.setAttribute('id', 'step1');
@@ -40,52 +47,60 @@
         form.append(nextBtn);
     }
 
+    //Step 2: checks number of people
     async function step2(nb){
         let res = await fetchNumber(nb);
         if(!res)
         {
             return;
         }
+        await displaysTimes();
         let nextBtn = document.getElementById('step1');
         if(nextBtn) nextBtn.remove();
         bookPplNumber.setAttribute('type', 'hidden');
         bookDate.setAttribute('type', 'date');
-
-        nextBtn = document.createElement('input');
-        nextBtn.setAttribute('id', 'step2');
-        nextBtn.setAttribute('type', 'button');
-        nextBtn.setAttribute('onclick', 'step3()');
-        nextBtn.value = 'Next 2';
-        form.append(nextBtn);
+        bookSubmit.setAttribute('type', 'submit');
     }
 
-    async function step3(){
+    //displays the available hours each time date selector is changed
+    async function displaysTimes(){
         let chosenDate  = bookDate.value;
         let number      = bookPplNumber.value;
+        eraseOptions();
+        bookSubmit.setAttribute('disabled', 'true');
+
         let res = await fetchHours(chosenDate, number);
         if(!res)
         {
             return;
         }
         let hoursDiv = document.createElement('div');
-        console.log(res.times)
+        hoursDiv.setAttribute('id', 'hours_available');
+
         if(res.times?.length > 0){
             res.times.forEach( time => hoursDiv.append(createTimeInput(time)));
-            form.append(hoursDiv);
+            form.insertBefore(hoursDiv, bookSubmit)
         }else{
             return;
         }
         let nextBtn = document.getElementById('step2');
-        if(nextBtn) nextBtn.remove();
-        bookSubmit.setAttribute('type', 'submit');
+    }
 
+    function timeSelected(){
+        if( bookSubmit.getAttribute('disabled') != 'true') return;
+        bookSubmit.removeAttribute('disabled');
+    }
+
+    function eraseOptions(){
+        let hoursDiv = document.getElementById('hours_available');
+        if(hoursDiv) hoursDiv.remove();
     }
 
     function createTimeInput(item){
         let radio = document.createElement('input');
         radio.setAttribute('type', 'radio');
         radio.setAttribute('name', 'time');
-        radio.setAttribute('value', item );
+        radio.setAttribute('onclick', 'timeSelected()' );
 
         let label = document.createElement('label');
         label.innerHTML = item;
