@@ -86,33 +86,114 @@ class BookingController{
         }
     }
 
-    public function apiCheckPersonNumber($site){
-        $bookingSettingsObj = new Booking_settings($site['prefix']);
-        $bookingSettingsObj->findOne(TRUE);
-        $message;
-        if( $bookingSettingsObj->getEnabled() == 0 || $bookingSettingsObj->getIsSetUp() == 0 ){
-            $code = 422;
-            $message = "Booking is not enabled on this site";
-        }
-        $number = \App\Core\FormValidator::sanitizeData($number);
-        if($bookingSettingsObj->getMaxNumberPerReservation() < $number){
-            $code = 422;
-            $message = "You are trying to reserve for more persons than the restaurant enables. Please follow the instructions on the inputs.";
-        }
-        if( empty($message) ){
-            $code = 200;
-            $message = "Number accepted";
+    public function apiCheckPersonNumberAction($site){
+        if( !empty($_GET)){
+            $bookingSettingsObj = new Booking_settings($site->getPrefix());
+            $bookingSettingsObj->findOne(TRUE);
+            $message;
+            if( $bookingSettingsObj->getEnabled() == 0 || $bookingSettingsObj->getIsSetUp() == 0 ){
+                $code = 422;
+                $errors [] = "Booking is not enabled on this site";
+            }
+            $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
+            if($bookingSettingsObj->getMaxNumberPerReservation() < $number){
+                $code = 422;
+                $errors [] = "You are trying to reserve for more persons than the restaurant enables. Please follow the instructions on the inputs.";
+            }
+            if( empty($errors) ){
+                $code = 200;
+            }
+        } else {
+            $code = 400;
+            $errors [] = "Bad request";
         }
         http_response_code($code);
-        echo json_encode(array('code' => $code, 'message' => $message));
+        if( $code == 200 ){
+            echo json_encode(array('code' => $code));
+        } else {
+            echo json_encode(array('code' => $code, 'errors' => ($errors)));
+        }
+    }
+
+    public function apiGetCalendarAction($site){
+        $today = new \DateTime();
+        $maxDate = new \DateTime();
+        $maxDate->add(new \DateInterval("P1M1D"));
+        $period = new \DatePeriod($today, \DateInterval::createFromDateString('1 day'), $maxDate);
+
+        $bookingPlanningObj = new Booking_planning($site->getPrefix());
+        $plannings = $bookingPlanningObj->findAll();
         
+        $bookingDates = [];
+        $acceptedDates = [];
+
+        foreach( $plannings as $plan){
+            if($plan['disabled'] == 1){
+                array_push($acceptedDates, $plan['id']);
+            }
+        }
+        foreach($period as $p){
+            if( in_array($p->format('N'), $acceptedDates) ){
+                array_push($bookingDates, $p->format('Y-m-d'));
+            }
+        }
+        $code = 200;
+        http_response_code($code);
+        echo json_encode(array('code' => $code, 'dates' => ($bookingDates)));
     }
 
-    public function apiGetCalendar($site){
-        return array();
-    }
+    public function apiGetTimesAction($site){
+        $acceptedTimes = [];
+        $errors = [];
+        if( empty($_GET['date']) || empty($_GET['number'])){
+            $code = 400;
+            $errors [] = "Bad request";
+        }
+        else {
+            $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
+            $date = \DateTime::createFromFormat('Y-m-d', $_GET['date']);
 
-    public function apiGetTimes($site){
-        return array();
+            $bookingSettingsObj = new Booking_settings($site->getPrefix());
+            $bookingSettingsObj->findOne(TRUE);
+
+            $bookingPlanningObj = new Booking_planning($site->getPrefix());
+            $bookingPlanningObj->setId($date->format('N'));
+            $bookingPlanningObj->findOne(TRUE);
+
+            if( $bookingPlanningObj->getDisabled() == 0){//CHECK IF RESTAURANT IS WORKING THIS DAY
+                $errors[] = "We don't work this day, try another one";
+                $code = 422;
+            } else { 
+                $start = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getStart());
+                $end = \DateTime::createFromFormat('Y-m-dH:i:s', $date->format('Y-m-d').$bookingPlanningObj->getEnd());
+                $period = new \DatePeriod($start, \DateInterval::createFromDateString($bookingSettingsObj->getTimePerReservation()."minutes"), $end); 
+                // CREATE A PERIOD FOR FUTURE LOOP WHICH WILL RETURN PLANNINGS THAT CAN BE BOOKED
+
+                $acceptedTimes = [];
+                foreach($period as $p){ // LOOPING ON PERIOD TO CHECK
+                    $plan = new Booking($site->getPrefix());
+                    $plan->setDate($p->format('Y-m-d H:i:s'));
+                    $plans = $plan->findAll();
+                    $currentReservationNumber = 0;
+                    if( $plans && count($plans) > 0){ // CHECK IF THERE IS ALREADY RESERVATIONS ON THIS TIME
+                        foreach( $plans as $plan){ //LOOP ON RESERVATIONS AT THIS TIME
+                            $currentReservationNumber += $plan['number']; //NUMBER OF PEOPLE ALREADY BOOKED
+                        }
+                    }
+                    if( ($currentReservationNumber + $number ) < $bookingSettingsObj->getTotalNumberPerReservation()){//IF WE DONT EXCEED THE MAX NUMBER OF RESERVATION, STOCK IT IN ARRAY
+                        array_push($acceptedTimes, $p);
+                    }
+                }
+                foreach($acceptedTimes as $key => $value){ //CHANGE FORMAT TO GET ACCEPTED BY FRONT
+                    $acceptedTimes[$key] = $value->format('H:i:s');
+                }
+            }
+        }
+        
+        if( empty($errors) ){
+            $code = 200;
+        }
+        http_response_code($code);
+        echo json_encode(array('code' => $code, 'times' => ($acceptedTimes), 'errors' => ($errors)));
     }
 }
