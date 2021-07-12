@@ -100,6 +100,7 @@
         let radio = document.createElement('input');
         radio.setAttribute('type', 'radio');
         radio.setAttribute('name', 'time');
+        radio.setAttribute('value', item);
         radio.setAttribute('onclick', 'timeSelected()' );
 
         let label = document.createElement('label');
