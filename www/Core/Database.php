@@ -119,12 +119,19 @@ class Database
 
 			unset($columns["id"]);
 			foreach($columns as $key => $col){
-				if( empty($col))
+				if( empty($col)){
+					echo "unset : ".$key. "<br>";
+					echo $columns[$key]."<br>";
 					unset($columns[$key]);
+				}
 
 				if($col == 'IS NULL'){
-						$columns[$key] = NULL;
-					}
+					$columns[$key] = NULL;
+				}
+				
+				if($col == 'IS FALSE'){
+					$columns[$key] = 0;
+				}
 			}
 			$setCmd = [];
 			foreach( array_keys($columns) as $field )
@@ -143,7 +150,8 @@ class Database
 				$req .= ' id = ' . $this->getId();
 			}
 
-			echo $req;
+			echo $req."<br>";
+			print_r($columns);
 			$query 	= $this->pdo->prepare($req);
 			$query->execute($columns);
 			return true;

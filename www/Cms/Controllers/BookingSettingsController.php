@@ -22,7 +22,7 @@ class BookingSettingsController{
             $this->setupPlanning($site, $bookingSettingsObj);
             return;
         }
-
+    
         $this->setupCalendar($site, $bookingSettingsObj);//IF EVERY THING IS CHECKED, SHOW THE RESERVATIONS ACTIVES AND WAITING
         return;
         
@@ -238,10 +238,8 @@ class BookingSettingsController{
         $bookingObj = new Booking($site['prefix']);
         $bookingObj->setId($_GET['id']);
         $bookingObj->findOne(TRUE);
-        print_r($bookingObj);
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
             $bookingObj->delete();
-            echo "ah";
         }
         //\App\Core\Helpers::customRedirect('/admin/booking', $site);
         return;
