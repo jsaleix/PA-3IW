@@ -87,7 +87,25 @@ class BookingController{
     }
 
     public function apiCheckPersonNumber($site){
-        return array(bool(true));
+        $bookingSettingsObj = new Booking_settings($site['prefix']);
+        $bookingSettingsObj->findOne(TRUE);
+        $message;
+        if( $bookingSettingsObj->getEnabled() == 0 || $bookingSettingsObj->getIsSetUp() == 0 ){
+            $code = 422;
+            $message = "Booking is not enabled on this site";
+        }
+        $number = \App\Core\FormValidator::sanitizeData($number);
+        if($bookingSettingsObj->getMaxNumberPerReservation() < $number){
+            $code = 422;
+            $message = "You are trying to reserve for more persons than the restaurant enables. Please follow the instructions on the inputs.";
+        }
+        if( empty($message) ){
+            $code = 200;
+            $message = "Number accepted";
+        }
+        http_response_code($code);
+        echo json_encode(array('code' => $code, 'message' => $message));
+        
     }
 
     public function apiGetCalendar($site){
