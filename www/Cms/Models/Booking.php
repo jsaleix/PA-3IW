@@ -63,7 +63,7 @@ class Booking extends CMSModels
                 "action"=>"",
                 "id"=>"booking_form",
                 "class"=>"form-content",
-                "submit"=>"edit",
+                "submit"=>"Book this date",
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[

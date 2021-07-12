@@ -20,10 +20,12 @@ class BookingController{
     public function addBookingAction($site){
         $bookingObj = new Booking($site->getPrefix());
         $bookingSettingsObj = new Booking_settings($site->getPrefix());
+        $bookingSettingsObj->setEnabled(TRUE);
         $bookingPlanningObj = new Booking_planning($site->getPrefix());
         if( !$bookingSettingsObj->findOne(TRUE))
         {
             $view = new View('featureNotAvailable', 'front', $site);
+            $view->assign("pageTitle", "Add a reservation");
             return;
         }
         $form = $bookingObj->form($bookingSettingsObj); //CREATE FORM AND VIEW

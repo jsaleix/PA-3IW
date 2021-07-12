@@ -46,7 +46,7 @@ class BookingSettingsController{
             if( $pdoResult ){
                 $message = "Settings modified !";
                 $view->assign("message", $message);
-                \App\Core\Helpers::customRedirect('/admin/booking/settings', $site);
+                \App\Core\Helpers::customRedirect('/admin/booking/edit/settings', $site);
             } else {
                 $errors[] = "Cannot set these settings";
                 $view->assign("errors", $errors);
