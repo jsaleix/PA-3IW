@@ -85,12 +85,14 @@ class BookingSettingsController{
         $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
         $plans = $planObj->findAll();
         $forms = [];
-        foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
-            $plan = new Planning($site['prefix']);
-            $plan->populate($p);
-            $forms[] = $plan;
+        if( $plans && count($plans) > 0){
+            foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
+                $plan = new Planning($site['prefix']);
+                $plan->populate($p);
+                $forms[] = $plan;
+            }
+            $fieldNumber = count($plans);
         }
-        $fieldNumber = count($plans);
 
         $view = new View('booking', 'back', $site);//CREATE THE VIEW AND FORM TO MODIFY EVERY DAYS'S PLANNING
         $view->assign('pageTitle', "Set up planning");
