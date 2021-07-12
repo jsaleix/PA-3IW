@@ -14,16 +14,16 @@ class BookingSettingsController{
     
     public function manageBookingSettingsAction($site){
         $bookingSettingsObj = new Booking_settings($site['prefix']);
-        if( !$bookingSettingsObj->findOne(TRUE)){
+        if( !$bookingSettingsObj->findOne(TRUE)){//IF THERE IS NO SETTINGS MAKE THE USER SET THEM
             $this->setupSettings($site, $bookingSettingsObj);
             return;
         }
-        if( !$bookingSettingsObj->getIsSetUp()){
+        if( !$bookingSettingsObj->getIsSetUp()){//IF THERE IS SETTINGS BUT NO PLANING, MAKE THE USER SET HIS PLANNING
             $this->setupPlanning($site, $bookingSettingsObj);
             return;
         }
 
-        $this->setupCalendar($site, $bookingSettingsObj);
+        $this->setupCalendar($site, $bookingSettingsObj);//IF EVERY THING IS CHECKED, SHOW THE RESERVATIONS ACTIVES AND WAITING
         return;
         
     }
@@ -33,18 +33,18 @@ class BookingSettingsController{
     }
 
     public function editSettingsAction($site){
-        $bookingSettingsObj = new Booking_settings($site['prefix']);
+        $bookingSettingsObj = new Booking_settings($site['prefix']);//CREATE VIEW AND FORM TO EDIT THE BOOKING SETTINGS
         $formEdit = $bookingSettingsObj->form();
         $view = new View('booking', 'back', $site);
         $view->assign('pageTitle', "Manage the events");
         $view->assign("form", $formEdit);
         if( !empty($_POST)){
-            $errors = FormValidator::check($formEdit, $_POST);
+            $errors = FormValidator::check($formEdit, $_POST);//CHECK AND SANATIZE THE FORM
             if( count($errors) > 0){
                 $view->assign("errors", $errors);
                 return;
             }
-            $pdoResult = $bookingSettingsObj->edit($_POST);
+            $pdoResult = $bookingSettingsObj->edit($_POST);//IF EVERY THING IS OK, SAVE THE SETTINGS
             if( $pdoResult ){
                 $message = "Settings modified !";
                 $view->assign("message", $message);
@@ -57,19 +57,19 @@ class BookingSettingsController{
     }
 
     private function setupSettings($site, $bookingSettingsObj){
-        $form= $bookingSettingsObj->form();
+        $form= $bookingSettingsObj->form();//CREATE VIEW AND FORM TO CREATE THE BOOKING SETTINGS
         $view = new View('booking', 'back', $site);
         $view->assign("form", $form);
         $view->assign('pageTitle', "Set up settings");
         $view->assign("settings", TRUE);
         if( !empty($_POST)){
-            $errors = FormValidator::check($form, $_POST);
+            $errors = FormValidator::check($form, $_POST);//CHECK AND SANATIZE THE FORM
             if( count($errors) > 0){
                 $view->assign("errors", $errors);
                 return;
             }
-            $_POST['enabled'] = 1;
-            $pdoResult = $bookingSettingsObj->populate($_POST, TRUE);
+            $_POST['enabled'] = 1;//CHANGE THE BOOKING SETTINGS TO CREATED
+            $pdoResult = $bookingSettingsObj->populate($_POST, TRUE);//CREATE THE SETTINGS ON DB
             if( $pdoResult ){
                 $message = "Settings added !";
                 $view->assign("message", $message);
@@ -82,38 +82,37 @@ class BookingSettingsController{
     }
 
     private function setupPlanning($site, $bookingSettingsObj){
-        $planObj = new Planning($site['prefix']);
+        $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
         $plans = $planObj->findAll();
         $forms = [];
-        foreach($plans as $p){
+        foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
             $plan = new Planning($site['prefix']);
             $plan->populate($p);
             $forms[] = $plan;
         }
         $fieldNumber = count($plans);
 
-        $view = new View('booking', 'back', $site);
+        $view = new View('booking', 'back', $site);//CREATE THE VIEW AND FORM TO MODIFY EVERY DAYS'S PLANNING
         $view->assign('pageTitle', "Set up planning");
         $view->assign("planning", TRUE);
         $form = $planObj->form($forms);
         $view->assign("f", $form);
         if( !empty($_POST)){
-            $errors = FormValidator::check($form, $_POST);
+            $errors = FormValidator::check($form, $_POST);//CHECK AND SANATIZE THE FORM
             if( count($errors) > 0){
                 $view->assign("errors", $errors);
                 return;
             }
-            $savedPlans = [];
-            $totalPost = count($_POST);
-            $currArray = [];
-            $index = 1;
-            for($i=1; $i<=$totalPost; $i++){
-                if( $i % ( $totalPost/$fieldNumber ) == 0 ){
-                    $planObj = new Planning($site['prefix']);
-                    $currArray = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));
-                    $this->sanatizeAssociativeKeys($currArray, "-".$index);
-                    $currArray[ "id" ] = $index ;
-                    $pdoResult = $planObj->edit($currArray);
+            $savedPlans = [];//CREATE AN ARRAY TO STORE THE MODIFIED PLANNINGS
+            $totalPost = count($_POST);//GET ALL INPUTS THAT CAN BE MODIFIED 
+            $index = 1;//INDEX THAT WILL BE INCREMENTED DEPENDING THE NUMBER OF INPUTS PER OBJECT, STARTS ON ONE FOR DB'S IDS
+            for($i=1; $i<=$totalPost; $i++){//LOOP ON ALL THE MODIFIABLE INPUTS
+                if( $i % ( $totalPost/$fieldNumber ) == 0 ){//EVERY 4 INPUTS(BECAUSE WE HAVE 4 FIELDS MODIFIABLE BY OBJECT)
+                    $planObj = new Planning($site['prefix']);//WE CREATE A NEW PLAN OBJ
+                    $savedPlans = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));//AND SAVE THE 4 INPUTS IN OUR ARRAY
+                    $this->sanatizeAssociativeKeys($savedPlans, "-".$index);//SANATIZE THE DATA OF OUR ARRAY
+                    $savedPlans[ "id" ] = $index ;//SET ARRAY ID TO USE THE EDIT DB FUNCTION
+                    $pdoResult = $planObj->edit($savedPlans);//TRY TO EDIT THE DAY CURRENTLY ASSOCIATED
                     if( !$pdoResult ){
                         $errors = "Booking planning not modified!";
                         $view->assign("errors", $errors);
