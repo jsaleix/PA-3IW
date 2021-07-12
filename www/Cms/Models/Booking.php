@@ -61,7 +61,7 @@ class Booking extends CMSModels
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "id"=>"form_content",
+                "id"=>"booking_form",
                 "class"=>"form-content",
                 "submit"=>"edit",
                 "submitClass"=>"cta-blue width-80 last-sm-elem"

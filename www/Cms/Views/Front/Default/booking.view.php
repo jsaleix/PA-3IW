@@ -19,5 +19,118 @@
 </main>    
     
 <script>
- alert("ceci est un script");
+    var form            = document.getElementById("booking_form");
+    var bookPplNumber   = form.elements['number'];
+    var bookDate        = form.elements['date'];
+    var bookTime        = form.elements['time'];
+    var bookSubmit      = form.elements[form.elements.length - 1]
+    step1();
+
+    function step1(){
+        bookDate.setAttribute('type', 'hidden');
+        bookTime.setAttribute('type', 'hidden');
+        bookTime.remove();
+        bookSubmit.setAttribute('type', 'hidden');
+
+        let nextBtn = document.createElement('input');
+        nextBtn.setAttribute('id', 'step1');
+        nextBtn.setAttribute('type', 'button');
+        nextBtn.setAttribute('onclick', 'step2(' + bookPplNumber.value + ')');
+        nextBtn.value = 'Next';
+        form.append(nextBtn);
+    }
+
+    async function step2(nb){
+        let res = await fetchNumber(nb);
+        if(!res)
+        {
+            //return;
+        }
+        let nextBtn = document.getElementById('step1');
+        if(nextBtn) nextBtn.remove();
+        bookPplNumber.setAttribute('type', 'hidden');
+        bookDate.setAttribute('type', 'date');
+
+        nextBtn = document.createElement('input');
+        nextBtn.setAttribute('id', 'step2');
+        nextBtn.setAttribute('type', 'button');
+        nextBtn.setAttribute('onclick', 'step3()');
+        nextBtn.value = 'Next 2';
+        form.append(nextBtn);
+    }
+
+    async function step3(){
+        let chosenDate = bookDate.value;
+        let res = await fetchDates(chosenDate);
+        if(!res)
+        {
+            //return;
+        }
+        let hoursDiv = document.createElement('div');
+
+        res?.hours.foreach( item => hoursDiv.append(createTimeInput(item)));
+        
+        let nextBtn = document.getElementById('step2');
+        if(nextBtn) nextBtn.remove();
+        bookSubmit.setAttribute('type', 'submit');
+
+    }
+
+    function createTimeInput(item){
+        let radio = document.createElement('input');
+        radio.setAttribute('type', 'radio');
+        radio.setAttribute('name', 'time');
+        radio.setAttribute('value', item );
+
+        let label = document.createElement('label');
+        label.innerHTML = item;
+
+        let radioDiv = document.createElement('div');
+        radioDiv.append(radio);
+        radioDiv.append(label);
+        return radioDiv;
+    }
+
+    async function fetchNumber(value){
+        try{
+            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/getFilters?id=' + value, 
+            {
+                method: 'GET',
+                headers:{
+                    'Content-type': 'application/x-www-form-urlencoded'
+                },
+            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ res.json();}})
+            if(res?.code === 200){
+                return true;
+            }else{
+                throw new Error('Wrong response code');
+            }
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+    }
+
+
+    async function fetchDates(value){
+        console.log('looking ' + value)
+        try{
+            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/getFilters?id=' + value, 
+            {
+                method: 'GET',
+                headers:{
+                    'Content-type': 'application/x-www-form-urlencoded'
+                },
+            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ res.json();}})
+            if(res?.code === 200){
+                return true;
+            }else{
+                throw new Error('Wrong response code');
+            }
+        }catch(e){
+            console.error(e);
+            return false;
+        }
+    }
+
 </script>
