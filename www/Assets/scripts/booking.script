@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `client` INT NOT NULL,
     `date` DATETIME NOT NULL,
+    `number` INT NOT NULL,
     `status` INT NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     INDEX `fk_booking_client_idx` (`client` ASC),

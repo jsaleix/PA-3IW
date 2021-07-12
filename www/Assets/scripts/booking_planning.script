@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking_planning` (
   `start` TIME NOT NULL,
   `end` TIME NOT NULL,
   `notes` VARCHAR(255) DEFAULT NULL,
+  `disabled` TINYINT NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_booking_planning_day_:X`
     UNIQUE (day)
-  )
+  );

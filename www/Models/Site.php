@@ -191,7 +191,7 @@ class Site extends Model
         $dir = basename(__DIR__) . '/../Assets/scripts';
         clearstatcache();
         $sqlFiles = array(
-            'dish_category', 'dish', 'booking', 'booking_settings', 'booking_planning', 'category', 'page', 'medium', 'post', 'content', 'comment', 'menu', 'menu_dish_association', 'post_medium_association'
+            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 'menu', 'menu_dish_association', 'post_medium_association'
         );
 
         foreach($sqlFiles as $file)
@@ -210,7 +210,7 @@ class Site extends Model
                 $table = file_get_contents($dir . '/'.$table.'.script');
                 $script = str_replace($toReplace, $replaceBy, $table);
                 $create = $this->createTable($script);
-                if(!$create){ echo $table; return false; }
+                if(!$create){ echo '<br>' .  $table; return false; }
             }
             $insert = new Page();
             $insert->setName('home');
