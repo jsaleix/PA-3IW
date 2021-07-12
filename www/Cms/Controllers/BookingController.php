@@ -153,7 +153,7 @@ class BookingController{
             $number = \App\Core\FormValidator::sanitizeData($_GET['number']);
             $date = \DateTime::createFromFormat('Y-m-d', $_GET['date']);
             $today = new \DateTime();
-            if($date < $today){
+            if($date <= $today){
                 $code = 422;
                 $errors[] = "Enter a valid date";
             }else {

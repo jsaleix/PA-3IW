@@ -44,7 +44,7 @@
         let res = await fetchNumber(nb);
         if(!res)
         {
-            //return;
+            return;
         }
         let nextBtn = document.getElementById('step1');
         if(nextBtn) nextBtn.remove();
@@ -60,15 +60,20 @@
     }
 
     async function step3(){
-        let chosenDate = bookDate.value;
-        let res = await fetchDates(chosenDate);
+        let chosenDate  = bookDate.value;
+        let number      = bookPplNumber.value;
+        let res = await fetchHours(chosenDate, number);
         if(!res)
         {
-            //return;
+            return;
         }
         let hoursDiv = document.createElement('div');
-
-        res?.hours.foreach( item => hoursDiv.append(createTimeInput(item)));
+        console.log(res);
+        if(res.times?.length > 0){
+            res.times.foreach( time => hoursDiv.append(createTimeInput(time)));
+        }else{
+            return;
+        }
         
         let nextBtn = document.getElementById('step2');
         if(nextBtn) nextBtn.remove();
@@ -93,13 +98,14 @@
 
     async function fetchNumber(value){
         try{
-            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/getFilters?id=' + value, 
+            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/booking/number?number=' + value, 
             {
                 method: 'GET',
                 headers:{
                     'Content-type': 'application/x-www-form-urlencoded'
                 },
-            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ res.json();}})
+            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ return res.json();}});
+
             if(res?.code === 200){
                 return true;
             }else{
@@ -112,18 +118,20 @@
     }
 
 
-    async function fetchDates(value){
-        console.log('looking ' + value)
+    async function fetchHours(date, number){
+        console.log('date= ' + date);
+        console.log('time= ' + number);
         try{
-            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/getFilters?id=' + value, 
+            let res = await fetch('<?=DOMAIN?>/site/<?=$this->site->getSubDomain()?>/ent/api/booking/time?date=' + date +'&number=' + number, 
             {
                 method: 'GET',
                 headers:{
                     'Content-type': 'application/x-www-form-urlencoded'
                 },
-            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ res.json();}})
+            }).then( (res) => { if(res?.status === 200 && res?.redirected != true){ return res.json();}})
+
             if(res?.code === 200){
-                return true;
+                return res;
             }else{
                 throw new Error('Wrong response code');
             }
