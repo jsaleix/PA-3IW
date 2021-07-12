@@ -29,8 +29,7 @@
 				<img class="logoHead" src="/Assets/images/logo_black.png"/>
 			</div>
 			<div class="nameMenu">
-				<p>John Doe</p>
-				<img class="avatar" src="https://png.pngtree.com/png-vector/20190710/ourlarge/pngtree-user-vector-avatar-png-image_1541962.jpg"/>
+				<?= CMS\Core\UserRenderer::render() ?>
 			</div>
 		</div>
 		<main>
