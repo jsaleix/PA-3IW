@@ -59,7 +59,7 @@ class Booking_planning extends CMSModels
         return $this->disabled;
     }
 
-    public function individualInput(){
+    public function individualInput(){//CREATE AND INPUT ASSOCIATED TO THE ID IN DB
         return [
             "day-".$this->getId()=>[
                 "type"=>"text",
@@ -113,7 +113,7 @@ class Booking_planning extends CMSModels
             ]
         ];
     }
-    public function form($forms){
+    public function form($forms){//GET AN ARRAY OF INPUTS TO CREATE A FORM WITH ALL THE INPUTS
         $inputs = [];
         foreach($forms as $form){
             $inputs = array_merge($inputs, $form->individualInput());

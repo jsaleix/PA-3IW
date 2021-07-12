@@ -27,11 +27,6 @@
             </div>
         </div>
     <?php endif;?>
-    
-    <?php if( !empty( $calendar ) && $calendar == true ):?>
-        <p>Calendar</p>
-    <?php endif;?>
-
 </div>
 
 

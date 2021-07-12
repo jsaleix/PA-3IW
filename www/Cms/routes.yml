@@ -99,6 +99,26 @@
   controller: bookingSettingsController
   action: manageBookingSettings
 
+/booking/settings:
+  controller: bookingSettingsController
+  action: editSettings
+
+/booking/planning:
+  controller: bookingSettingsController
+  action: editPlannings
+
+/booking/front:
+  controller: bookingController
+  action: addBooking
+
+/booking/accept:
+  controller: bookingSettingsController
+  action: acceptBooking
+
+/booking/decline:
+  controller: bookingSettingsController
+  action: declineBooking
+
 /settings:
   controller: sitecontroller
   action: editsite
@@ -176,3 +196,15 @@
 /ent/menu:
   controller: menuController
   action: renderMenu
+
+/ent/api/booking/number:
+  controller: bookingController
+  action: apiCheckPersonNumber
+
+/ent/api/booking/calendar:
+  controller: bookingController
+  action: apiGetCalendar
+
+/ent/api/booking/time:
+  controller: bookingController
+  action: apiGetTimes

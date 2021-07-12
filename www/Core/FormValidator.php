@@ -13,7 +13,11 @@ class FormValidator
 			return $errors;
 		}
 		unset($data["CSRF"]);
-
+		foreach ($form["inputs"] as $name => $configInput) {
+			if( !empty($configInput["disabled"])){
+				unset($form["inputs"][$name]);
+			}
+		}
 		if( count($data) == count($form["inputs"])){
 			foreach ($form["inputs"] as $name => $configInput) {
 				if($configInput["type"] == "radio" &&
@@ -73,6 +77,14 @@ class FormValidator
 					){
 						$errors[] = $configInput["label"]."\' doit faire moins de ". $configInput["maxLength"] . " caractères";
 
+					}
+				
+				
+				if( $configInput["type"] == "number" &&
+					!empty($configInput["max"]) && 
+					is_numeric($configInput["max"]) &&
+					$data[$name] > $configInput["max"]){
+						$errors[] = "Le maximum pour le champ ".$configInput["label"]." acceptée est de ".$configInput["max"];
 					}
 
 				if($configInput["type"] == "email" && 
