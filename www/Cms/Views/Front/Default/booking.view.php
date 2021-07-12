@@ -68,13 +68,13 @@
             return;
         }
         let hoursDiv = document.createElement('div');
-        console.log(res);
+        console.log(res.times)
         if(res.times?.length > 0){
-            res.times.foreach( time => hoursDiv.append(createTimeInput(time)));
+            res.times.forEach( time => hoursDiv.append(createTimeInput(time)));
+            form.append(hoursDiv);
         }else{
             return;
         }
-        
         let nextBtn = document.getElementById('step2');
         if(nextBtn) nextBtn.remove();
         bookSubmit.setAttribute('type', 'submit');
