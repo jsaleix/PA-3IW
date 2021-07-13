@@ -6,4 +6,5 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Booking_settings` (
   `maxNumberPerReservation` INT NOT NULL,
   `available` TINYINT NOT NULL DEFAULT TRUE,
   `notes` VARCHAR(255) DEFAULT NULL,
+  `isSetUp` TINYINT NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`))

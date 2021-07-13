@@ -101,7 +101,7 @@ class BookingSettingsController{
             $bsObj->save();
             $message = "Booking planning created !";
             $view->assign("message", $message);
-            \App\Core\Helpers::customRedirect('/admin/booking/planning', $site);
+            \App\Core\Helpers::customRedirect('/admin/booking/edit/planning', $site);
             return;
         }
     }
