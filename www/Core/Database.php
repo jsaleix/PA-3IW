@@ -116,20 +116,19 @@ class Database
 							get_object_vars($this),
 							get_class_vars(get_class())
 						);
-
-			unset($columns["id"]);
+						
+			unset($columns["id"]);;
 			foreach($columns as $key => $col){
 				if( empty($col)){
-					echo "unset : ".$key. "<br>";
-					echo $columns[$key]."<br>";
 					unset($columns[$key]);
+					unset($col);
 				}
 
-				if($col == 'IS NULL'){
+				if( !empty($col) && $col == 'IS NULL'){
 					$columns[$key] = NULL;
 				}
 				
-				if($col == 'IS FALSE'){
+				if( !empty($col) && $col == 'IS FALSE'){
 					$columns[$key] = 0;
 				}
 			}
@@ -149,9 +148,6 @@ class Database
 				if(count($setCmd) > 0) $req .= ' AND ';
 				$req .= ' id = ' . $this->getId();
 			}
-
-			echo $req."<br>";
-			print_r($columns);
 			$query 	= $this->pdo->prepare($req);
 			$query->execute($columns);
 			return true;
