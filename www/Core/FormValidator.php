@@ -156,7 +156,7 @@ class FormValidator
 	}
 
 	public static function verifyFileSize($file){
-		if($file["size"] > 500000)
+		if($file["size"] > 1000000)
 			return false;
 		return true;
 	}
