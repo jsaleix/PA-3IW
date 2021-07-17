@@ -2,6 +2,8 @@
 
 namespace CMS\Controller;
 use App\Core\FileUploader;
+use App\Core\FormBuilder;
+use App\Core\FormValidator;
 
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
@@ -61,11 +63,10 @@ class DishController{
 	}
 
 	public function createDishAction($site){
-		$dishObj = new Dish($site['prefix']);
-
+		$dishObj 	= new Dish($site['prefix']);
 		$dishCatObj = new DishCategory($site['prefix']);
 		$dishCategories = $dishCatObj->findAll();
-		$dishCatArr = [];
+		$dishCatArr 	= [];
 		
 		if($dishCategories){
 			foreach($dishCategories as $item){
@@ -79,43 +80,32 @@ class DishController{
 		$view->assign('pageTitle', "Add a dish");
 
 		if(!empty($_POST) ) {
-			$errors = [];
+			try{
+				$errors = [];
 
-			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-			[ "image" => $image ] = $_FILES;
+				[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
+				[ "image" => $image ] = $_FILES;
 
-			if(!empty($name) && !is_null($name)){
-
-				if(isset($image) && !empty($image) && $image['size'] != 0){
-
-					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-
-					$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
-					$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
-
-					$imgName = $site['subDomain'] . '_' . $imgTmpName;
-					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-
-					if($isUploaded != false){
-						$image = $isUploaded;
-					}else{
-						$image = null;
-					}
-				}else{
-					$image = null;
+				$form = $dishObj->formAdd();
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if(count($errors) != 0){ 
+					$errors[] = 'Form not accepted';
+					throw new \Exception('Form not accepted'); 
 				}
-				
-				$dishCat = ($dishCat == 0) ? null : $dishCat ;
-				$dishObj->setName($name);
-				$dishObj->setImage($image);
-				$dishObj->setDescription($description);
-				$dishObj->setPrice($price);
-				$dishObj->setCategory($dishCat);
-				$dishObj->setNotes($notes);
-				$dishObj->setAllergens($allergens);
-				$dishObj->setIsActive($isActive??1);
 
-				$adding = $dishObj->save();
+				$imgDir 	= "/uploads/cms/" . $site['subDomain'] . "/dishes/";
+				$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+				$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
+				$imgName 	= $site['subDomain'] . '_' . $imgTmpName;
+				$image = FileUploader::uploadImage($image, $imgName, $imgDir);
+				if( !$image ){ 
+					$errors[] = 'Invalid or missing image';
+					throw new \Exception('Invalid or missing image'); 
+				}
+
+				$data["image"] = $image;
+				$adding = $dishObj->populate($data, TRUE);
 
 				if($adding){
 					$message ='Dish successfully added!';
@@ -124,7 +114,11 @@ class DishController{
 					$errors[] = "Cannot insert this dish";
 					$view->assign("errors", $errors);
 				}
+
+			}catch(\Exception $e){
+				$view->assign("errors", $errors);
 			}
+			$_POST = array();
 		}
 
 	}

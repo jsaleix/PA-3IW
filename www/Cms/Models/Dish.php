@@ -114,7 +114,7 @@ class Dish extends CMSModels
 		}*/
 	}
 
-	public function formAdd($dishCategoryArr){
+	public function formAdd(){
         return [
 
             "config"=>[
@@ -128,7 +128,7 @@ class Dish extends CMSModels
             ],
             "inputs"=>[
 				"image"=>[ 
-                    "type"=>"file",
+                    "type"=>"file-img",
                     "label"=>"image",
                     "id"=>"image",
                     "class"=>"input-file",
@@ -165,7 +165,6 @@ class Dish extends CMSModels
 					"label"=>"Category associated",
 					"id"=>"category",
 					"class"=>"input-category-select",
-					"options" => $dishCategoryArr,
                 ],
                 "notes"=>[ 
 					"type"=>"text",

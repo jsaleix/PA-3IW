@@ -162,6 +162,9 @@ class FormValidator
 	}
 	public static function verifyFileType($file){
 		$type = explode("/", $file["type"]);
+		if(!isset($type[1])){ 
+			return false; 
+		}
 		if( $type[1] != "png" && $type[1] != "jpg" && $type[1] != "jpeg")
 			return false;
 		return true;
