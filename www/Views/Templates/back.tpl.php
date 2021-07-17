@@ -11,10 +11,7 @@
 </head>
 
 <body>
-	<header>
-		<h1>Template du back</h1>
-	</header>
-
+	
 	<?php include $this->view ;?>
 
 </body>

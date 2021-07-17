@@ -14,7 +14,6 @@
 
 <body>
 
-
 	<?php include $this->view ;?>
 
 </body>
