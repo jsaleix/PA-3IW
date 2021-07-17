@@ -82,22 +82,22 @@ class SiteController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 	public function render($siteObj, $filter = null){
+		$site = $siteObj->findOne();
 
-		if(!empty($site->getCreator()))
+		if(!empty($siteObj->getCreator()))
         {
 			$userObj = new User();
-			$userObj->setId($site->getCreator());
+			$userObj->setId($siteObj->getCreator());
         	$creator = $userObj->findOne();
 			if($creator){
-				$site->setCreator($creator['firstname'] . " " . $creator['lastname']);
+				$site['creator'] = $creator['firstname'] . " " . $creator['lastname'];
 			}else{
-				$site->setCreator('Unknown');
+				$site['creator'] = 'Unknown';
 			}
 		}
-        
+
 		$view = new View('about', 'front', $siteObj);
 		$view->assign('pageTitle', 'About our restaurant');
 		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));

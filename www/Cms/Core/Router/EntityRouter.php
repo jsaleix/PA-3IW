@@ -25,21 +25,8 @@ class EntityRouter extends Router implements RouterInterface
 			$requestedPage = $url[1];
 
 			$siteObj->setSubDomain($domain);
-			$site = $siteObj->findOne();
-
-			if(empty($site->getId()) || !$site){
-				throw new \Exception('This site does not exist');
-			}
-
-			$siteObj->setId($site->getId());
-			$siteObj->setName($site->getName());
-			$siteObj->setDescription($site['description']);
-			$siteObj->setImage($site['image']);
-			$siteObj->setCreator($site->getCreator());
-			$siteObj->setSubDomain($site->getSubDomain());
-			$siteObj->setPrefix($site->getPrefix());
-			$siteObj->setType($site['type']);
-			$siteObj->setTheme($site->getTheme());
+			$siteCheck = $siteObj->findOne(TRUE);
+			if(!$siteCheck){ throw new \Exception('This site does not exist'); }
 
 			$uri = array_slice($url, 1);
 			if(empty($uri[0])){

@@ -16,7 +16,7 @@
             <img src="<?= $imgLink ?>"/>
         </div>
         <div class="col-6 col-sm-12 info-right">
-            <h1><?= $site->getName()?></h1>
+            <h1><?= $site['name']?></h1>
             <p class="info-type"><?= $site['type'] ?></p>
             <p class="info-description"><?= $site['description']?></p>
             <br/>

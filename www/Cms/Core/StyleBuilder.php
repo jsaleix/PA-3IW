@@ -14,7 +14,7 @@ class StyleBuilder
         $theme = "Default";
 
         if(gettype($site) == "array"){
-            $theme = $site->getTheme();
+            $theme = $site['theme'];
         }else if(gettype($site) === "object"){
             $theme = $site->getTheme();
         }
@@ -32,7 +32,7 @@ class StyleBuilder
         $theme = "Default";
 
         if(gettype($site) == "array"){
-            $theme = $site->getTheme();
+            $theme = $site['theme'];
         }else if(gettype($site) === "object"){
             $theme = $site->getTheme();
         }
