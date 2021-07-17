@@ -29,7 +29,7 @@ class ActionController{
             }
             $actionObj = '\\CMS\Models\\'.ucfirst($action['filters']);
             $obj = new $actionObj();
-            $obj->setPrefix($site['prefix']);
+            $obj->setPrefix($site->getPrefix());
             $items = $obj->findAll();
 
             $code = 200;

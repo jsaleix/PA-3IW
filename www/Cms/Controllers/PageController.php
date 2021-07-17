@@ -26,17 +26,17 @@ class PageController{
 	}
 
 	public function managePagesAction($site){
-		$pageObj = new Page($site['prefix']);
+		$pageObj = new Page($site->getPrefix());
 		$pages = $pageObj->findAll();
 		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'main page', 'visible in navigation', 'edit', 'delete', 'see', 'copyLink'];
 		$datas = [];
 
-		$contentObj = new Content($site['prefix']);
+		$contentObj = new Content($site->getPrefix());
 
 		$actionObj 	= new Action();
 		$userObj 	= new User();
 
-		$categoryObj = new Category($site['prefix']);
+		$categoryObj = new Category($site->getPrefix());
 
 		foreach($pages as $item){
 			if($item['category'] !== NULL){
@@ -87,7 +87,7 @@ class PageController{
 	}
 
 	public function createPageAction($site){
-		$pageObj = new Page($site['prefix']);
+		$pageObj = new Page($site->getPrefix());
 		$actionObj = new Action();
 		$actions = $actionObj->findAll();
 		$actionArr = [];
@@ -151,7 +151,7 @@ class PageController{
 			exit();
 		}
 
-		$pageObj = new Page($site['prefix']);
+		$pageObj = new Page($site->getPrefix());
 		$pageObj->setId($_GET['id']??0);
 		$page = $pageObj->findOne();
 		if(!$page){
@@ -159,7 +159,7 @@ class PageController{
 			exit();
 		}
 
-		$contentObj = new Content($site['prefix']);
+		$contentObj = new Content($site->getPrefix());
 		$contentObj->setPage($_GET['id']);
 		$content = $contentObj->findOne();
 
@@ -172,7 +172,7 @@ class PageController{
 			}
 		}
 
-		$categoryObj = new Category($site['prefix']);
+		$categoryObj = new Category($site->getPrefix());
 		$category = $categoryObj->findAll();
 		$categoryArr = array();
 		$categoryArr[] = 'None';
@@ -192,7 +192,7 @@ class PageController{
 		$view = new View('page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit a page");
-        $view->assign('subDomain', $site['subDomain']);
+        $view->assign('subDomain', $site->getSubDomain());
 		if(!empty($_POST) )
 		{
 			unset($_POST["filters_hidden"]);
@@ -236,7 +236,7 @@ class PageController{
 	public function deletePageAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('page not set');}
-			$pageObj = new Page($site['prefix']);
+			$pageObj = new Page($site->getPrefix());
 			$pageObj->setId($_GET['id']??0);
 			$page = $pageObj->findOne();
 
