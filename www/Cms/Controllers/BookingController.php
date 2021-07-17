@@ -14,7 +14,7 @@ use App\Core\Security;
 class BookingController{
 
     public function manageBookingsAction($site){
-        $bookingObj = new Booking($site['prefix']);
+        $bookingObj = new Booking($site->getPrefix());
     }
 
     public function addBookingAction($site){

@@ -102,7 +102,7 @@ class PageController{
 		$view = new View('page', 'back', $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add a page");
-        $view->assign('subDomain', $site['subDomain']);
+        $view->assign('subDomain', $site->getSubDomain());
 
 		if(!empty($_POST) )
 		{

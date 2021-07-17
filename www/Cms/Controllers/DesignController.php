@@ -9,8 +9,7 @@ use App\Models\Site as Site;
 class DesignController{
 
     public function defaultAction($site){
-        $siteObj = new Site();
-        $siteObj->setId($site['id']);
+        $siteObj = $site;
 
         $themes = [];
         $thumbnails = [];
@@ -26,7 +25,7 @@ class DesignController{
         $form = $siteObj->formThemeEdit($themes);
 
         if(!empty($_POST)){
-            if(($_POST['theme'] !== $site['theme']) && array_search($_POST['theme'], $themes)){
+            if(($_POST['theme'] !== $site->getTheme()) && array_search($_POST['theme'], $themes)){
                 $siteObj->setTheme($_POST['theme']);
                 $siteObj->save();
                 $site = $siteObj->findOne();
@@ -34,13 +33,13 @@ class DesignController{
             
         }
 
-        foreach (glob("Cms/Views/Front/".$site['theme']."/Thumbnails/*") as $thumbnail){
+        foreach (glob("Cms/Views/Front/".$siteObj->getTheme()."/Thumbnails/*") as $thumbnail){
             $imageFileType = strtolower(pathinfo($thumbnail,PATHINFO_EXTENSION));
             if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif")
                 array_push($thumbnails, $thumbnail);
         } 
 
-        $view->assign("site", $site);
+        $view->assign("site", $siteObj);
         $view->assign("form", $form);
         $view->assign("thumbnails", $thumbnails);
     }

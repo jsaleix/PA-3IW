@@ -26,17 +26,17 @@ class DynamicRouter extends Router implements RouterInterface
 
 			$siteObj->setSubDomain($domain);
 			$site = $siteObj->findOne();
-			if(empty($site['id']) || !$site){ throw new \Exception('This site does not exist'); }
+			if(empty($site->getId()) || !$site){ throw new \Exception('This site does not exist'); }
 
-			$siteObj->setId($site['id']);
-			$siteObj->setName($site['name']);
+			$siteObj->setId($site->getId());
+			$siteObj->setName($site->getName());
 			$siteObj->setDescription($site['description']);
 			$siteObj->setImage($site['image']);
-			$siteObj->setCreator($site['creator']);
-			$siteObj->setSubDomain($site['subDomain']);
-			$siteObj->setPrefix($site['prefix']);
+			$siteObj->setCreator($site->getCreator());
+			$siteObj->setSubDomain($site->getSubDomain());
+			$siteObj->setPrefix($site->getPrefix());
 			$siteObj->setType($site['type']);
-			$siteObj->setTheme($site['theme']);
+			$siteObj->setTheme($site->getTheme());
 			$siteObj->setInstagram($site['instagram']);
 			$siteObj->setFacebook($site['facebook']);
 			$siteObj->setTwitter($site['twitter']);
