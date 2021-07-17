@@ -204,11 +204,21 @@ class BookingSettingsController{
             $accepted['data'] = [];
             if($booking){
                 foreach($booking as $item){
-                    $client = new User();
-                    $client->setId($item['client']);
-                    $client->findOne(TRUE);
-                    $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] . "'";
-                    $accepted['data'][] = $formalized;
+                    $date  = new \DateTime($item["date"]);
+                    $today = new \DateTime();
+                    if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
+                    {
+                        $bookDate = new Booking($site->getPrefix());
+                        $bookDate->setId($item['id']);
+                        $bookDate->setStatus(2);
+                        $bookDate->save();
+                    }else{
+                        $client = new User();
+                        $client->setId($item['client']);
+                        $client->findOne(TRUE);
+                        $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] . "'";
+                        $accepted['data'][] = $formalized;
+                    }
                 }
             }
         //----//
