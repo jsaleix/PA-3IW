@@ -11,28 +11,55 @@
         </div>
     </div>
 
-    <a href="<?= \App\Core\Helpers::renderCMSLink( "admin/booking/edit/settings", $this->site)?>">Modify the settings</a>
-    <a href="<?= \App\Core\Helpers::renderCMSLink( "admin/booking/edit/planning", $this->site)?>">Modify the planning</a>
+    <a href="<?= \App\Core\Helpers::renderCMSLink( "admin/booking/edit/settings", $this->site)?>"><button>Modify the settings</button></a>
+    <a href="<?= \App\Core\Helpers::renderCMSLink( "admin/booking/edit/planning", $this->site)?>"><button>Modify the planning</button></a>
+    <a href="<?= \App\Core\Helpers::renderCMSLink( "admin/booking/history", $this->site)?>"><button>Records</button></a>
     <div class="col-12 col-sm-12 col-md-12 col-xl-12">
+        <section>
+            <h2>Pending</h2>
             <div class="col-inner">
-                <table id="data" class="display" width="100%"></table>
+                <table id="pending" class="display" width="100%"></table>
             </div>
-        </div>
+        <section>
+
+        <section>
+            <h2>Accepted</h2>
+            <div class="col-inner">
+                <table id="accepted" class="display" width="100%"></table>
+            </div>
+        <section>
     </div>
 </div>
 
 <script>
-    var dataSet = [
-        <?php foreach($datas as $data):?>
+    var pendingDataSet = [
+        <?php foreach($pendings['data'] as $data):?>
                 [ <?=$data?> ],
         <?php endforeach;?>
         ];
     
     $(document).ready(function() {
-        $('#data').DataTable( {
-            data: dataSet,
+        $('#pending').DataTable( {
+            data: pendingDataSet,
             columns: [
-                <?php foreach($fields as $field):?>
+                <?php foreach($pendings['fields'] as $field):?>
+                { title: "<?=$field?>" },
+                <?php endforeach;?>
+            ]
+        } );
+    } );
+
+    var acceptedDataSet = [
+        <?php foreach($accepted['data'] as $data):?>
+                [ <?=$data?> ],
+        <?php endforeach;?>
+        ];
+    
+    $(document).ready(function() {
+        $('#accepted').DataTable( {
+            data: acceptedDataSet,
+            columns: [
+                <?php foreach($accepted['fields'] as $field):?>
                 { title: "<?=$field?>" },
                 <?php endforeach;?>
             ]

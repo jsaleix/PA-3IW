@@ -3,9 +3,9 @@
 namespace CMS\Controller;
 
 use App\Core\FormValidator;
+use App\Models\User;
 
 use CMS\Core\CMSView as View;
-
 use CMS\Models\Booking;
 use CMS\Models\Booking_settings;
 use CMS\Models\Booking_planning as Planning;
@@ -194,25 +194,51 @@ class BookingSettingsController{
 
     private function setupCalendar($site, $bookingSettingsObj){
         $bookingObj = new Booking($site->getPrefix());//TRY TO FIND RESERVATIONS FOR THE RESTAURANT
-        $bookingObj->setStatus("IS FALSE");
-        $booking = $bookingObj->findAll();
 
-        $fields = [ 'client', 'date', 'number', 'accept', 'delete' ];
-		$datas = [];
-
-        if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
-            foreach($booking as $item){
-                $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
-                $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
-                $buttonAccept = '<a href="' . $accept . '">Go</a>';
-                $buttonDelete = '<a href="' . $decline . '">Go</a>';
-                $formalized = "'" . $item['client'] . "','" . $item['date'] . "','" . $item['number'] .  "','" . $buttonAccept . "','" . $buttonDelete . "'";
-				$datas[] = $formalized;
+        //Get all the accepted bookings date
+            $bookingObj->setStatus(1);
+            $booking = $bookingObj->findAll();
+        
+            $accepted = [];
+            $accepted['fields'] = [ 'client', 'date', 'number' ];
+            $accepted['data'] = [];
+            if($booking){
+                foreach($booking as $item){
+                    $client = new User();
+                    $client->setId($item['client']);
+                    $client->findOne(TRUE);
+                    $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] . "'";
+                    $accepted['data'][] = $formalized;
+                }
             }
-        }
+        //----//
+
+        //Get all the pending bookings date
+            $bookingObj->setStatus("IS FALSE");
+            $booking = $bookingObj->findAll();
+
+            $pendings = [];
+            $pendings['fields'] = [ 'client', 'date', 'number', 'accept', 'delete' ];
+            $pendings['data'] = [];
+
+            if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
+                foreach($booking as $item){
+                    $client = new User();
+                    $client->setId($item['client']);
+                    $client->findOne(TRUE);
+                    $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
+                    $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
+                    $buttonAccept = '<a href="' . $accept . '">Go</a>';
+                    $buttonDelete = '<a href="' . $decline . '">Go</a>';
+                    $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] .  "','" . $buttonAccept . "','" . $buttonDelete . "'";
+                    $pendings['data'][] = $formalized;
+                }
+            }
+        //----//
+
         $view = new View('booking.list', 'back', $site);
-		$view->assign("fields", $fields);
-		$view->assign("datas", $datas);
+		$view->assign("pendings", $pendings);
+		$view->assign("accepted", $accepted);
 		$view->assign('pageTitle', "Manage the comments");
         $view->assign('calendar', true);
     }
@@ -228,6 +254,7 @@ class BookingSettingsController{
             $bookingObj->setStatus(1);
             $bookingObj->save();
         }
+        \App\Core\Helpers::customRedirect('/admin/booking', $site);
     }
 
     public function deleteBookingAction($site){//CHECK IF AN ID IS GIVEN
