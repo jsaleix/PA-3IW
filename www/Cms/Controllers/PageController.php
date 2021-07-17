@@ -11,6 +11,7 @@ use CMS\Models\Category;
 
 use CMS\Core\CMSView as View;
 use App\Core\FormValidator;
+use App\Core\Security;
 
 class PageController{
 
@@ -111,7 +112,7 @@ class PageController{
 				$errors = FormValidator::check($form, $_POST);
 				if(count($errors) != 0){ throw new \Exception('Form not accepted'); }
 				$errors = [];
-
+				$pageObj->setCreator(Security::getUser());
 				$pageObj->populate($_POST, FALSE);
 				[ "action" => $action, "filters" => $filters, "main" => $main ] = $_POST;
 
