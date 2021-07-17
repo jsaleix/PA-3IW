@@ -266,7 +266,7 @@ class DishController{
 
 		$dishObj = new Dish($site->getPrefix());
 		$dishObj->setId($_GET['id']);
-		$dishObj->setIsActive(1);
+		//$dishObj->setIsActive(1);
         $dish = $dishObj->findOne();
         if(!$dish){
             return 'No content found :/';
