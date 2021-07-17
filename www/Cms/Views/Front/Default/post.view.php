@@ -11,10 +11,7 @@
             <?php if($post['allowComment']):?>
                 <hr/>
                 <?php if($canPostComment): ?>
-                    <form action="" method="POST">
-                        <input name="message" class="input input-100 comment-input" placeholder="Write a comment"/>
-                        <button type="submit" class="btn comment-btn">Publish</button>
-                    </form>
+                    <?php App\Core\FormBuilder::render($commentForm)?>    
                 <?php endif;?>
             <?php endif;?>
 

@@ -71,6 +71,34 @@ class Comment extends CMSModels
         $this->date = $date;
     }
 
+    public function form(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"form-content",
+                "submit"=>"Publish",
+                "submitClass"=>"btn comment-btn",
+            ],
+            "inputs"=>[
+                "message"=>[ 
+                    "type"=>"text",
+                    "label"=>"message",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"title",
+                    "class"=>"input input-100 comment-input",
+                    "placeholder"=>"Write a comment",
+                    "error"=>"The title cannot be empty!",
+                    "required"=>true,
+                ],
+            ]
+
+        ];
+    }
+
 }
 
 

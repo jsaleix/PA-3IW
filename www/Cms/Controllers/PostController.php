@@ -167,7 +167,6 @@ class PostController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 	public function renderList($site, $filter = null){
 		$postObj = new Post($site->getPrefix());
@@ -195,8 +194,9 @@ class PostController{
 		$view->assign('posts', $tmp_posts);
 	}
 
-	//$site is an instance of Site
 	public function renderPostAction($site, $filter = null){
+		$view = new View('post', 'front',  $site);
+		//Checks if the methode is called as an action of the site or as an entity
 		if(!empty($filter)){
             $filter = json_decode($filter, true);
             if(isset($filter['post'])){
@@ -210,9 +210,10 @@ class PostController{
 			return 'article not set ';
 		}
 
+		$errors = [];
 		$user = Security::getUser();
-        $userObj = new User();
 
+        $userObj 	= new User();
 		$commentObj = new Comment($site->getPrefix());
 
 		$postObj = new Post($site->getPrefix());
@@ -222,7 +223,7 @@ class PostController{
             return 'No content found :/';
         }
 		
-		/* Retrieve post author */
+		// Retrieve post author
 		if(!empty($post['publisher']))
         {
 			$userObj->setId($post['publisher']);
@@ -232,21 +233,34 @@ class PostController{
 			$post['author'] = 'Unknown';
 		}
 
-		#if the admin allows the post to get commented
+		//if the admin allows the post to get comments
 		if($post['allowComment'] === 1){
 			$commentObj->setIdPost($postId);
-
-			if(isset($_POST['message']) && !empty($_POST['message']) && $user)
+			$form = $commentObj->form();
+			if($_POST)
 			{
-				$commentObj->setMessage($_POST['message']);
-				$commentObj->setIdUser($user);
-				$commentPublished = $commentObj->save();
-				if(!$commentPublished){
-					$errors[] = 'Your comment could not be published';
-				} else {
-					$commentObj->setMessage(null);
-					$commentObj->setIdUser(null);
+				if($user)
+				{
+					try{
+						$errors = FormValidator::check($form, $_POST); //CHECK AND SANATIZE FORM
+						if( count($errors) > 0){
+							throw new \Exception('Invalid data');
+						}
+	
+						$commentObj->setIdUser($user);
+						$commentPublished = $commentObj->populate($_POST, TRUE);
+						if(!$commentPublished){
+							$errors[] = 'Your comment could not be published';
+						}
+	
+						$commentObj->setMessage(null);
+						$commentObj->setIdUser(null);
+						
+					}catch(\Exception $e){}
+				}else{
+					$errors[] = 'You must be logged in to comment a post';
 				}
+				
 			}
 	
 			$comments = $commentObj->findAll();
@@ -266,14 +280,14 @@ class PostController{
 			} 
 		}
 		
-		$errors = [];
-
-		$view = new View('post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
 		$view->assign('canPostComment', !Security::getUser() == 0 );
+		if($post['allowComment'] && !(Security::getUser() == 0)){
+			$view->assign('commentForm', $form );
+		}
 		$view->assign('comments', $comments??[]);
 
 	}
