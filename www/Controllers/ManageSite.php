@@ -72,7 +72,7 @@ class ManageSite{
                
             case 'test':
                 $site = new Site();
-                $site->setSubDomain('menu');
+                $site->setSubDomain('si');
                 $result = $site->findOne();
                 if( $result )
                     self::returnJson("subDomain", 460);

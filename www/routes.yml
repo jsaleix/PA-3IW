@@ -79,6 +79,11 @@
   action: displayRoles
   middleware: isAdmin
 
+/admin/role/create:
+  controller: Admin
+  action: createRole
+  middleware: isAdmin
+
 /admin/role:
   controller: Admin
   action: editrole

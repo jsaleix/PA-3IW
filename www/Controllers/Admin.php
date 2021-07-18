@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\FormValidator;
+use App\Core\FileUploader;
 
 use App\Models\User;
 use App\Models\Role;
@@ -152,11 +153,59 @@ class Admin{
 				$datas[] = $formalized;
 			}
 		}
+		$createBtn = '<a href="/admin/role/create"><button>New</button></a>';
 
 		$view = new View('back/list', 'back');
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the roles");
+		$view->assign("button", $createBtn);
+	}
+
+	public function createRoleAction(){
+		$roleObj = new Role();
+
+		$form = $roleObj->formCreate();
+
+		$view = new View('back/form', 'back');
+		$view->assign('pageTitle', "Edit a role");
+		$view->assign("form", $form);
+		if(!empty($_POST))
+		{
+			try{
+
+				$errors = [];
+
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if( count($errors) > 0){
+					$view->assign("errors", $errors);
+					throw new \Exception("Invalid form");
+					return;
+				}
+				if(isset($data['description']) && strlen($data['description']) == 0){
+					$data['description'] = 'IS NULL';
+				}
+
+				$icon = $_FILES['icon'];
+				if(!empty($icon['name']) && strlen($icon['name']) > 0){
+					throw new \Exception("icon missing");
+				}
+
+				$saving = $roleObj->populate($data, TRUE);
+				if(!$saving){
+					throw new \Exception("Could not create the role");
+				}else{
+					\App\Core\Helpers::customRedirect('/admin/roles?success');
+				}
+			
+			}catch(\Exception $e){
+				$message = "Could not create this role!";
+				$view->assign("message", $message);
+				return;
+			}
+		}
+
 	}
 
 	public function editRoleAction(){
@@ -170,29 +219,54 @@ class Admin{
 			\App\Core\Helpers::customRedirect('/admin/roles?error');
 		}
 
-		$form = $roleObj->formEdit($role);
+		$form = $roleObj->formEdit();
 
 		$view = new View('back/form', 'back');
 		$view->assign('pageTitle', "Edit a role");
 		$view->assign("form", $form);
-		if(!empty($_POST)){
-			$errors = [];
-			$errors = FormValidator::check($form, $_POST);
-			if( count($errors) > 0){
-				$view->assign("errors", $errors);
-				return;
-			}
-			if(isset($_POST['description']) && strlen($_POST['description']) == 0){
-				$_POST['description'] = 'IS NULL';
-			}
 
-			$saving = $roleObj->populate($_POST, TRUE);
-			if(!$saving){
+		if(!empty($_POST)){
+			try{
+				$errors = [];
+
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if( count($errors) > 0){
+					$view->assign("errors", $errors);
+					throw new \Exception("Could not save the changes");
+				}
+
+				if(isset($data['description']) && strlen($data['description']) == 0){
+					$data['description'] = 'IS NULL';
+				}
+
+				$icon = $_FILES['icon'];
+				if(!empty($icon['name']) && strlen($icon['name']) > 0)
+				{
+					$imgDir = "/uploads/main/icons/roles/";
+					$imgName = (new \DateTime())->format("Ymd_Hisu");
+					$isUploaded = FileUploader::uploadImage($_FILES["icon"], $imgName, $imgDir);
+					if( !$isUploaded ){ 
+						$errors[] = 'Invalid or missing image';
+						throw new \Exception('Invalid or missing image'); 
+					}
+					$data["icon"] = $isUploaded;
+				}else{
+					$data['icon'] = null;
+				}
+
+				$saving = $roleObj->populate($data, TRUE);
+
+				if(!$saving){
+					throw new \Exception("Could not save the changes");
+				}else{
+					\App\Core\Helpers::customRedirect('/admin/roles?success');
+				}
+			}catch(\Exception $e){
 				$message = "Could not update this role!";
 				$view->assign("message", $message);
+				$e->getMessage();
 				return;
-			}else{
-				\App\Core\Helpers::customRedirect('/admin/roles?success');
 			}
 		}
 
