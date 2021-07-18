@@ -211,6 +211,8 @@ class PageController{
 				if($filters && is_numeric($filters)){
 					$contentAction = json_encode(array( $check['filters'] => $filters));
 					$pageObj->setFilters(($contentAction));
+				}else{
+					$pageObj->setFilters('IS NULL');
 				}
 				$adding = $pageObj->save();
 
