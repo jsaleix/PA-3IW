@@ -197,32 +197,37 @@ class PostController{
 	public function renderPostAction($site, $filter = null){
 		$view = new View('post', 'front',  $site);
 		//Checks if the methode is called as an action of the site or as an entity
-		if(!empty($filter)){
-            $filter = json_decode($filter, true);
-            if(isset($filter['post'])){
-                $postId = $filter['post'];
-            }else{
-                return;
-            }
-		}else if(isset($_GET['id']) && !empty($_GET['id']) ){
-			$postId = $_GET['id'];
-		}else{
-			return 'article not set ';
+		try{
+			if(!empty($filter)){
+				$filter = json_decode($filter, true);
+				if(isset($filter['post'])){
+					$postId = $filter['post'];
+				}else{
+                    throw new \Exception('Filter is not set');
+				}
+			}else if(isset($_GET['id']) && !empty($_GET['id']) ){
+				$postId = $_GET['id'];
+			}else{
+				throw new \Exception('article is not set');
+			}
+
+			$errors = [];
+			$user = Security::getUser();
+
+			$userObj 	= new User();
+			$commentObj = new Comment($site->getPrefix());
+
+			$postObj = new Post($site->getPrefix());
+			$postObj->setId($postId);
+			$post = $postObj->findOne();
+			if(!$post){
+				throw new \Exception('Post not found');
+			}
+		}catch(\Exception $e){
+			$view->assign('notFound', true);
+			$view->assign('pageTitle', 'Not found');
+			return 'No content found :/';	
 		}
-
-		$errors = [];
-		$user = Security::getUser();
-
-        $userObj 	= new User();
-		$commentObj = new Comment($site->getPrefix());
-
-		$postObj = new Post($site->getPrefix());
-		$postObj->setId($postId);
-        $post = $postObj->findOne();
-        if(!$post){
-			\App\Core\Helpers::customRedirect('/', $site);
-            return 'No content found :/';
-        }
 		
 		// Retrieve post author
 		if(!empty($post['publisher']))

@@ -276,32 +276,40 @@ class MenuController{
 	}
 
     public function renderMenuAction($site, $filter = null){
-        if($filter){
-            $filter = json_decode($filter, true);
-            if(isset($filter['menu'])){
-                $menuId = $filter['menu'];
+        $view = new View('menu', 'front', $site);
+        try{
+            $error = false;
+            if($filter){
+                $filter = json_decode($filter, true);
+                if(isset($filter['menu'])){
+                    $menuId = $filter['menu'];
+                }else{
+                    throw new \Exception('No menu set');
+                }
+            }else if(isset($_GET['id']) && !empty($_GET['id']) ){
+                $menuId = $_GET['id'];
             }else{
-                return;
+                throw new \Exception('No id set');
             }
-        }else if(isset($_GET['id']) && !empty($_GET['id']) ){
-            $menuId = $_GET['id'];
-		}else{
-			return 'menu id not set ';
-        }
 
-        $menuObj = new Menu();
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishCatObj = new DishCategory();
+            $menuObj = new Menu();
+            $dishMenuAssocObj = new Menu_dish_association();
+            $dishCatObj = new DishCategory();
 
-        $dishesData = [];
-        
-        $menuObj->setPrefix($site->getPrefix());
-		$menuObj->setId($menuId);
-        $menu = $menuObj->findOne();
+            $dishesData = [];
+            
+            $menuObj->setPrefix($site->getPrefix());
+            $menuObj->setId($menuId);
+            $menu = $menuObj->findOne();
 
-        if(!$menu){
-            header('location: '.DOMAIN);
-            exit();
+
+            if(!$menu){
+                throw new \Exception('Menu not found');
+            }
+        }catch(\Exception $e){
+            $view->assign('notFound', true);
+            $view->assign('pageTitle', 'Not found');
+            return; 
         }
 
         $dishMenuAssocObj->setPrefix($site->getPrefix());
@@ -329,7 +337,6 @@ class MenuController{
                 }
             }
         }
-		$view = new View('menu', 'front', $site);
 		$view->assign('pageTitle', 'MENU ' . $menu['name']);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
         $view->assign('menu', $menu);

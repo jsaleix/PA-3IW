@@ -255,24 +255,24 @@ class DishController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 
-	//$site is an instance of Site
 	public function renderDishAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'dish id not set ';
 		}
+		$view = new View('dish', 'front', $site);
 
 		$dishObj = new Dish($site->getPrefix());
 		$dishObj->setId($_GET['id']);
-		//$dishObj->setIsActive(1);
-        $dish = $dishObj->findOne();
+		$dish = $dishObj->findOne();
+		
         if(!$dish){
+			$view->assign('notFound', true);
+			$view->assign('pageTitle', 'Not found');
             return 'No content found :/';
         }
 
-		$view = new View('dish', 'front', $site);
 		$view->assign('pageTitle', 'Dishes available');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('dish', $dish);

@@ -1,20 +1,26 @@
 <section id="menu-page-section">
-    <h2>Menu <?= $menu['name'] ?></h2>
-    <?php if(isset($dishes) && $dishes && count($dishes) > 0): ?>
-        <?php foreach($dishes as $dish): ?>
-            <div class="dish-container">
-                <div class="dish-img-div">
-                    <img class="dish-picture" src='<?=  DOMAIN . '/' . $dish['image'] ?>'/>
-                </div>
-                <div class="dish-data">
-                    <h2><a href="<?=$baseUrl?>/ent/dish?id=<?=$dish['id']?>"><?= $dish['name'] ?></a></h2>
-                    <h3>#<?= $dish['category']?></h3>
-                    <p><?=$dish['description']?></p>
-                </div>
-            </div>
-        <?php endforeach;?>
-    <?php endif; ?>
+    <?php if(!isset($notFound)): ?>
 
+        <h2>Menu <?= $menu['name'] ?></h2>
+        <?php if(isset($dishes) && $dishes && count($dishes) > 0): ?>
+            <?php foreach($dishes as $dish): ?>
+                <div class="dish-container">
+                    <div class="dish-img-div">
+                        <img class="dish-picture" src='<?=  DOMAIN . '/' . $dish['image'] ?>'/>
+                    </div>
+                    <div class="dish-data">
+                        <h2><a href="<?=$baseUrl?>/ent/dish?id=<?=$dish['id']?>"><?= $dish['name'] ?></a></h2>
+                        <h3>#<?= $dish['category']?></h3>
+                        <p><?=$dish['description']?></p>
+                    </div>
+                </div>
+            <?php endforeach;?>
+        <?php endif; ?>
+    <?php else: ?>
+        <h1>Menu not Found :/</h1>
+        <hr/>
+        <p>Sorry, we're unable to find the menu you're looking for.</p>
+    <?php endif; ?>
 </section>
 
 <style>
