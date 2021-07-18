@@ -51,7 +51,7 @@ class Main{
 			$fields = [ 'img', 'name', 'creation date', 'visit' ];
 			$datas = [];
 			foreach($sites as $item){
-				$visitBtn = '<a target="-blank" href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
+				$visitBtn = '<a target="_blank" href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
 				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/y H:i:s');
 				$formalized = "'" . $img . "','" . $item['name'] . "','" . $item['creationDate'] . "','" . $visitBtn . "'";
