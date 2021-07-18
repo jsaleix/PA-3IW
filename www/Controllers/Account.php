@@ -19,7 +19,7 @@ class Account{
 		$userObj->setId(Secu::getUser());
 		$userObj->findOne(TRUE);
 
-		$view = new View('front/account', 'front');
+		$view = new View('front/account', 'back');
 
 		$form = $userObj->formEdit();
 
@@ -76,7 +76,7 @@ class Account{
 		$userObj->setId(Secu::getUser());
 		$userObj->findOne(TRUE);
 
-		$view = new View('front/account.pwd', 'front');
+		$view = new View('front/account.pwd', 'back');
 		$form = $userObj->formPwd();
 		$view->assign("form", $form);
 
@@ -127,7 +127,7 @@ class Account{
 		$ownedSites = $siteObj->findAll();
 		if($ownedSites){
 			$datas = [];
-			$fields = [ 'id', 'version', 'name', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
+			$fields = [ 'id', 'version', 'name', 'subDomain', 'creation date', 'type', 'visit','edit' ];
 			foreach($ownedSites as $item){
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
@@ -135,7 +135,7 @@ class Account{
 				$editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';
                 $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
+				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $formalized;
 			}
 			$lists[] = array( "title" => "Sites you own", "datas" => $datas, "id" => "owned_sites", "fields" => $fields );
@@ -153,7 +153,7 @@ class Account{
 				$sites[] = $siteObj->findOne();
 			}
 		}
-		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
+		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'type', 'visit','edit' ];
 		$datas = [];
 
 		if($sites == true){
@@ -162,15 +162,15 @@ class Account{
                 $creator = $userObj->findOne();
 				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				$editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';
-                $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
+                $creatorBtn = '<a href="/profile?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" .$creatorBtn .  "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
+				$formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" .$creatorBtn .  "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $formalized;
 			}
 		}
 		$lists[] = array( "title" => "Sites you are whitelisted on", "datas" => $datas, "id" => "shared_sites", "fields" => $fields );
 		//var_dump($lists[1]);
-		$view = new View('front/list.account', 'front');
+		$view = new View('front/list.account', 'back');
 		$view->assign("lists", $lists);
 		$view->assign('pageTitle', "Manage the sites");
 	}

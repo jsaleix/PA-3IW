@@ -58,4 +58,16 @@ class Security
 		}
 		return $roleObj;
 	}
+
+	public function isAdmin(){
+		if(!self::getUser()) return false;
+		$role = self::getRole();
+		if(!$role) return false;
+		$roleObj = new Role();
+		$roleObj->setId($role->getId());
+		$roleObj->setIsAdmin(1);
+		$exists = $roleObj->findOne();
+		if(!$exists) return false;
+		return true;
+	}
 }

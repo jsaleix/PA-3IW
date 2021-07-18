@@ -16,7 +16,7 @@ class Admin{
 	public function defaultAction(){
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
-		$view = new View('back/default', 'back');
+		$view = new View('back/default', 'admin');
 		$view->assign('pageTitle', "Dashboard");
 		$view->assign('content', $html);
 	}
@@ -42,7 +42,7 @@ class Admin{
 		}
 		//$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
-		$view = new View('back/list', 'back');
+		$view = new View('back/list', 'admin');
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the sites");
@@ -62,7 +62,7 @@ class Admin{
 		}
 		$form = $siteObj->formEdit($site);
 
-		$view = new View('back/form', 'back');
+		$view = new View('back/form', 'admin');
 		$view->assign('pageTitle', "Manage a site");
 		$view->assign("form", $form);
 	}
@@ -80,7 +80,7 @@ class Admin{
 			exit();
 		}
 		$siteObj = new Site();
-		$view = new View('back/form', 'back');
+		$view = new View('back/form', 'admin');
 
 		##########
 		/*update process here */
@@ -130,7 +130,7 @@ class Admin{
 		}
 		//$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
-		$view = new View('back/list', 'back');
+		$view = new View('back/list', 'admin');
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the users");
@@ -155,7 +155,7 @@ class Admin{
 		}
 		$createBtn = '<a href="/admin/role/create"><button>New</button></a>';
 
-		$view = new View('back/list', 'back');
+		$view = new View('back/list', 'admin');
 		$view->assign("fields", $fields);
 		$view->assign("datas", $datas);
 		$view->assign('pageTitle', "Manage the roles");
@@ -167,7 +167,7 @@ class Admin{
 
 		$form = $roleObj->formCreate();
 
-		$view = new View('back/form', 'back');
+		$view = new View('back/form', 'admin');
 		$view->assign('pageTitle', "Edit a role");
 		$view->assign("form", $form);
 		if(!empty($_POST))
@@ -229,7 +229,7 @@ class Admin{
 
 		$form = $roleObj->formEdit();
 
-		$view = new View('back/form', 'back');
+		$view = new View('back/form', 'admin');
 		$view->assign('pageTitle', "Edit a role");
 		$view->assign("form", $form);
 
