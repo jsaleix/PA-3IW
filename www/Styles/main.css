@@ -2961,3 +2961,113 @@ main {
   transition: 0.5s;
   transform: scale(1.02);
 }
+
+
+.btn {
+  display: flex;
+  margin: 5px;
+  border: none;
+  color: white;
+  background-color: #2DC091;
+  font-size: 16px;
+  padding: 0.5em;
+  padding-left: 2em;
+  padding-right: 2em;
+  transition: 0.5s;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-light {
+  color: #2DC091;
+  border: 1px solid #2DC091;
+  background-color: transparent;
+}
+
+.btn:hover {
+  transition: 0.5s;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.input {
+  width: 30%;
+  background-color: transparent;
+  border: 1px solid #2DC091;
+  color: black;
+  padding: 0.8em;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-weight: normal;
+  outline: none;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.input-100 {
+  width: 100%;
+}
+
+.input::-moz-placeholder {
+  color: #959595;
+}
+
+.input:-ms-input-placeholder {
+  color: #959595;
+}
+
+.input::placeholder {
+  color: #959595;
+}
+
+.input-select:disabled option {
+  color: #959595;
+}
+
+.input-select:hover {
+  cursor: pointer;
+}
+
+.input-banner-container {
+  display: flex;
+  flex-direction: column;
+  border: 4px solid #2DC091;
+}
+
+.input-banner-container img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  aspect-ratio: 0.93;
+}
+
+.input-banner-container label {
+  width: 100%;
+  color: white;
+  background: #2DC091;
+  padding: 1em;
+  font-size: 16px;
+  text-align: center;
+  transition: 0.5s;
+}
+
+.input-banner-container label:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  color: #325348;
+}
+
+.input-banner-container input {
+  display: none;
+}
+
+.form-account{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-account .btn{
+  width: 100%;
+}

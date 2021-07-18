@@ -1,6 +1,7 @@
 <nav class="homepage-nav" style="background-color: #2DC091;">
     <ul>
         <li><a href="/">HOME</a></li>
+        <li><a href="/account">MY ACCOUNT</a></li>
         <li><a href="/logout">LOGOUT</a></li>
     </ul>
     <img alt="logo" src="/Assets/images/logo-easymeal.png"/>

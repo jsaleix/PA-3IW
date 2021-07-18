@@ -171,7 +171,10 @@ class FormBuilder
 			}else{
 
 				$html .= '<img src="'. $configInput['value'] .'"/>';
+
 			}
+		}elseif(!empty($configInput["type"]) && $configInput["type"] === 'file-img' && (empty($configInput["value"]) || is_null($configInput["value"]))){
+			$html .= '<img src="'. DOMAIN . "/Assets/images/default.png" .'"/>';
 		}
 
 		$html .= '<label for="'.($configInput['id']??"").'">'.($configInput['label']??"").'</label>

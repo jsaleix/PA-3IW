@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Site;
 use App\Models\Whitelist;
 
+use App\Core\Helpers; 
+
 class Account{
 
 
@@ -39,8 +41,9 @@ class Account{
 					$newUser = new User();
 					$newUser->setEmail(htmlspecialchars($data['email']));
 					if($newUser->findOne()){
-						$errors[] = "Mail already taken";
-						$view->assign("errors", $errors);
+						$message = "Mail already taken";
+						$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+
 						throw new \Exception('Invalid mail');
 					}
 				}
@@ -53,14 +56,14 @@ class Account{
 					$data['avatar'] = $isUploaded ? $isUploaded : null;
 				}
 
-				if(  $userObj->populate($data, TRUE) ){
+				if($userObj->populate($data, TRUE)){
 					$message = "Profile successfully updated!";
-					$view->assign("message", $message);
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
 					$form = $userObj->formEdit();
 
 				} else {
-					$errors[] = "Cannot update your profile";
-					$view->assign("errors", $errors);
+					$message = "Cannot update your profile";
+					$view->assign("alert", Helpers::displayAlert("error", $message, 3500));
 				}
 			}catch(\Exception $e){
 				//echo $e->getMessage();
@@ -104,10 +107,12 @@ class Account{
 				$userObj->setPwd($newPwd);
 				if($userObj->save()){
 					$message = "Password successfully updated!";
-					$view->assign("message", $message);
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+
 				} else {
-					$errors[] = "Cannot update your profile";
-					$view->assign("errors", $errors);
+					$message = "Cannot update your profile";
+					$view->assign("alert", Helpers::displayAlert("error",$message,3500));
+
 				}
 			}catch(\Exception $e){
 				echo $e->getMessage();
