@@ -220,6 +220,7 @@ class PostController{
 		$postObj->setId($postId);
         $post = $postObj->findOne();
         if(!$post){
+			\App\Core\Helpers::customRedirect('/', $site);
             return 'No content found :/';
         }
 		
