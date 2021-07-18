@@ -17,7 +17,9 @@
                     <div class="site">
                         <h1><?= $data['name'] ?></h1>
                         <p><?= $data['subDomain'] ?>.easymeal.cooking</p>
-                        <p>Owner: <a href="/profile?id=<?=$data['creator']['id']?>"><?= $data['creator']['firstname'].' '. $data['creator']['lastname']?></a></p>
+                        <?php if(gettype($data['creator']) == 'array'): ?>
+                            <p>Owner: <a href="/profile?id=<?=$data['creator']['id']?>"><?= $data['creator']['firstname'].' '. $data['creator']['lastname']?></a></p>
+                        <?php endif;?>
                         <p>Creation date: <?= $data['creationDate'] ?></p>
                         <div class="row">
                             <a target="_blank" href="<?= DOMAIN . "/site/" . $data['subDomain']?>" class="site-btn">VISIT</a>
