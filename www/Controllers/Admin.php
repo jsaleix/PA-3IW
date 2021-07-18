@@ -172,25 +172,31 @@ class Admin{
 		$view->assign("form", $form);
 		if(!empty($_POST))
 		{
+			$errors = [];
 			try{
-
-				$errors = [];
 
 				$data = array_merge($_POST, $_FILES);
 				$errors = FormValidator::check($form, $data);
 				if( count($errors) > 0){
 					$view->assign("errors", $errors);
 					throw new \Exception("Invalid form");
-					return;
 				}
 				if(isset($data['description']) && strlen($data['description']) == 0){
 					$data['description'] = 'IS NULL';
 				}
 
 				$icon = $_FILES['icon'];
-				if(!empty($icon['name']) && strlen($icon['name']) > 0){
+				if(empty($icon['name']) || strlen($icon['name']) == 0){
 					throw new \Exception("icon missing");
 				}
+				$imgDir = "/uploads/main/icons/roles/";
+				$imgName = (new \DateTime())->format("Ymd_Hisu");
+				$isUploaded = FileUploader::uploadImage($icon, $imgName, $imgDir);
+				if( !$isUploaded ){ 
+					$errors[] = 'Invalid or missing image';
+					throw new \Exception('Invalid or missing image'); 
+				}
+				$data["icon"] = $isUploaded;
 
 				$saving = $roleObj->populate($data, TRUE);
 				if(!$saving){
@@ -200,6 +206,8 @@ class Admin{
 				}
 			
 			}catch(\Exception $e){
+				$errors[] = $e->getMessage();
+				$view->assign("errors", $errors);
 				$message = "Could not create this role!";
 				$view->assign("message", $message);
 				return;
