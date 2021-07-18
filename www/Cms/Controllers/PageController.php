@@ -237,6 +237,9 @@ class PageController{
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('page not set');}
 			$pageObj = new Page($site->getPrefix());
+			$pages = $pageObj->findAll();
+			if(!$pages){ throw new \Exception('Site pages not found'); }
+			if(count($pages)<2){ throw new \Exception('Cannot delete the only page left'); }
 			$pageObj->setId($_GET['id']??0);
 			$page = $pageObj->findOne();
 

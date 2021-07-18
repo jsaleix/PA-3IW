@@ -223,6 +223,7 @@ class Site extends Model
             $insert->setName('home');
             $insert->setPrefix($this->prefix);
             $insert->setCreator(Security::getUser());
+            $insert->setMain(1);
             $insert->save();
 
             FileUploader::createCMSDirs($this->subDomain);
