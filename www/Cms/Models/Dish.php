@@ -41,7 +41,9 @@ class Dish extends CMSModels
 	}
 
     public function setImage($image){
-		$this->image = $image;
+		if(gettype($image) == 'string'){
+			$this->image = $image;
+		}
 	}
 
 	public function getImage(){
@@ -114,7 +116,7 @@ class Dish extends CMSModels
 		}*/
 	}
 
-	public function formAdd($dishCategoryArr){
+	public function formAdd(){
         return [
 
             "config"=>[
@@ -128,7 +130,7 @@ class Dish extends CMSModels
             ],
             "inputs"=>[
 				"image"=>[ 
-                    "type"=>"file",
+                    "type"=>"file-img",
                     "label"=>"image",
                     "id"=>"image",
                     "class"=>"input-file",
@@ -165,7 +167,6 @@ class Dish extends CMSModels
 					"label"=>"Category associated",
 					"id"=>"category",
 					"class"=>"input-category-select",
-					"options" => $dishCategoryArr,
                 ],
                 "notes"=>[ 
 					"type"=>"text",
@@ -190,7 +191,7 @@ class Dish extends CMSModels
         ];
     }
 
-	public function formEdit($content, $categoryArr){
+	public function formEdit($categoryArr = null){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -208,7 +209,7 @@ class Dish extends CMSModels
                     "id"=>"image",
                     "class"=>"input-file",
                     "required"=>false,
-					"value"=> $content['image']
+					"value"=> $this->image
                 ],
                 "name"=>[ 
                     "type"=>"text",
@@ -220,7 +221,7 @@ class Dish extends CMSModels
                     "placeholder"=>"New dish",
                     "error"=>"The title cannot be empty!",
                     "required"=>true,
-					"value"=> $content['name']
+					"value"=> $this->name
                 ],
                 
 				"description"=>[ 
@@ -228,8 +229,8 @@ class Dish extends CMSModels
 					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input-description",
-					"options" => $categoryArr,
-					"value"=> $content['description']
+					//"options" => $categoryArr,
+					"value"=> $this->description
                 ],
                 "price"=>[ 
 					"type"=>"text",
@@ -237,7 +238,7 @@ class Dish extends CMSModels
 					"id"=>"price",
 					"class"=>"input-price",
 					"options" => $categoryArr,
-					"value"=> $content['price']
+					"value"=> $this->price
                 ],
                 "category"=>[ 
 					"type"=>"select",
@@ -245,7 +246,7 @@ class Dish extends CMSModels
 					"id"=>"category",
 					"class"=>"input-category-select",
 					"options" => $categoryArr,
-					"value"=> $content['category']
+					"value"=> $this->category
                 ],
                 "notes"=>[ 
 					"type"=>"text",
@@ -253,7 +254,7 @@ class Dish extends CMSModels
 					"id"=>"notes",
 					"class"=>"input-notes",
 					"options" => $categoryArr,
-					"value"=> $content['notes']
+					"value"=> $this->notes
                 ],
                 "allergens"=>[ 
 					"type"=>"text",
@@ -261,7 +262,7 @@ class Dish extends CMSModels
 					"id"=>"allergens",
 					"class"=>"input-allergens",
 					"options" => $categoryArr,
-					"value"=> $content['allergens']
+					"value"=> $this->allergens
                 ]
             ]
         ];

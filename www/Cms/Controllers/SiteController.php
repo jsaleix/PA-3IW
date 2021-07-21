@@ -21,8 +21,7 @@ class SiteController{
 	}
 
 	public function editSiteAction($site){
-		$siteObj = new Site();
-        $siteObj->setId($site['id']);
+		$siteObj = $site;
 		$view = new View('create', 'back', $site);
 
 		if(!empty($_POST) ) {
@@ -31,7 +30,7 @@ class SiteController{
 
 			if($name || $description || $type ){
 				if(isset($image)){
-					$imgDir = "/uploads/cms/" . $site['subDomain'] . '/';
+					$imgDir = "/uploads/cms/" . $site->getSubDomain() . '/';
 					$imgName = 'banner';
 					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
 					
@@ -59,7 +58,7 @@ class SiteController{
 			}
 		}
 
-		$form = $siteObj->formEdit($site);
+		$form = $siteObj->formEdit();
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
 
@@ -69,12 +68,12 @@ class SiteController{
 
 	public function deleteSiteAction($site){
 		$siteObj = new Site();
-		$siteObj->setPrefix($site['prefix']);
+		$siteObj->setPrefix($site->getPrefix());
 		$site = $siteObj->findOne();
 		if(!$site){
 			return;
 		}
-		if( $site['creator'] != Security::getUser()){
+		if( $site->getCreator() != Security::getUser()){
 			return;
 		}
 		$siteObj->deleteTables();
@@ -83,16 +82,14 @@ class SiteController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 	public function render($siteObj, $filter = null){
-		$site = $siteObj->returnData();
+		$site = $siteObj->findOne();
 
-
-		if(!empty($site['creator']))
+		if(!empty($siteObj->getCreator()))
         {
 			$userObj = new User();
-			$userObj->setId($site['creator']);
+			$userObj->setId($siteObj->getCreator());
         	$creator = $userObj->findOne();
 			if($creator){
 				$site['creator'] = $creator['firstname'] . " " . $creator['lastname'];
@@ -100,7 +97,7 @@ class SiteController{
 				$site['creator'] = 'Unknown';
 			}
 		}
-        
+
 		$view = new View('about', 'front', $siteObj);
 		$view->assign('pageTitle', 'About our restaurant');
 		$view->assign("style", StyleBuilder::renderStyle($siteObj->returnData()));

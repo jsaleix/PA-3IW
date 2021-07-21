@@ -23,7 +23,7 @@ class Site extends Model
 	protected $prefix;
     protected $type;
     protected $theme;
-
+    protected $creationDate;
     protected $address;
     protected $phoneNumber;
     protected $emailPro;
@@ -45,6 +45,13 @@ class Site extends Model
         $this->id = $id;
     }
     
+    public function setCreationDate($creationDate){
+        $this->creationDate = $creationDate;
+    }
+
+    public function getCreationDate(){
+        return $this->creationDate;
+    }
 
     public function getTheme()
     {
@@ -216,6 +223,7 @@ class Site extends Model
             $insert->setName('home');
             $insert->setPrefix($this->prefix);
             $insert->setCreator(Security::getUser());
+            $insert->setMain(1);
             $insert->save();
 
             FileUploader::createCMSDirs($this->subDomain);
@@ -264,7 +272,7 @@ class Site extends Model
     }
 
 
-    public function formContactEdit($content){
+    public function formContactEdit(){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -278,7 +286,7 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Phone Number",
-                    "value"=>$content['phoneNumber']
+                    "value"=> $this->phoneNumber
                 ],
                 "action"=>[
                     "type"=>"hidden",
@@ -288,19 +296,19 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Email",
-                    "value"=>$content['emailPro']
+                    "value"=> $this->emailPro
                 ],
                 "address"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Restaurant address",
-                    "value"=>$content['address']
+                    "value"=> $this->address
                 ],
             ]
         ];
     }
 
-    public function formSocialEdit($content){
+    public function formSocialEdit(){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -318,19 +326,19 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Instagram (Account link)",
-                    "value"=>$content['instagram']
+                    "value"=>$this->instagram
                 ],
                 "twitter"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Twitter (Account link)",
-                    "value"=>$content['twitter']
+                    "value"=>$this->twitter
                 ],
                 "facebook"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Facebook (Page link)",
-                    "value"=>$content['facebook']
+                    "value"=>$this->facebook
                 ],
             ]
         ];
@@ -338,7 +346,7 @@ class Site extends Model
 
     
 
-    public function formEdit($content){
+    public function formEdit(){
         return [
 
             "config"=>[
@@ -361,7 +369,7 @@ class Site extends Model
                     "placeholder"=>"Website name",
                     "error"=>"The name cannot be empty!",
                     "required"=>true,
-					"value"=> $content['name']
+					"value"=> $this->name
                 ],
 				"description"=>[ 
 					"type"=>"text",
@@ -370,7 +378,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The description cannot be empty!",
 					"required"=> false,
-					"value"=> $content['description']
+					"value"=> $this->description
                 ],
                 "type"=>[ 
 					"type"=>"text",
@@ -380,7 +388,7 @@ class Site extends Model
                     "placeholder"=>"Restaurant food type",
                     "error"=>"The type cannot be empty!",
 					"required"=> false,
-					"value"=> $content['type'],
+					"value"=> $this->type,
                 ],
 				"image"=>[ 
 					"type"=>"file-img",
@@ -389,7 +397,7 @@ class Site extends Model
 					"class"=>"input-file",
                     "error"=>"",
 					"required"=> false,
-					"value"=> $content['image']
+					"value"=> $this->image
                 ],
                 "subDomain"=>[ 
 					"type"=>"text",
@@ -398,7 +406,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The subDomain cannot be empty!",
 					"required"=> false,
-					"value"=> $content['subDomain'],
+					"value"=> $this->subDomain,
                     "disabled" => true
                 ],
                 "creationDate"=>[ 
@@ -409,7 +417,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The creationDate cannot be empty!",
 					"required"=> false,
-					"value"=> $content['creationDate'],
+					"value"=> $this->creationDate,
                     "disabled" => true
                 ],
             ]

@@ -15,7 +15,7 @@ class UserController{
 
     public function listAdminAction($site){
         $wlistObj = new Whitelist();
-        $wlistObj->setIdSite($site['id']);
+        $wlistObj->setIdSite($site->getId());
         $wlist = $wlistObj->findAll();
         $userObj = new User();
         $fields = [ 'id', 'name', 'email', 'joinDate', 'Delete' ];
@@ -44,7 +44,7 @@ class UserController{
 
     public function addAdminAction($site){
         $wlistObj = new Whitelist();
-		$wlistObj->setIdSite($site['id']);
+		$wlistObj->setIdSite($site->getId());
 
 		$form = $wlistObj->formAdd();
 
@@ -59,10 +59,10 @@ class UserController{
 				[ "user" => $user] = $_POST;
 				if(empty($user)){ throw new \Exception('No user'); }
 				if($user == Security::getUser()){ throw new \Exception('Cannot add yourself'); }
-				if($site['creator'] != Security::getUser()){ throw new \Exception('Cannot do this action'); }
+				if($site->getCreator() != Security::getUser()){ throw new \Exception('Cannot do this action'); }
 
 				$wlistObj->setIdUser($user);
-				$wlistObj->setIdSite($site['id']);
+				$wlistObj->setIdSite($site->getId());
 				$check = $wlistObj->findOne();
 				if($check){  throw new \Exception('User already authorized');  }
 				$adding = $wlistObj->save();
@@ -79,10 +79,10 @@ class UserController{
 					$sender->setId(Security::getUser());
 					$sender->findOne(TRUE);
 					$body = "<h3>EasyMeal</h3><br>";
-					$body .= "<h2>".$sender->getFullName()." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site['name'] ."/" . $site['subDomain'] . "</a></h2>";
+					$body .= "<h2>".$sender->getFullName()." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site->getName() ."/" . $site->getSubDomain() . "</a></h2>";
 					$body .= "<hr>";
 					$body .= "<p>To access the admin panel add in the url after the site domain /admin or click <a href='" . \App\Core\Helpers::renderCMSLink('admin', $site) . "'>here</a></p>";
-					$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => $sender->getFullName() .' allowed you on '.$site['name'] , 'body' => $body);
+					$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => $sender->getFullName() .' allowed you on '.$site->getName() , 'body' => $body);
 					$mailer = new Mail();
 					$mailer->sendMail($mail);
 					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
@@ -101,13 +101,13 @@ class UserController{
     public function deleteAdminAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('whitelist id not set');}
-			if($site['creator'] != Security::getUser()){ throw new \Exception('Cannot do this action'); }
+			if($site->getCreator() != Security::getUser()){ throw new \Exception('Cannot do this action'); }
 			$userObj = new User();
 			$userObj->setId($_GET['id']);
 			$user = $userObj->findOne();
 			if(!$user){ throw new \Exception('Cannot find this user on the whitelist'); }
 			$wlistObj = new Whitelist();
-			$wlistObj->setIdSite($site['id']);
+			$wlistObj->setIdSite($site->getId());
 			$wlistObj->setIdUser($_GET['id']);
 			$check = $wlistObj->delete();
 			if(!$check){ throw new \Exception('Cannot delete this user from whitelist');}

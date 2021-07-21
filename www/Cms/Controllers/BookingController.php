@@ -10,11 +10,47 @@ use CMS\Core\CMSView as View;
 
 use App\Core\FormValidator;
 use App\Core\Security;
+use App\Models\User;
 
 class BookingController{
 
     public function manageBookingsAction($site){
-        $bookingObj = new Booking($site['prefix']);
+        $bookingObj = new Booking($site->getPrefix());
+    }
+
+    public function renderRecordsAction($site){
+        $bookingObj = new Booking($site->getPrefix());//TRY TO FIND RESERVATIONS FOR THE RESTAURANT
+
+        $booking = $bookingObj->findAll();
+
+        $fields = [ 'client', 'date', 'number', 'status' ];
+        $data = [];
+
+        if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
+            foreach($booking as $item){
+                $client = new User();
+                $client->setId($item['client']);
+                $client->findOne(TRUE);
+                switch($item['status']){
+                    case 0: 
+                        $status = '<p style="color: gray ;">Not answered</p>';
+                        break;
+                    case 1:
+                        $status = '<p style="color: green ;">Accepted</p>';
+                        break;
+                    case 2:
+                        $status = '<p style="color: blue ;">Gone</p>';
+                }
+                $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] .  "','" . $status ."'";
+                $data[] = $formalized;
+            }
+        }
+
+        $view = new View('booking.records.list', 'back', $site);
+		$view->assign("datas", $data);
+		$view->assign("fields", $fields);
+		$view->assign('pageTitle', "Manage the comments");
+        $view->assign('calendar', true);
     }
 
     public function addBookingAction($site){
@@ -39,7 +75,7 @@ class BookingController{
                 return;
             }
 
-            if( $bookingSettingsObj->getEnabled() == 0 || $bookingSettingsObj->getIsSetUp() == 0 ){ //CHECK IF THE RESTAURANT ACCEPT RESERVATIONS IN CASE SOMEONES TRIES TO OVERPASS SECURITY
+            if( $bookingSettingsObj->getEnabled() == 0 || $bookingSettingsObj->getIsSetUp() == 0 ){ //CHECK IF THE RESTAURANT ACCEPT RESERVATIONS IN CASE SOMEONE TRIES TO OVERPASS SECURITY
                 $errors[] = "Unfortunately, reservations aren't active on this retaurant";
                 $view->assign("errors", $errors);
                 return;

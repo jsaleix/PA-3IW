@@ -99,6 +99,10 @@
   controller: bookingSettingsController
   action: manageBookingSettings
 
+/booking/records:
+  controller: bookingController
+  action: renderRecords
+
 /booking/edit/settings:
   controller: bookingSettingsController
   action: editSettings

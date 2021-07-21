@@ -22,7 +22,7 @@ class MediaController{
 	}
 
 	public function listMediasAction($site){
-		$mediumObj = new Medium($site['prefix']);
+		$mediumObj = new Medium($site->getPrefix());
 		$media = $mediumObj->findAll();
 		$fields = ['id', 'image', 'name', 'type', 'publisher', 'publicationDate', 'Edit', 'Delete'];
 		$datas = [];
@@ -46,7 +46,7 @@ class MediaController{
 	}
 
 	public function createMediumAction($site){
-		$mediumObj = new Medium($site['prefix']);
+		$mediumObj = new Medium($site->getPrefix());
 		$form = $mediumObj->formAdd();
 
 		$view = new View('create', 'back', $site);
@@ -62,7 +62,7 @@ class MediaController{
 				return;
 			}
 			$date = new \DateTime();
-			$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
+			$imgDir = "/uploads/cms/" . $site->getSubDomain() . "/library/";
 			$imgName = $date->format("Ymd_Hisu");
 			$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
 			$image = $isUploaded ? $isUploaded : null;
@@ -82,7 +82,7 @@ class MediaController{
 	public function editMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium($site['prefix']);
+		$mediumObj = new Medium($site->getPrefix());
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)
@@ -93,7 +93,7 @@ class MediaController{
 		$view->assign("form", $formEdit);
 		$view->assign("pageTitle", "Edit a medium");
 
-		$PMAObj = new PMAssoc($site['prefix']);
+		$PMAObj = new PMAssoc($site->getPrefix());
 		$PMAObj->setMedium($mediumObj->getId());
 		$PMAS = $PMAObj->findAll();
 		$fields = ['id', 'medium', 'post', 'Delete'];
@@ -101,7 +101,7 @@ class MediaController{
 		
 		if($PMAS){
 			foreach($PMAS as $item){
-				$postObj = new Post($site['prefix']);
+				$postObj = new Post($site->getPrefix());
 				$postObj->setId($item['post']);
 				$postObj->findOne(TRUE);
 				$buttonDelete = "<a href=".\App\Core\Helpers::renderCMSLink("admin/medium/assoc/delete?id=".$item['id'], $site).">Go</a>";
@@ -125,7 +125,7 @@ class MediaController{
 			}
 			if( !empty($data["image"]["name"])){
 				$date = new \DateTime();
-				$imgDir = "/uploads/cms/" . $site['subDomain'] . "/library/";
+				$imgDir = "/uploads/cms/" . $site->getSubDomain() . "/library/";
 				$imgName = $date->format("Ymd_Hisu");
 				$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
 				$image = $isUploaded ? $isUploaded : null;
@@ -148,7 +148,7 @@ class MediaController{
 	public function deleteMediumAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) )
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-		$mediumObj = new Medium($site['prefix']);
+		$mediumObj = new Medium($site->getPrefix());
 		$mediumObj->setId($_GET['id']??0);
 		$medium = $mediumObj->findOne();
 		if(!$medium)

@@ -14,11 +14,11 @@
     <div id="site-banner"> 
     </div>
     <div id="site-content">
-        <h1><?= $site['name']?></h1>
+        <h1><?= $site->getName()?></h1>
         <p><?= $site['description']?></p>
         <p>Type of food: <?= $site['type'] ?></p>
         <div>
-            <p>Created by <?= $site['creator'] ?></p>
+            <p>Created by <?= $site->getCreator() ?></p>
         </div>
     </div>
     

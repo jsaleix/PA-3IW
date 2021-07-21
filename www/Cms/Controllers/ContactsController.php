@@ -8,8 +8,7 @@ use App\Models\Site as Site;
 class ContactsController{
 
     public function defaultAction($site){
-        $siteObj = new Site();
-        $siteObj->setId($site['id']);
+        $siteObj = $site;
 
         $view = new View("contacts", "back", $site);
         
@@ -64,14 +63,10 @@ class ContactsController{
                 $siteObj->save();
             }
 
-            $siteObj = new Site();
-            $siteObj->setId($site['id']);
-            $site = $siteObj->findOne();
-
         }
 
-        $contactForm = $siteObj->formContactEdit($site);
-        $socialForm = $siteObj->formSocialEdit($site);
+        $contactForm = $siteObj->formContactEdit();
+        $socialForm = $siteObj->formSocialEdit();
 
         $view->assign("contactForm", $contactForm);
         $view->assign("socialForm", $socialForm);

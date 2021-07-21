@@ -19,14 +19,14 @@ class AdminRouter extends Router implements RouterInterface
                 \App\Core\Helpers::customRedirect('/login');
             }
 
-            $siteObj = new Site();
-            $siteObj->setSubDomain($uri[0]);
-            $site = $siteObj->findOne();
-            if(!$site || empty($site['id'])){ throw new \Exception('This site does not exist'); }
+            $site = new Site();
+            $site->setSubDomain($uri[0]);
+            $site->findOne(TRUE);
+            if(!$site || empty($site->getId())){ throw new \Exception('This site does not exist'); }
 
-            if( $site['creator'] !== Security::getUser()){
+            if( $site->getCreator() !== Security::getUser()){
                 $wlistObj = new Whitelist();
-                $wlistObj->setIdSite($site['id']);
+                $wlistObj->setIdSite($site->getId());
                 $wlistObj->setIdUser(Security::getUser());
                 $wlist = $wlistObj->findOne();
                 if( !$wlist ) { throw new \Exception('You\re not allowed to access this page'); }

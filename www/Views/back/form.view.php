@@ -35,3 +35,13 @@
             } );
         </script>
     <?php endif; ?>
+
+    <style>
+        img{
+            display: block;
+            max-width:350px;
+            max-height:195px;
+            width: auto;
+            height: auto;
+        }
+    </style>

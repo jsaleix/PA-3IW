@@ -156,12 +156,15 @@ class FormValidator
 	}
 
 	public static function verifyFileSize($file){
-		if($file["size"] > 500000)
+		if($file["size"] > 1000000)
 			return false;
 		return true;
 	}
 	public static function verifyFileType($file){
 		$type = explode("/", $file["type"]);
+		if(!isset($type[1])){ 
+			return false; 
+		}
 		if( $type[1] != "png" && $type[1] != "jpg" && $type[1] != "jpeg")
 			return false;
 		return true;

@@ -159,13 +159,14 @@ class Account{
 				$sites[] = $siteObj->findOne();
 			}
 		}
-		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
+		$fields = [ 'id', 'version', 'name', 'creator', 'subDomain', 'creation date', 'type', 'visit','edit' ];
 		$datas = [];
 
 		if($sites == true){
 			foreach($sites as $item){
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
+				$item['creator'] = $creator;
 				// $visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				// $editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';
                 // $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';

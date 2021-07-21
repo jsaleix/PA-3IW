@@ -1,12 +1,13 @@
 <div class="row" >
     <div class="col-12 col-sm-12 col-md-12 col-xl-12">
-            <div class="col-inner">
-                <div class="pageTitle">
-                    <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
-                    <?php if(isset($createButton)): ?>
-                        <a href="<?= $createButton['link']?>"><button class="cta-green"><?=$createButton['label']?></button></a>
-                    <?php endif; ?>
-                </div>
+    <?php if(isset($button)): echo $button; endif;?>
+
+        <div class="col-inner">
+            <div class="pageTitle">
+                <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
+                <?php if(isset($createButton)): ?>
+                    <a href="<?= $createButton['link']?>"><button class="cta-green"><?=$createButton['label']?></button></a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
