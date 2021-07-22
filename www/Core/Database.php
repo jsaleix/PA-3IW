@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+use App\Core\ErrorReporter;
 
 class Database
 {
@@ -335,7 +336,7 @@ class Database
 		}
 	}
 
-	public function deleteTables(){
+	/*public function deleteTables(){
 		if(get_class($this) != "App\Models\Site")
 			return false;
 		try{
@@ -361,6 +362,24 @@ class Database
 		} catch(\Exception $e){
 			print_r($e);
 		}
+	}*/
+
+	protected function deleteTables(array $tables){
+		if(get_class($this) != "App\Models\Site")
+			return false;
+		if(gettype($tables) != 'array')
+			return false;
+
+		$query = "DROP TABLE IF EXISTS `" . DBNAME ."`.`";
+		foreach($tables as $table){
+			try{
+				$this->pdo->query($query.$table."`;");
+			}catch(\Exception $e){
+				ErrorReporter::report($query.$table . ': ' . $e->getMessage());
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function getLastId(){

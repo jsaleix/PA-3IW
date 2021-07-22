@@ -2,6 +2,7 @@
 namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 
+use App\Core\ErrorReporter;
 use App\Models\Site;
 use App\Models\Whitelist;
 use App\Core\Security;
@@ -38,6 +39,7 @@ class AdminRouter extends Router implements RouterInterface
             $this->uri  = $uri;
             $this->site = $site;
         }catch(\Exception $e){
+            ErrorReporter::report("AdminRouter Construct():" . $e->getMessage() );
 			echo $e->getMessage();
             \App\Core\Helpers::customRedirect('/', $site);
 		}
@@ -57,6 +59,7 @@ class AdminRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
 			echo $e->getMessage();
+            ErrorReporter::report("AdminRouter route():" . $e->getMessage() );
 		}
 
 	}

@@ -192,6 +192,26 @@ class Site extends Model
 		return get_object_vars($this);
 	}
 
+    //Overrides database->delete methode
+    public function delete(){
+        $sqlFiles = array(
+            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
+            'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 
+            'menu', 'menu_dish_association', 'post_medium_association'
+        );
+
+        foreach($sqlFiles as $key => $value)
+        {
+            $sqlFiles[$key] = $this->getPrefix() . '_' . ucfirst($value);
+        }
+        $sqlFiles = array_reverse($sqlFiles);
+        if( $this->deleteTables($sqlFiles))
+            return parent::delete();
+        else 
+            return false;
+
+    }
+
     public function formCreate(){
         return [
 

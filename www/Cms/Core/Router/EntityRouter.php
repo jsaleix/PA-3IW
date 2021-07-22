@@ -3,6 +3,7 @@ namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
+use App\Core\ErrorReporter;
 use App\Models\Site;
 
 use CMS\Models\Page;
@@ -40,7 +41,9 @@ class EntityRouter extends Router implements RouterInterface
 			$this->site = $siteObj;
 
 		}catch(\Exception $e){
+			ErrorReporter::report("EntityRouter Construct():" . $e->getMessage() );
 			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/');
 			return;
 		}
 	}
@@ -62,6 +65,7 @@ class EntityRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
 			echo $e->getMessage();
+			ErrorReporter::report("EntityRouter route():" . $e->getMessage() );
 		}
 	}
 
