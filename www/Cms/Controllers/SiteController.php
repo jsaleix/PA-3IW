@@ -70,7 +70,7 @@ class SiteController{
 	public function deleteSiteAction($site){
 		$user = Security::getUser();
 		if($user !== $site->getCreator()){
-			\App\Core\Helpers::customRedirect('/admin', $site);
+			\App\Core\Helpers::customRedirect('/admin?not_allowed', $site);
 		}
 		$view = new View('settings', 'back', $site);
 		$form = $site->formDelete();

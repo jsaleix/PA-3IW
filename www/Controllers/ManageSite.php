@@ -97,7 +97,7 @@ class ManageSite{
 
                 $creation = $this->initializeSite($site);
                 if(!$creation){
-                    self::returnJson( "Unsuccessful" , 500 );
+                    self::returnJson( "Unsuccessful" , 400 );
                 }else{
                     self::returnJson( "Successfully created" , 201 );
                 }
@@ -126,25 +126,24 @@ class ManageSite{
             'menu', 'menu_dish_association', 'post_medium_association'
         );
 
-        foreach($sqlFiles as $file)
-        {
-            if(!file_exists($dir . '/' . $file .'.script' )){
-                ErrorReporter::report("Missing required file " . $file);
-                return false;
-            }
-        }
-
-        $toReplace = [':X', ':prefix'];
-        $replaceBy = [$site->getPrefix(), DBPREFIXE];
 
         try{
+            foreach($sqlFiles as $file){
+                if(!file_exists($dir . '/' . $file .'.script' )){
+                    throw new \Exception("Missing required file " . $file);
+                }
+            }
+
+            $toReplace = [':X', ':prefix'];
+            $replaceBy = [$site->getPrefix(), DBPREFIXE];
+
+
             foreach( $sqlFiles as $table){
                 $table  = file_get_contents($dir . '/'.$table.'.script');
                 $script = str_replace($toReplace, $replaceBy, $table);
                 $create = $site->createTable($script);
                 if(!$create){ 
-                    ErrorReporter::report("Not able to create table:" . $table);
-                    return false; 
+                    throw new \Exception("Not able to create table:" . $table);
                 }
             }
 
@@ -154,13 +153,11 @@ class ManageSite{
             $page->setCreator(Security::getUser());
             $page->setMain(1);
             if( !$page->save() ){
-                ErrorReporter::report("Not able to create page at site init");
-                throw new \Exception('page');
+                throw new \Exception("Not able to create page at site init");
             }
 
             if(!FileUploader::createCMSDirs($site->getSubDomain())){
-                ErrorReporter::report("Not able to create dirs at site init");
-                throw new \Exception('cms dirs');
+                throw new \Exception("Not able to create dirs at site init");
             }
 
             $post = new Post($site->getPrefix());
@@ -181,8 +178,11 @@ class ManageSite{
             return true;
         }catch(\Exception $e){
             ErrorReporter::report($e->getMessage());
+            FileUploader::removeCMSDirs($site->getSubDomain());
+            $site->delete();
             return false;
         }
+        return false;
     }
 
     private function returnJson(string $status, int $code){

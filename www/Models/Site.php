@@ -205,10 +205,12 @@ class Site extends Model
             $sqlFiles[$key] = $this->getPrefix() . '_' . ucfirst($value);
         }
         $sqlFiles = array_reverse($sqlFiles);
-        if( $this->deleteTables($sqlFiles))
+        if( $this->deleteTables($sqlFiles)){
+            FileUploader::renameCMSDir($this->getSubDomain());
             return parent::delete();
-        else 
+        }else{
             return false;
+        }
 
     }
 
