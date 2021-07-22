@@ -86,8 +86,8 @@ class Comment extends CMSModels
                 "message"=>[ 
                     "type"=>"text",
                     "label"=>"message",
-                    "minLength"=>255,
-                    "maxLength"=>45,
+                    "minLength"=>1,
+                    "maxLength"=>255,
                     "id"=>"comment",
                     "class"=>"input input-100 comment-input",
                     "placeholder"=>"Write a comment",
