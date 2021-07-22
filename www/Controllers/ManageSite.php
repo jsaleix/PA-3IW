@@ -112,10 +112,10 @@ class ManageSite{
     }
 
     public function initializeSite($site){
-        if(!$site->getName() ){ return false; }
-        if(!$site->getSubDomain() ){ return false; }
+        if( !$site->getName() ){ return false; }
+        if( !$site->getSubDomain() ){ return false; }
         if( $site->getId() ){ return false; }
-        if(!($site->save()) ){ return false; }
+        if( !($site->save()) ){ return false; }
 
         // Creation of new tables 
         $dir = basename(__DIR__) . '/../Assets/scripts';

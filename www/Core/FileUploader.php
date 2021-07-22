@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+use App\Core\ErrorReporter;
 
 class FileUploader
 {
@@ -51,7 +52,7 @@ class FileUploader
 				throw new \Exception('Wrong directory ' . $target_dir);
 			}
 		}catch(\Exception $e){
-			//echo $e->getMessage();
+			ErrorReporter::report($e->getMessage());
 			return false;
 		}
 		
