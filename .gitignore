@@ -1,6 +1,7 @@
 www/.env
 www/.env.*
 www/.htaccess
+www/reports/report.txt
 /db_data
 /db_data/
 /db_data/*

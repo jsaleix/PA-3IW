@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Core\Security;
 use App\Core\FormValidator;
 use App\Core\FileUploader;
+use App\Core\ErrorReporter;
 
 use App\Models\Site;
 
@@ -54,7 +55,7 @@ class ManageSite{
                 $errors = FormValidator::check($form, $_POST);
 				if( count($errors) > 0)
 				{
-                    throw new \Exception(implode(' - ', $errors));
+                    ErrorReporter::report("Invalid form: " . implode(' - ', $errors));
 					throw new \Exception('Invalid form');
 				}
 
@@ -102,6 +103,7 @@ class ManageSite{
                 }
 
             }catch(\Exception $e){
+                ErrorReporter::report($e->getMessage());
                 self::returnJson($e->getMessage(), 400);
             }
         }else{
@@ -127,7 +129,7 @@ class ManageSite{
         foreach($sqlFiles as $file)
         {
             if(!file_exists($dir . '/' . $file .'.script' )){
-                echo("Missing required file " . $file);
+                ErrorReporter::report("Missing required file " . $file);
                 return false;
             }
         }
@@ -141,7 +143,7 @@ class ManageSite{
                 $script = str_replace($toReplace, $replaceBy, $table);
                 $create = $site->createTable($script);
                 if(!$create){ 
-                    echo '<br>' .  $table; 
+                    ErrorReporter::report("Not able to create table:" . $table);
                     return false; 
                 }
             }
@@ -152,10 +154,12 @@ class ManageSite{
             $page->setCreator(Security::getUser());
             $page->setMain(1);
             if( !$page->save() ){
+                ErrorReporter::report("Not able to create page at site init");
                 throw new \Exception('page');
             }
 
             if(!FileUploader::createCMSDirs($site->getSubDomain())){
+                ErrorReporter::report("Not able to create dirs at site init");
                 throw new \Exception('cms dirs');
             }
 
@@ -176,6 +180,7 @@ class ManageSite{
 
             return true;
         }catch(\Exception $e){
+            ErrorReporter::report($e->getMessage());
             return false;
         }
     }
