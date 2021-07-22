@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Site;
 use App\Core\FileUploader;
 use App\Core\Security;
+use App\Core\FormValidator;
+use App\Core\ErrorReporter;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
@@ -22,7 +24,7 @@ class SiteController{
 
 	public function editSiteAction($site){
 		$siteObj = $site;
-		$view = new View('create', 'back', $site);
+		$view = new View('settings', 'back', $site);
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
@@ -61,23 +63,41 @@ class SiteController{
 		$form = $siteObj->formEdit();
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
-
-		
+		$view->assign('deletePage', false);
 
 	}
 
 	public function deleteSiteAction($site){
-		$siteObj = new Site();
-		$siteObj->setPrefix($site->getPrefix());
-		$site = $siteObj->findOne();
-		if(!$site){
-			return;
+		$user = Security::getUser();
+		if($user !== $site->getCreator()){
+			\App\Core\Helpers::customRedirect('/admin', $site);
 		}
-		if( $site->getCreator() != Security::getUser()){
-			return;
+		$view = new View('settings', 'back', $site);
+		$form = $site->formDelete();
+		$view->assign("form", $form);
+		$view->assign('pageTitle', "Edit the site informations");
+		$view->assign('deletePage', true);
+
+		if(!empty($_POST) && isset($_POST['_method']) && $_POST['_method'] == 'delete')//since there is not $_DELETE in php
+		{
+			try{
+				$errors = [];
+				$errors = FormValidator::check($form, $_POST);
+				if( count($errors) > 0){
+					$view->assign("errors", $errors);
+					return;
+				}
+				$deletion = $site->delete();
+				if(!$deletion){
+					$errors[] = 'Couldn\'t delete this site';
+					$view->assign("errors", $errors);
+				}
+			}catch(\Exception $e){
+				ErrorReporter::report("SiteController deleteSite:" . $e->getMessage() );
+				$errors[] = 'Couldn\'t delete this site';
+				$view->assign("errors", $errors);
+			}
 		}
-		$siteObj->deleteTables();
-		\App\Core\Helpers::customRedirect('/');
 	}
 
 	/*

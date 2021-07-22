@@ -287,6 +287,23 @@ class Site extends Model
         ];
     }
 
+    public function formDelete(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10",
+                "submit"=>"Delete this site",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "_method"=>[
+                    "type"=>"hidden",
+                    "value"=> 'delete'
+                ],
+            ]
+        ];
+    }
 
     public function formContactEdit(){
         return [
