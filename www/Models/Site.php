@@ -188,69 +188,65 @@ class Site extends Model
         $this->type = htmlspecialchars($type);
     }
 
-    public function initializeSite(){
-        if(!$this->name){ throw new \InvalidArgumentException("missing fields"); }
-        if($this->id){ throw new \InvalidArgumentException("The site already exists"); }
-        if(!($this->save())){ return false; }
-
-
-        // Creation of new tables 
-        $dir = basename(__DIR__) . '/../Assets/scripts';
-        clearstatcache();
-        $sqlFiles = array(
-            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 'menu', 'menu_dish_association', 'post_medium_association'
-        );
-
-        foreach($sqlFiles as $file)
-        {
-            if(!file_exists($dir . '/' . $file .'.script' )){
-                die("Missing required file " . $file);
-                return false;
-            }
-        }
-
-        $toReplace = [':X', ':prefix'];
-        $replaceBy = [$this->prefix, DBPREFIXE];
-
-        try{
-            foreach( $sqlFiles as $table){
-                $table = file_get_contents($dir . '/'.$table.'.script');
-                $script = str_replace($toReplace, $replaceBy, $table);
-                $create = $this->createTable($script);
-                if(!$create){ echo '<br>' .  $table; return false; }
-            }
-            $insert = new Page();
-            $insert->setName('home');
-            $insert->setPrefix($this->prefix);
-            $insert->setCreator(Security::getUser());
-            $insert->setMain(1);
-            $insert->save();
-
-            FileUploader::createCMSDirs($this->subDomain);
-
-            $postObj = new Post($this->prefix);
-            $postObj->setTitle('Welcome');
-            $postObj->setContent('This is your first article on your new website.');
-            $postObj->setPublisher(Security::getUser());
-            $postObj->save();
-
-            $dishCatObj = new DishCategory($this->prefix);
-            $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
-            foreach($dishCatArr as $cat){
-                $dishCatObj->setName($cat);
-                $dishCatObj->save();
-            }
-
-            return true;
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-
     public function returnData() : array{
 		return get_object_vars($this);
 	}
 
+    public function formCreate(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"edit-site col-5 col-sm-12",
+                "submit"=>"Create",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Website name",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
+					"value"=> $this->name
+                ],
+				"description"=>[ 
+					"type"=>"text",
+					"placeholder"=>"Description",
+					"id"=>"description",
+					"class"=>"input input-100",
+                    "error"=>"The description cannot be empty!",
+					"required"=> false,
+					"value"=> $this->description
+                ],
+                "type"=>[ 
+					"type"=>"text",
+					"label"=>"type",
+					"id"=>"type",
+					"class"=>"input input-100",
+                    "placeholder"=>"Restaurant type",
+                    "error"=>"The type cannot be empty!",
+					"required"=> false,
+					"value"=> $this->type,
+                ],
+                "subDomain"=>[ 
+					"type"=>"text",
+					"label"=>"domain of the site",
+					"id"=>"subDomain",
+					"class"=>"input input-100",
+                    "error"=>"The domain cannot be empty!",
+					"required"=> true,
+					"value"=> $this->subDomain,
+                ],
+            ]
+        ];
+    }
 
     public function formThemeEdit($themes){
         return [
@@ -343,8 +339,6 @@ class Site extends Model
             ]
         ];
     }
-
-    
 
     public function formEdit(){
         return [

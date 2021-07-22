@@ -5,11 +5,15 @@ namespace App\Core;
 class FileUploader
 {
 
-	public static function createCMSDirs($name){
+	public static function createCMSDirs($name): bool{
 		$cmsRoot = '/uploads/cms/'. $name;
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot);
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes');
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library');
+		if (mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot) &&
+			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes') &&
+			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library')
+		){
+			return true;
+		}
+		return false;
 	}
 
 	public static function createUserDirs($user){

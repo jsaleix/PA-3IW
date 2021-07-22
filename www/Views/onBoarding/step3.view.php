@@ -27,7 +27,7 @@
             </div>
         </div>
         <div>
-            
+            <?= App\Core\FormBuilder::createCSRFToken() ?>
         </div>
         <svg class="infoMen" viewBox="0 0 580 439" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g clip-path="url(#clip0)">
