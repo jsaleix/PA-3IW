@@ -17,10 +17,12 @@ class DesignController{
         $view = new View("design", "back", $site);
         $view->assign("title","Design | Themes | Styles");
 
-        foreach (glob("Cms/Views/Front/*") as $theme){
-            $tmpTheme = explode("/", $theme)[3];
+        $path = $_SERVER['DOCUMENT_ROOT'] ."/Cms/Views/Front";
+        foreach (glob($path . '/*') as $theme){
+            $tmpTheme = explode("/", $theme);
+            $tmpTheme = $tmpTheme[count($tmpTheme)-1];
             $themes[$tmpTheme] = $tmpTheme;
-        } 
+        }
 
         $form = $siteObj->formThemeEdit($themes);
 
@@ -33,10 +35,16 @@ class DesignController{
             
         }
 
-        foreach (glob("Cms/Views/Front/".$siteObj->getTheme()."/Thumbnails/*") as $thumbnail){
+        foreach (glob( $_SERVER['DOCUMENT_ROOT'] . '/public/Assets/cms/Front/'.$siteObj->getTheme()."/Thumbnails/*") as $thumbnail){
             $imageFileType = strtolower(pathinfo($thumbnail,PATHINFO_EXTENSION));
             if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif")
+            {
+                #Removing /var/www/html/ from the path
+                $thumbnail = explode('/', $thumbnail);
+                $thumbnail = array_slice($thumbnail, 4);
+                $thumbnail = implode('/', $thumbnail);
                 array_push($thumbnails, $thumbnail);
+            }
         } 
 
         $view->assign("site", $siteObj);

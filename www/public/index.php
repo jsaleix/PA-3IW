@@ -1,7 +1,7 @@
 <?php
 namespace Publi;
 
-define('STYLES', "/Styles/main.css"); 
+define('STYLES', "/Assets/styles/main.css"); 
 
 use App\Core\Router;
 use App\Core\ConstantMaker;

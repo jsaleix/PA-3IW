@@ -18,8 +18,8 @@ class FooterBuilder
 		
 		$theme = strlen($theme)>0 ? $theme : "Default"; 
 
-		if(file_exists("CMS/Views/Front/".$theme."/footer.php")){
-			include_once("CMS/Views/Front/".$theme."/footer.php");
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Front/".$theme."/footer.php")){
+			include_once($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Front/".$theme."/footer.php");
 		}else{
 			die('Footer not found');
 		}
