@@ -65,7 +65,7 @@ class ManageSite{
                 #Checks if sub domain is not already taken
                 $tmpSite = new Site();
 
-                if (in_array($_POST['subDomain'], $site->invalidDomains)) {
+                if (in_array($_POST['subDomain'], $site->getInvalidDomains())) {
                     throw new \Exception('Invalid sub Domain');
                 }
 

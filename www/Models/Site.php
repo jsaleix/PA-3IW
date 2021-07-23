@@ -30,7 +30,7 @@ class Site extends Model
     protected $instagram;
     protected $facebook;
     protected $twitter;
-    public $invalidDomains = [ 'public', 'uploads', 'assets' ];
+    private $invalidDomains = [ 'public', 'uploads', 'assets' ];
 
 	public function __construct(){
 		parent::__construct();
@@ -189,6 +189,9 @@ class Site extends Model
         $this->type = htmlspecialchars($type);
     }
 
+    public function getInvalidDomains(){
+        return $this->invalidDomains;
+    }
     public function returnData() : array{
 		return get_object_vars($this);
 	}

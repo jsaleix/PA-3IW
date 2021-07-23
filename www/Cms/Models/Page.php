@@ -18,6 +18,7 @@ class Page extends CMSModels
     protected $main;
     private $filters;
     private $action = null;
+    private $invalidNames = [ 'admin', 'ent' ];
 
     public function setPrefix($prefix){
 		parent::setTableName($prefix.'_');
@@ -54,9 +55,11 @@ class Page extends CMSModels
      */
     public function setName($name)
     {
-        if($name === 'admin' || $name === 'ent') $name.='_';
+        if( in_array($name, $this->invalidNames) )//Check if there is no name already used by the routers
+        {
+            $name.='1';
+        }
         $name = htmlspecialchars($name);
-        //$name = preg_replace("/\s+/", "", $name);//removes spaces
         $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
 
         $this->name = $name;
