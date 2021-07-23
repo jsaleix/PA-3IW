@@ -35,7 +35,7 @@ class AdminRouter extends Router implements RouterInterface
             $uri = array_slice($uri, 2);
             $uri[0] = empty($uri[0]) ? '/' : ('/' . $uri[0]);
             $uri = implode($uri, '/');
-            parent::__construct($uri, $_SERVER['DOCUMENT_ROOT'] . "/Cms/routes.yml");
+            parent::__construct($uri, __DIR__."/routes_admin.yml");
             $this->uri  = $uri;
             $this->site = $site;
         }catch(\Exception $e){

@@ -36,7 +36,7 @@ class EntityRouter extends Router implements RouterInterface
 				$uri[0] = '/' . $uri[0];
 			}
 			$uri = implode($uri, '/');
-			parent::__construct($uri, $_SERVER['DOCUMENT_ROOT'] . "/Cms/routes.yml");
+			parent::__construct($uri, __DIR__ . "/routes_entities.yml");
 			$this->uri  = $uri;
 			$this->site = $siteObj;
 
