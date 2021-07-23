@@ -30,6 +30,7 @@ class Site extends Model
     protected $instagram;
     protected $facebook;
     protected $twitter;
+    public $invalidDomains = [ 'public', 'uploads', 'assets' ];
 
 	public function __construct(){
 		parent::__construct();

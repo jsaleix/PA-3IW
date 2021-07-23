@@ -64,12 +64,16 @@ class ManageSite{
                 */
                 #Checks if sub domain is not already taken
                 $tmpSite = new Site();
-                $prefix = bin2hex(random_bytes(4));
+
+                if (in_array($_POST['subDomain'], $site->invalidDomains)) {
+                    throw new \Exception('Invalid sub Domain');
+                }
+
                 $tmpSite->setSubDomain($_POST['subDomain']);
                 $result = $tmpSite->findOne();
                 if( $result ){
                     //self::returnJson("subDomain", 460);
-                    throw new \Exception('subDomain already taken');
+                    throw new \Exception('Sub domain already taken');
                 }
 
                 $tmpSite->setSubDomain(null);
