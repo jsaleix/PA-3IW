@@ -118,7 +118,7 @@ class ManageSite{
         if( !($site->save()) ){ return false; }
 
         // Creation of new tables 
-        $dir = basename(__DIR__) . '/../Assets/scripts';
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/Assets/scripts';
         clearstatcache();
         $sqlFiles = array(
             'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 

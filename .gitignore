@@ -7,3 +7,4 @@ www/reports/report.txt
 /db_data/*
 /db_data/**
 www/uploads/*
+www/public/uploads/*

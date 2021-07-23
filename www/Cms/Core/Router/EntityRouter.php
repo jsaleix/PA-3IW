@@ -56,8 +56,8 @@ class EntityRouter extends Router implements RouterInterface
 			$debug = 'debug: ' . $a . ' - ' . $c . '<br>';
 			// echo $debug;
 
-			if(!file_exists("Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
-			include "Cms/Controllers/".$c.".php";
+			if(!file_exists($_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
+			include $_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php";
             $c = "CMS\\Controller\\".$c;
 			if(!class_exists($c)) throw new \Exception("La classe controller : ".$c." n'existe pas");
 			$cObjet = new $c();

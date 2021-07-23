@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace Publi;
 
 define('STYLES', "/Styles/main.css"); 
 
@@ -9,17 +9,17 @@ use App\Middlewares\Middleware;
 
 session_start();
 
-require "Autoload.php";
+require "../Autoload.php";
 
-Autoload::register();
+\App\Autoload::register();
 new ConstantMaker();
 
 $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
 $uri = $uriExploded[0];
 
 if( preg_match('/\/site\/+/', $uri) ){
-	if( file_exists('./Cms/index.php') ){
-		include './Cms/index.php';
+	if( file_exists('../Cms/index.php') ){
+		include '../Cms/index.php';
 		\CMS\handleCMS($uri);
 	}else{
 		die('Missing required cms file');
@@ -27,7 +27,8 @@ if( preg_match('/\/site\/+/', $uri) ){
 	return;
 }
 
-$router = new Router($uri, "routes.yml");
+
+$router = new Router($uri, "../routes.yml");
 $c = $router->getController();
 $a = $router->getAction();
 $m = $router->getMiddleware();
@@ -36,9 +37,9 @@ if($m){
 	Middleware::$m();
 }
 
-if( file_exists("./Controllers/".$c.".php")){
+if( file_exists("../Controllers/".$c.".php")){
 
-	include "./Controllers/".$c.".php";
+	include "../Controllers/".$c.".php";
 	// SecurityController =>  App\Controller\SecurityController
 
 	$c = "App\\Controller\\".$c;
