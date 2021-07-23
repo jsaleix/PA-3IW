@@ -123,7 +123,7 @@ class Post extends CMSModels
                     "required"=>true,
                 ],
                 "content"=>[ 
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "label"=>"Content",
                     "minLength"=>2,
                     "maxLength"=>255,
@@ -185,7 +185,7 @@ class Post extends CMSModels
 					"value"=> $content['title']
                 ],
                 "content"=>[ 
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "label"=>"Content",
                     "minLength"=>2,
                     "maxLength"=>255,

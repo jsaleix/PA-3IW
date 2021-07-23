@@ -38,7 +38,7 @@ class StyleBuilder
         }
         $theme = strlen($theme)>0 || is_null($theme) ? $theme : "Default";
 
-		if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Front/" . $theme . "/Styles/main.js"))
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/public/Assets/Cms/Front/" . $theme . "/Styles/main.js"))
             $styleScriptLink = DOMAIN."/Assets/cms/Front/" . $theme . "/Styles/main.js";
         
         return '<script src="'.$styleScriptLink.'"></script>';
