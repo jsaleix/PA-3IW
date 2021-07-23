@@ -75,7 +75,6 @@ class Security{
 				FileUploader::createUserDirs($user->getLastId());
 				$mail->sendConfirmationMail($user->getEmail());
 				
-
 				header('Location: '.DOMAIN);
 				exit();
 			}else{
