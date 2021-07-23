@@ -200,7 +200,7 @@ class Site extends Model
     public function delete(){
         $sqlFiles = array(
             'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
-            'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 
+            'booking_planning_data', 'page', 'medium', 'post', 'content', 'comment', 
             'menu', 'menu_dish_association', 'post_medium_association'
         );
 

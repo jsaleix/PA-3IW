@@ -1,17 +1,15 @@
 <?php
 
 namespace CMS\Models;
+
 use CMS\Models\Content;
-
 use App\Models\Action;
-
 
 class Page extends CMSModels
 {
 
 	protected $id = null;
 	protected $name;
-	protected $category = null;
     protected $creationDate = null;
     protected $creator;
     protected $visible;
@@ -63,22 +61,6 @@ class Page extends CMSModels
         $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
 
         $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param mixed $lastname
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
     }
 
     public function setAction($action){
@@ -255,10 +237,6 @@ class Page extends CMSModels
                     "type"=>"text",
                     "value" => $pageData['name']
                 ],
-				"category"=>[ 
-					"type"=>"text",
-                    "value" => $pageData['category']
-                ],
                 "creator"=>[ 
                     "type"=>"text",
                     "value" => $pageData['creator']
@@ -275,7 +253,7 @@ class Page extends CMSModels
         ];
     }
 
-    public function formEditContent($content, $dataArr, $actionArr = null, $filters = null){
+    public function formEditContent($content, $actionArr = null, $filters = null){
         return [
 
             "config"=>[
