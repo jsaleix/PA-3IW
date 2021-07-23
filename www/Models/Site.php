@@ -8,7 +8,7 @@ use App\Core\Security;
 
 use CMS\Models\Page;
 use CMS\Models\Post;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 
 class Site extends Model

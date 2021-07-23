@@ -344,7 +344,7 @@ class Database
 				$this->prefix."_Menu_dish_association",
 				$this->prefix."_Menu",
 				$this->prefix."_Dish",
-				$this->prefix."_DishCategory",
+				$this->prefix."_Dish_Category",
 				$this->prefix."_Comment",
 				$this->prefix."_Post_medium_association",
 				$this->prefix."_Post",

@@ -52,7 +52,7 @@
   action: editdish
 
 /dishcategories:
-  controller: dishCategoryController
+  controller: DishCategoryController
   action: managedishcategories
 
 /dish/delete:
@@ -60,16 +60,16 @@
   action: deletedish
 
 /dishcategory/create:
-  controller: dishCategoryController
-  action: createdishCategory
+  controller: DishCategoryController
+  action: createDishCategory
 
 /dishcategory/edit:
-  controller: dishCategoryController
-  action: editdishcategory
+  controller: DishCategoryController
+  action: editDishCategory
 
 /dishcategory/delete:
-  controller: dishCategoryController
-  action: deletedishcategory
+  controller: DishCategoryController
+  action: deleteDishCategory
 
 /comments:
   controller: commentController

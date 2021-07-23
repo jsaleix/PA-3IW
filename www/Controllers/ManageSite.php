@@ -12,7 +12,7 @@ use App\Models\Site;
 
 use CMS\Models\Page;
 use CMS\Models\Post;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 class ManageSite{
 
@@ -172,7 +172,7 @@ class ManageSite{
                 throw new \Exception('post');
             }
             
-            $dishCatObj = new DishCategory($site->getPrefix());
+            $dishCatObj = new Dish_Category($site->getPrefix());
             $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
             foreach($dishCatArr as $cat){
                 $dishCatObj->setName($cat);

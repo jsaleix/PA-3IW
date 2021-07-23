@@ -147,7 +147,7 @@ class Menu extends CMSModels
             "config"=>[
                 "method"=>"",
                 "action"=>"",
-				"href" => "editDishCategory?id=" . $data['id'],
+				"href" => "editDish_Category?id=" . $data['id'],
                 "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",

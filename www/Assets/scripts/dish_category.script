@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `easymeal`.`:X_DishCategory` (
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Dish_Category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `description` VARCHAR(255) NULL,
