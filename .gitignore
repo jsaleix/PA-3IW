@@ -6,12 +6,14 @@ www/.env.*
 /db_data/*
 /db_data/**
 
-www/public/uploads/cms/*
 !www/public/uploads/cms
-www/public/uploads/main/*
+www/public/uploads/cms/*
+
 !www/public/uploads/main
-www/public/uploads/users/*
+www/public/uploads/main/*
+
 !www/public/uploads/users
+www/public/uploads/users/*
 
 !www/reports/
 www/reports/report.txt
