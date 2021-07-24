@@ -7,6 +7,8 @@ use App\Core\FormValidator;
 
 use CMS\Models\Dish;
 use CMS\Models\Dish_Category;
+use CMS\Models\Menu;
+use CMS\Models\Menu_Dish_Association;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
@@ -227,30 +229,51 @@ class DishController{
 	}
 
 	public function getDishAction($site){
-		$category = $_GET['category']??'';
-		$dishObj = new Dish($site->getPrefix());
-		if(isset($category)){
-			$dishObj->setCategory($category);
-		}
-
-		$dishes = $dishObj->findAll();
-		$dishArr = [];
-		if(!$dishes){ 
-			$code = 404;
-		}else{
-			$code = 200;
-			foreach($dishes as $dish){
-				$dishArr[] = array(
-					'id' => $dish['id'],
-					'name' => preg_replace("/\\\+/", "", $dish['name']),
-					'image' => DOMAIN . '/' . $dish['image'],
-					'price' => $dish['price']
-				);
+		try{
+			$category = $_GET['category']??'';
+			$menu = $_GET['menu']??'';
+			$dishObj = new Dish($site->getPrefix());
+			$menuObj = new Menu($site->getPrefix());
+			$menuObj->setID($menu);
+			$menu = $menuObj->findOne(TRUE);
+			if(!$menu){
+				throw new \Exception('NoMenu');
 			}
+			if(isset($category)){
+				$dishObj->setCategory($category);
+			}
+	
+			$dishes = $dishObj->findAll();
+			$dishArr = [];
+			if(!$dishes){ 
+				$code = 404;
+			}else{
+				$code = 200;
+				$mdAssocObj = new Menu_dish_association($site->getPrefix());
+				$mdAssocObj->setMenu($menuObj->getId());
+				foreach($dishes as $dish){
+					$mdAssocObj->setDish($dish['id']);
+					$mdAssoc = $mdAssocObj->findOne();
+					if(!$mdAssoc){
+						$dishArr[] = array(
+							'id' => $dish['id'],
+							'name' => preg_replace("/\\\+/", "", $dish['name']),
+							'image' => DOMAIN . '/' . $dish['image'],
+							'price' => $dish['price']
+						);
+					}
+				}
+			}
+		} catch(\Exception $e){
+			if($e->getMessage() == 'NoMenu'){
+				$code = 404;
+			} else {
+				$code = 500;
+			}
+		} finally {
+			http_response_code($code);
+			echo json_encode(array('code' => $code, 'dishes' => $dishArr??[]));
 		}
-
-		http_response_code($code);
-        echo json_encode(array('code' => $code, 'dishes' => ($dishArr)));
 	}
 
 	/*
