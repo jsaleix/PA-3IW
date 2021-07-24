@@ -25,46 +25,40 @@ class SiteController{
 	public function editSiteAction($site){
 		$siteObj = $site;
 		$view = new View('settings', 'back', $site);
+		$form = $siteObj->formEdit();
 
 		if(!empty($_POST) ) {
 			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
 			[ "image" => $image ] = $_FILES;
-
-			if($name || $description || $type ){
-				if(isset($image)){
-					$imgDir = "/uploads/cms/" . $site->getSubDomain() . '/';
-					$imgName = 'banner';
-					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-					
-					if($isUploaded != false){
-						$image = $isUploaded;
-					}else{
-						$image = null;
-					}
+			$data = array_merge($_POST, $_FILES);
+			$errors = FormValidator::check($form, $data);
+			if(count($errors) != 0){ 
+				$errors[] = 'Form not accepted';
+				throw new \Exception('Form not accepted'); 
+			}
+			if(isset($data['image'])){
+				$imgDir = "/uploads/cms/" . $site->getSubDomain() . '/';
+				$imgName = 'banner';
+				$isUploaded = FileUploader::uploadImage($data['image'], $imgName, $imgDir);
+				
+				if($isUploaded != false){
+					$data['image']= $isUploaded;
 				}else{
-					$image = null;
+					$data['image'] = null;
 				}
-
-				$siteObj->setName($name);
-				$siteObj->setDescription($description);
-				$siteObj->setImage($image);
-				$siteObj->setType($type);
-				$adding = $siteObj->save();
-				if($adding){
-					$message ='Site successfully updated!';
-					$view->assign("message", $message);
-				}else{
-					$errors = ["Error when updating the site"];
-					$view->assign("errors", $errors);
-				}
+			}
+			$adding = $siteObj->edit($data);
+			if($adding){
+				\App\Core\Helpers::customRedirect('/admin/settings', $site);
+			}else{
+				$errors = ["Error when updating the site"];
+				$view->assign("errors", $errors);
 			}
 		}
 
-		$form = $siteObj->formEdit();
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Edit the site informations");
 		$view->assign('deletePage', false);
-
 	}
 
 	public function deleteSiteAction($site){

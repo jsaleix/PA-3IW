@@ -84,10 +84,6 @@ class DishController{
 		if(!empty($_POST) ) {
 			try{
 				$errors = [];
-
-				[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-				[ "image" => $image ] = $_FILES;
-
 				$form = $dishObj->formAdd();
 				$data = array_merge($_POST, $_FILES);
 				$errors = FormValidator::check($form, $data);
@@ -97,10 +93,10 @@ class DishController{
 				}
 
 				$imgDir 	= "/uploads/cms/" . $site->getSubDomain() . "/dishes/";
-				$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+				$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $_POST['name']);
 				$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
 				$imgName 	= $site->getSubDomain() . '_' . $imgTmpName;
-				$image = FileUploader::uploadImage($image, $imgName, $imgDir);
+				$image = FileUploader::uploadImage($_FILES['image'], $imgName, $imgDir);
 				if( !$image ){ 
 					$errors[] = 'Invalid or missing image';
 					throw new \Exception('Invalid or missing image'); 

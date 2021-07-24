@@ -134,6 +134,11 @@ class Site extends Model
         return $this->name;
     }
 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
     public function setDescription($description)
     {
         $this->description = htmlspecialchars($description);
