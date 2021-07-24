@@ -32,7 +32,7 @@
                 <?php if(isset($comments) && !empty($comments)):?>
                     <h3>Comments</h3>
                     <?php foreach ($comments as $comment):?>
-                        <div class="comment col-6 col-md-10 col-sm-12">
+                        <div class="comment col-6 col-md-10 col-sm-12" id="<?= $comment['id']?>">
                             <h2><span><?=$comment['author']?></span> the <b><?= $comment['date'] ?> </b></h2>
                             <p><?=$comment['message']?></p>
                         </div>
