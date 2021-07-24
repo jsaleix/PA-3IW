@@ -53,6 +53,7 @@ class FormBuilder
 					break;
 				case 'textarea':
 					$html .= self::renderTextarea($name, $configInput);
+					break;
 				default:
 					$html .= self::renderInput($name, $configInput);
 

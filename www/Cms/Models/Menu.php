@@ -84,7 +84,7 @@ class Menu extends CMSModels
                     "required"=>true,
                 ],
 				"description"=>[ 
-					"type"=>"text",
+					"type"=>"textarea",
 					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input input-100",
@@ -125,7 +125,7 @@ class Menu extends CMSModels
 					"value"=> $content['name']
                 ],
 				"description"=>[ 
-					"type"=>"text",
+					"type"=>"textarea",
 					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input-description",
