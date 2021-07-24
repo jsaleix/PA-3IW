@@ -29,7 +29,7 @@
             <?php else: ?>
                 <?php App\Core\FormBuilder::render($form)?>
                 <form class="edit-site col-5 col-sm-12">
-                    <a class="width-80 " href="<?= \App\Core\Helpers::renderCMSLink( "admin/settings/delete", $this->site) ?> "><input class="cta-blue width-80 last-sm-elem" type="button" value="Delete"></a>
+                    <a class="width-80 " href="<?= \App\Core\Helpers::renderCMSLink( "admin/settings/delete", $this->site) ?> "><input class="btn btn-light btn-100" type="button" value="Delete"></a>
                 </form>
             <?php endif; ?>
         </div>
