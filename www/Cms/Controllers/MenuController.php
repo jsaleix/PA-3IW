@@ -16,23 +16,20 @@ class MenuController{
     public function manageMenusAction($site){
 		$menuObj = new Menu($site->getPrefix());
 		$menus = $menuObj->findAll();
-		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
-		$datas = [];
 
-		if($menus){
-			foreach($menus as $item){
-				$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
-                $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
-				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
-			}
-		}
+		// if($menus){
+		// 	foreach($menus as $item){
+		// 		$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
+        //         $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
+		// 		// $datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
+		// 	}
+		// }
 
-		$addCatButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
+		$addMenuButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
 		
-		$view = new View('list', 'back', $site);
-		$view->assign("createButton", $addCatButton);
-		$view->assign("fields", $fields);
-		$view->assign("datas", $datas);
+		$view = new View('menus', 'back', $site);
+		$view->assign("createButton", $addMenuButton);
+		$view->assign("menus", $menus);
 		$view->assign('pageTitle', "Manage your menus");
 	}
 
