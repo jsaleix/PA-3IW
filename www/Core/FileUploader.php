@@ -7,10 +7,10 @@ class FileUploader
 {
 
 	public static function createCMSDirs($name): bool{
-		$cmsRoot = '/uploads/cms/'. $name;
-		if (mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot) &&
-			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes') &&
-			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library')
+		$cmsRoot = $_SERVER['DOCUMENT_ROOT']. '/public/uploads/cms/'. $name;
+		if (mkdir($cmsRoot) &&
+			mkdir($cmsRoot . '/dishes') &&
+			mkdir($cmsRoot . '/library')
 		){
 			return true;
 		}
@@ -18,10 +18,10 @@ class FileUploader
 	}
 
 	public static function removeCMSDirs($name): bool{
-		$cmsRoot = '/uploads/cms/'. $name;
-		if (rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot) &&
-			rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes') &&
-			rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library')
+		$cmsRoot = $_SERVER['DOCUMENT_ROOT']. '/public/uploads/cms/'. $name;
+		if (rmdir($cmsRoot) &&
+			rmdir($cmsRoot . '/dishes') &&
+			rmdir($cmsRoot . '/library')
 		){
 			return true;
 		}
@@ -29,7 +29,7 @@ class FileUploader
 	}
 
 	public static function renameCMSDir($name): bool{
-		$oldDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/cms/'. $name;
+		$oldDir = $_SERVER['DOCUMENT_ROOT'] . '/public/uploads/cms/'. $name;
 		$date = new \DateTime();
 		$newDir = $oldDir . '-deleted-' . $date->format("Ymd_Hisu");
 		if (rename($oldDir, $newDir))
@@ -40,7 +40,12 @@ class FileUploader
 	}
 
 	public static function createUserDirs($user){
-		mkdir($_SERVER['DOCUMENT_ROOT']. '/uploads/users/' . $user);
+		try{
+			if(!mkdir($_SERVER['DOCUMENT_ROOT']. '/public/uploads/users/' . $user))
+			throw new \Exception('Couldn\'t create the folder');
+		}catch(\Exception $e){
+			ErrorReporter::report('FileUploader createUserDirs :'. $e->getMessage());
+		}
 	}
 
 	public static function uploadImage($file, $name, $dir){
@@ -49,7 +54,7 @@ class FileUploader
 				return false;
 			}
 			
-			$target_dir = $_SERVER['DOCUMENT_ROOT'] . $dir;
+			$target_dir = $_SERVER['DOCUMENT_ROOT'] .'/public/' . $dir;
 			$imageFileType = strtolower(pathinfo(($target_dir . basename($file["name"])),PATHINFO_EXTENSION));
 			$target_file = $target_dir . $name . '.' . $imageFileType;
 	
@@ -79,7 +84,7 @@ class FileUploader
 		}
 		
 		$addingFile = move_uploaded_file($file["tmp_name"], $target_file);
-		$publicDir = str_replace('/var/www/html/', '', $target_file);
+		$publicDir = str_replace('/var/www/html/public/', '', $target_file);
 		return $addingFile ? $publicDir : false;
 	}
 

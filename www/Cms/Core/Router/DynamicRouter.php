@@ -3,6 +3,8 @@ namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
+use CMS\Core\CMSView as View;
+
 use App\Core\ErrorReporter;
 use App\Models\Site;
 use App\Models\Action;
@@ -96,6 +98,11 @@ class DynamicRouter extends Router implements RouterInterface
 		return $this->filter;
 	}
 
+	public function renderInvalidRoute() : void{
+		$view = new View('somethingWentWrong', 'front',  $this->site);
+		$view->assign('pageTitle', "Dashboard");
+	}
+
 	public function route(): void{
 		try{
 			if(!$this->site) {
@@ -108,8 +115,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$debug = 'debug: ' . $a . ' - ' . $c . ' - ' . $f . '<br>';
 			// echo $debug;
 
-			if(!file_exists("Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
-			include "Cms/Controllers/".$c.".php";
+			if(!file_exists($_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
+			include $_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php";
             $c = "CMS\\Controller\\".$c;
 			if(!class_exists($c)) throw new \Exception("La classe controller: ".$c." n'existe pas");
 			$cObjet = new $c();
@@ -117,7 +124,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site, $f);
 		}catch(\Exception $e){
 			ErrorReporter::report("DynamicRouter route():" . $e->getMessage() );
-			echo $e->getMessage();
+			//echo $e->getMessage();
+			$this->renderInvalidRoute();
 		}
 	}
 

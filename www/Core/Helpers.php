@@ -38,6 +38,11 @@ class Helpers
 		exit();
 	}
 
+	public static function serverErrorStatus(){
+		http_response_code(500);
+		exit();
+	}
+
 	public static function renderCMSLink($path, $site)
 	{
 		$url = DOMAIN . '/site';

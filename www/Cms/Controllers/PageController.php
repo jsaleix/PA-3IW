@@ -7,7 +7,6 @@ use App\Models\Action;
 
 use CMS\Models\Content;
 use CMS\Models\Page;
-use CMS\Models\Category;
 
 use CMS\Core\CMSView as View;
 use App\Core\FormValidator;
@@ -28,7 +27,7 @@ class PageController{
 	public function managePagesAction($site){
 		$pageObj = new Page($site->getPrefix());
 		$pages = $pageObj->findAll();
-		$fields = [ 'id', 'name', 'category', 'creator', 'action', 'main page', 'visible in navigation', 'edit', 'delete', 'see', 'copyLink'];
+		$fields = [ 'id', 'name', 'creator', 'action', 'main page', 'visible in navigation', 'edit', 'delete', 'see', 'copyLink'];
 		$datas = [];
 
 		$contentObj = new Content($site->getPrefix());
@@ -36,17 +35,7 @@ class PageController{
 		$actionObj 	= new Action();
 		$userObj 	= new User();
 
-		$categoryObj = new Category($site->getPrefix());
-
 		foreach($pages as $item){
-			if($item['category'] !== NULL){
-				$categoryObj->setId($item['category']);
-				$category = $categoryObj->findOne();
-				$item['category'] = $category['name']??'Unknown';
-
-			}else{
-				$item['category'] = $item['category']??'Unknown';
-			}
 
 			$contentObj->setPage($item['id']);
 			$methodId = $contentObj->findOne();
@@ -74,7 +63,7 @@ class PageController{
 			/*$link = \App\Core\Helpers::renderCMSLink($item['name'], $site);
 			$copyLink = "<button type=\"button\" onClick=\"copyLink(\\'${link}\\')\" ></button>";*/
 
-			$datas[] 		= "'".$item['id']."','".$item['name']."','".$item['category']."','".$item['creator']. "','" . $item['action'] . "','" . $main . "','". $visible . "','" . $buttonEdit . "','" . $buttonDelete . "','" . $buttonVisit. "','" . $copyLink."'";
+			$datas[] 		= "'".$item['id']."','".$item['name']."','".$item['creator']. "','" . $item['action'] . "','" . $main . "','". $visible . "','" . $buttonEdit . "','" . $buttonDelete . "','" . $buttonVisit. "','" . $copyLink."'";
 
 		}
 		$createPageBtn = ['label' => 'Create a page', 'link' => 'page/create'];
@@ -171,23 +160,13 @@ class PageController{
 				$actionArr[$action['id']] = $action['name'];
 			}
 		}
-
-		$categoryObj = new Category($site->getPrefix());
-		$category = $categoryObj->findAll();
-		$categoryArr = array();
-		$categoryArr[] = 'None';
-		if(!empty($category)){
-			foreach($category as $data){
-				$categoryArr[$data['id']] = $data['name'];
-			}
-		}
 		
 		$pageArr 	= (array)$page;
 		$contentArr = (array)$content;
 		$contentArr = [ 'action' => $contentArr['method'] ];		
 		$pageArr = array_merge((array)$page, $contentArr);
 
-		$form = $pageObj->formEditContent($pageArr, $categoryArr, $actionArr, ($content['filter']));
+		$form = $pageObj->formEditContent($pageArr, $actionArr, ($content['filter']));
 
 		$view = new View('page', 'back', $site);
 		$view->assign("form", $form);

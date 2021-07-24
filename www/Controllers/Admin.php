@@ -123,8 +123,16 @@ class Admin{
 				$name = $item['firstname'] . ' ' . $item['firstname'];
 				$img = '<img src=' . DOMAIN . '/' . $item['avatar'] . ' width=100 height=80/>';
 				$editBtn = '<a href="user?id=' . $item['id'] . '">Go</a>';
+				if($item['role'] > 0){
+					$role = new Role();
+					$role->setId($item['role']);
+					$role->findOne(TRUE);
+					$item['role'] = $role->getName();
+				}else{
+					$item['role'] = 'none';
+				}
 
-				$formalized = "'" . $img . "','" . $item['id'] . "','" . $name . "','" .$item['email'] .  "','" . $item['joinDate'] . "','" . $item['role'] . "','". $editBtn . "'";
+				$formalized = "'" . $img . "','" . $item['id'] . "','" . $name . "','" .$item['email'] .  "','" . $item['joinDate'] . "','" . $item['role']  . "','". $editBtn . "'";
 				$datas[] = $formalized;
 			}
 		}

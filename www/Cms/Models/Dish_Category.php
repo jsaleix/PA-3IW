@@ -2,7 +2,7 @@
 
 namespace CMS\Models;
 
-class DishCategory extends CMSModels
+class Dish_Category extends CMSModels
 {
 
 	protected $id;
@@ -144,7 +144,7 @@ class DishCategory extends CMSModels
             "config"=>[
                 "method"=>"",
                 "action"=>"",
-				"href" => "dishcategory/edit?id=" . $data['id'],
+				"href" => "Dish_Category/edit?id=" . $data['id'],
                 "id"=>"form_content",
                 "class"=>"inline-list",
                 "submit"=>"Edit",

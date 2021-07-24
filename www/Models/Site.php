@@ -8,7 +8,7 @@ use App\Core\Security;
 
 use CMS\Models\Page;
 use CMS\Models\Post;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 
 class Site extends Model
@@ -30,6 +30,7 @@ class Site extends Model
     protected $instagram;
     protected $facebook;
     protected $twitter;
+    private $invalidDomains = [ 'public', 'uploads', 'assets' ];
 
 	public function __construct(){
 		parent::__construct();
@@ -188,6 +189,9 @@ class Site extends Model
         $this->type = htmlspecialchars($type);
     }
 
+    public function getInvalidDomains(){
+        return $this->invalidDomains;
+    }
     public function returnData() : array{
 		return get_object_vars($this);
 	}
@@ -196,7 +200,7 @@ class Site extends Model
     public function delete(){
         $sqlFiles = array(
             'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
-            'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 
+            'booking_planning_data', 'page', 'medium', 'post', 'content', 'comment', 
             'menu', 'menu_dish_association', 'post_medium_association'
         );
 

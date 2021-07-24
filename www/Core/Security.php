@@ -45,7 +45,8 @@ class Security
 			$usrObj->setId($userId);
 			$check = $usrObj->findOne(TRUE);
 			if(!$check) throw new \Exception('User not found'); 
-	
+			if(!$usrObj->getRole()) throw new \Exception('User has no role'); 
+
 			$roleObj = new Role();
 			$roleObj->setId($usrObj->getRole());
 			$exists = $roleObj->findOne(TRUE);
@@ -53,7 +54,7 @@ class Security
 			if(!$exists) throw new \Exception('Role not found'); 
 
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			//echo $e->getMessage();
 			return false;
 		}
 		return $roleObj;
@@ -62,11 +63,13 @@ class Security
 	public function isAdmin(){
 		if(!self::getUser()) return false;
 		$role = self::getRole();
+
 		if(!$role) return false;
 		$roleObj = new Role();
 		$roleObj->setId($role->getId());
 		$roleObj->setIsAdmin(1);
 		$exists = $roleObj->findOne();
+
 		if(!$exists) return false;
 		return true;
 	}

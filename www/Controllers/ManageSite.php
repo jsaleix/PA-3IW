@@ -12,7 +12,7 @@ use App\Models\Site;
 
 use CMS\Models\Page;
 use CMS\Models\Post;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 class ManageSite{
 
@@ -64,12 +64,16 @@ class ManageSite{
                 */
                 #Checks if sub domain is not already taken
                 $tmpSite = new Site();
-                $prefix = bin2hex(random_bytes(4));
+
+                if (in_array($_POST['subDomain'], $site->getInvalidDomains())) {
+                    throw new \Exception('Invalid sub Domain');
+                }
+
                 $tmpSite->setSubDomain($_POST['subDomain']);
                 $result = $tmpSite->findOne();
                 if( $result ){
                     //self::returnJson("subDomain", 460);
-                    throw new \Exception('subDomain already taken');
+                    throw new \Exception('Sub domain already taken');
                 }
 
                 $tmpSite->setSubDomain(null);
@@ -118,11 +122,11 @@ class ManageSite{
         if( !($site->save()) ){ return false; }
 
         // Creation of new tables 
-        $dir = basename(__DIR__) . '/../Assets/scripts';
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/Assets/scripts';
         clearstatcache();
         $sqlFiles = array(
             'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
-            'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 
+            'booking_planning_data','page', 'medium', 'post', 'content', 'comment', 
             'menu', 'menu_dish_association', 'post_medium_association'
         );
 
@@ -168,7 +172,7 @@ class ManageSite{
                 throw new \Exception('post');
             }
             
-            $dishCatObj = new DishCategory($site->getPrefix());
+            $dishCatObj = new Dish_Category($site->getPrefix());
             $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
             foreach($dishCatArr as $cat){
                 $dishCatObj->setName($cat);

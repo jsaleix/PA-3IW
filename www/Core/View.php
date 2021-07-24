@@ -5,14 +5,12 @@ namespace App\Core;
 class View
 {
 
-
-	protected $template; // back ou front
-	protected $view; // home admin login et logout
+	protected $template;
+	protected $view; 
 	protected $data = [];
 	protected $baseDir = '';
 
 	public function __construct( $view, $template = "front" ){
-
 		$this->setTemplate($template);
 		$this->setView($view);
 	}
@@ -22,16 +20,16 @@ class View
 	}
 
 	public function setTemplate($template){
-		if(file_exists($this->baseDir . "Views/Templates/".$template.".tpl.php")){
-			$this->template = $this->baseDir . "Views/Templates/".$template.".tpl.php";
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $this->baseDir . "Views/Templates/".$template.".tpl.php")){
+			$this->template = $_SERVER['DOCUMENT_ROOT'] . '/' . $this->baseDir . "Views/Templates/".$template.".tpl.php";
 		}else{
 			die("Erreur de template");
 		}
 	}
 
 	public function setView($view){
-		if(file_exists($this->baseDir . "Views/".$view.".view.php")){
-			$this->view = $this->baseDir . "Views/".$view.".view.php";
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $this->baseDir . "Views/".$view.".view.php")){
+			$this->view = $_SERVER['DOCUMENT_ROOT'] . '/' . $this->baseDir . "Views/".$view.".view.php";
 		}else{
 			die("Erreur de vue");
 		}

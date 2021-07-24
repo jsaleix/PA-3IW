@@ -15,8 +15,8 @@ class Autoload
 			// Core\Router -> Core/Router
 			$class = str_replace("\\", "/", $class);
 		
-			if( file_exists($class.".php")){
-				include $class.".php";
+			if( file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $class.".php")){
+				include $_SERVER['DOCUMENT_ROOT'] .'/' . $class.".php";
 			}
 			
 		});
