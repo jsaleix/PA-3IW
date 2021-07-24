@@ -8,6 +8,13 @@
                 <p>
                     <?=$post['content']?>
                 </p>
+                <?php if(isset($medias) && !empty($medias)):?>
+                    <section id="medias_section">
+                        <?php foreach ($medias as $media):?>
+                            <img src="<?= DOMAIN . $media['image']?>" alt="<?= $media['name'] ?>">
+                        <?php endforeach;?>
+                    </section>
+                <?php endif ?>
 
                 <?php if($post['allowComment']):?>
                     <hr/>
@@ -41,3 +48,19 @@
 
        </div>
 </main>
+
+<style>
+    #medias_section{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    #medias_section img{
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 25%;
+        object-fit: cover;
+    }
+</style>

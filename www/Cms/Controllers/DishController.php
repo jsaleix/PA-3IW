@@ -6,7 +6,7 @@ use App\Core\FormBuilder;
 use App\Core\FormValidator;
 
 use CMS\Models\Dish;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
@@ -31,7 +31,7 @@ class DishController{
 		$content = "";
 		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit', 'Delete' ];
 		$datas = [];
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 
 		if($dishes){
 			foreach($dishes as $item){
@@ -64,7 +64,7 @@ class DishController{
 
 	public function createDishAction($site){
 		$dishObj 	= new Dish($site->getPrefix());
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr 	= [];
 		
@@ -138,7 +138,7 @@ class DishController{
 			exit();
 		}
 
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		

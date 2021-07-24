@@ -1,0 +1,28 @@
+#Entities 
+/ent/post:
+  controller: postcontroller
+  action: renderpost
+
+/ent/dish:
+  controller: dishController
+  action: renderdish
+
+/ent/menu:
+  controller: menuController
+  action: renderMenu
+
+/ent/api/booking/number:
+  controller: bookingController
+  action: apiCheckPersonNumber
+
+/ent/api/booking/calendar:
+  controller: bookingController
+  action: apiGetCalendar
+
+/ent/api/booking/time:
+  controller: bookingController
+  action: apiGetTimes
+
+/ent/sitemap.xml:
+  controller: sitemapcontroller
+  action: renderSiteMap

@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Dish` (
   INDEX `fk_dish_category_idx` (`category` ASC),
   CONSTRAINT `fk_dish_category_:X`
     FOREIGN KEY (`category`)
-    REFERENCES `easymeal`.`:X_DishCategory` (`id`)
+    REFERENCES `easymeal`.`:X_Dish_Category` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

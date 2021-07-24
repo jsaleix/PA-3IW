@@ -57,6 +57,7 @@ class Security{
 				$user->setFirstname(htmlspecialchars($_POST["firstname"]));
 				$user->setLastname(htmlspecialchars($_POST["lastname"]));
 				$user->setEmail(htmlspecialchars($_POST["email"]));
+				$user->setRole(1);
 				$user->setPwd( password_hash(htmlspecialchars($_POST["pwd"]), PASSWORD_BCRYPT) );
 				$res = $user->save();
 				if( !$res){
@@ -71,10 +72,12 @@ class Security{
 				$mail->setExpiresDate(new \DateTime('now'));
 				$mail->setToken(bin2hex(random_bytes(128)));
 				$mail->save();
-				FileUploader::createUserDirs($user->getLastId());
+
+				$userId = $user->findOne();
+				FileUploader::createUserDirs($userId['id']);
+				
 				$mail->sendConfirmationMail($user->getEmail());
 				
-
 				header('Location: '.DOMAIN);
 				exit();
 			}else{

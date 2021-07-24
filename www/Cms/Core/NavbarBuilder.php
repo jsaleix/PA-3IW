@@ -10,7 +10,6 @@ class NavbarBuilder
 	{
 		$pageObj = new Page();
 		$pageObj->setPrefix($site->getPrefix());
-        $pageObj->setCategory('IS NULL');
 		$pageObj->setVisible(true);
         $pagesToShow = $pageObj->findAll();
 
@@ -18,8 +17,8 @@ class NavbarBuilder
 		
 		$theme = strlen($theme)>0 ? $theme : "Default"; 
 
-		if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . "CMS/Views/Front/".$theme."/navigation.php")){
-			include_once($_SERVER['DOCUMENT_ROOT'] . '/' . "CMS/Views/Front/".$theme."/navigation.php");
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Front/".$theme."/navigation.php")){
+			include_once($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Front/".$theme."/navigation.php");
 		}else{
 			die('navbar not found');
 		}
@@ -27,8 +26,8 @@ class NavbarBuilder
 
 	public function renderBackNavigation($site): void
 	{
-		if(file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . "CMS/Views/Back/navigation.php")){
-			include $_SERVER['DOCUMENT_ROOT'] . '/' . "CMS/Views/Back/navigation.php";
+		if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Back/navigation.php")){
+			include $_SERVER['DOCUMENT_ROOT'] . "/CMS/Views/Back/navigation.php";
 		}else{
 			die('navbar not found');
 		}	

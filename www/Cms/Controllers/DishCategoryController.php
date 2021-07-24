@@ -4,7 +4,7 @@ namespace CMS\Controller;
 use App\Core\FormValidator;
 
 use CMS\Models\Dish;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
@@ -22,7 +22,7 @@ class DishCategoryController{
 	}
 
 	public function manageDishCategoriesAction($site){
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatList = [];
 		$content = "";
@@ -32,8 +32,8 @@ class DishCategoryController{
 		if($dishCategories){
 			foreach($dishCategories as $item){
 				//$dishCatList[] = $dishCatObj->listFormalize($item);
-				$buttonEdit = '<a href="dishcategory/edit?id=' . $item['id'] . '">Go</a>';
-				$buttonDelete = '<a href="dishcategory/delete?id=' . $item['id'] . '">Go</a>';
+				$buttonEdit = '<a href="Dishcategory/edit?id=' . $item['id'] . '">Go</a>';
+				$buttonDelete = '<a href="Dishcategory/delete?id=' . $item['id'] . '">Go</a>';
 				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit."','". $buttonDelete . "'";
 
 			}
@@ -41,7 +41,7 @@ class DishCategoryController{
 			$content = "No dish category yet";
 		}
 
-		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'dishcategory/create'];
+		$addCatButton = ['label' => 'Add a new dish category', 'link' => 'Dishcategory/create'];
 		
 		$view = new View('list', 'back', $site);
 		$view->assign("createButton", $addCatButton);
@@ -51,7 +51,7 @@ class DishCategoryController{
 	}
 
 	public function createDishCategoryAction($site){
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCatArr = [];
 		$dishCatArr[0] = 'None';
 
@@ -87,7 +87,7 @@ class DishCategoryController{
 			exit();
 		}
 
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCatObj->setId($_GET['id']??0);
 		$dish = $dishCatObj->findOne();
 		if(!$dish){
@@ -127,7 +127,7 @@ class DishCategoryController{
 	public function deleteDishCategoryAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('dish category not set');}
-			$dishCatObj = new DishCategory($site->getPrefix());
+			$dishCatObj = new Dish_Category($site->getPrefix());
 			$dishCatObj->setId($_GET['id']??0);
 			$dish = $dishCatObj->findOne();
 			if(!$dish){ throw new \Exception('dish category not found');}
@@ -146,7 +146,7 @@ class DishCategoryController{
 	*/
 
 	public function renderList($site, $filter = null){
-		$dishCatObj = new DishCategory($site->getPrefix());
+		$dishCatObj = new Dish_Category($site->getPrefix());
 		$dishCatList = $dishCatObj->findAll();
 
 		$dishObj = new Dish($site->getPrefix());

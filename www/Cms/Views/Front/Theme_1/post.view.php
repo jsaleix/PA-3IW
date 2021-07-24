@@ -1,54 +1,64 @@
-<h2><?=$post['title']?></h2>
-<p id='<?=$publisher['id']?>'>By <?=$post['author']?></p>
-<p><?=$post['content']?></p>
-<hr>
-<?php if(isset($errors) && !empty($errors)):?>
-    <?php foreach ($errors as $error):?>
-        <li style="color:red"><?=$error;?></li>
-    <?php endforeach;?>
-<?php endif ?>
+<main class="main-container">
+       <div class="col-10 article-container">
+           <?php if(!isset($notFound)): ?>
 
-<?php if($post['allowComment']):?>
-    <?php if($canPostComment): ?>
-        <button onClick="toggleBox()">Publish a comment</button>
-        <form id="commentBox" action="" method="POST">
-            <input name="message"/>
-            <input type="submit" value="Publish"/>
-        </form>
-    <?php else: ?>
-        <button>You must be logged in to post a comment</button>
-    <?php endif;?>
-<?php endif;?>
+                <h1><?=$post['title']?></h1>
+                <p>By <span><?=$post['author']?></span> the <span><?= (new DateTime($post['publicationDate']))->format("d/m/y")?></span> at <span><?= (new DateTime($post['publicationDate']))->format("H:i")?></span></p>
+                <hr/>
+                <p>
+                    <?=$post['content']?>
+                </p>
+                <?php if(isset($medias) && !empty($medias)):?>
+                    <section id="medias_section">
+                        <?php foreach ($medias as $media):?>
+                            <img src="<?= DOMAIN . $media['image']?>" alt="<?= $media['name'] ?>">
+                        <?php endforeach;?>
+                    </section>
+                <?php endif ?>
 
-<?php if(isset($comments) && !empty($comments)):?>
-    <?php foreach ($comments as $comment):?>
-        <p><?=$comment['message']?></p>
-        <i>Published by <?= $comment['author'] ?> - <?=$comment['date']?></i>
-        <p>###############</p>
-    <?php endforeach;?>
-<?php endif ?>
+                <?php if($post['allowComment']):?>
+                    <hr/>
+                    <?php if($canPostComment): ?>
+                        <?php App\Core\FormBuilder::render($commentForm)?>    
+                    <?php endif;?>
+                <?php endif;?>
 
-<script>
-    function toggleBox(){
-        let box = document.getElementById('commentBox');
-        let style = getComputedStyle(box);
-        if(style.display === 'none'){
-            box.style.display = 'flex';
-        }else{
-            box.style.display = 'none';
-        }
-    }
-</script>
+                <?php if(isset($errors) && !empty($errors)):?>
+                    <?php foreach ($errors as $error):?>
+                        <li style="color:red"><?=$error;?></li>
+                    <?php endforeach;?>
+                <?php endif ?>
+
+                <?php if(isset($comments) && !empty($comments)):?>
+                    <h3>Comments</h3>
+                    <?php foreach ($comments as $comment):?>
+                        <div class="comment col-6 col-md-10 col-sm-12">
+                            <p><b><?=$comment['author']?></b> | <?= $comment['date'] ?> </p>
+                            <p><?=$comment['message']?></p>
+                        </div>
+                    <?php endforeach;?>
+                <?php endif ?>
+            <?php else: ?>
+                <h1>Not Found :/</h1>
+                <hr/>
+                <p>Sorry, we're unable to find the article you're looking for.</p>
+            <?php endif; ?>
+
+       </div>
+</main>
 
 <style>
-    #commentBox{
-        display: none;
+    #medias_section{
+        display: flex;
         flex-direction: row;
-        justify-items: flex-start;
-        align-items: flex-end;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
     }
 
-    #commentBox:nth-child(1){
-        padding-bottom: 2em;
+    #medias_section img{
+        margin-right: 10px;
+        margin-bottom: 10px;
+        width: 25%;
+        object-fit: cover;
     }
 </style>

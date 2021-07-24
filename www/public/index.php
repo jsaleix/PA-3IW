@@ -1,34 +1,40 @@
 <?php
-namespace Publi;
-
-define('STYLES', "/Styles/main.css"); 
-
 use App\Core\Router;
 use App\Core\ConstantMaker;
+use App\Core\Helpers;
+use App\Core\ErrorReporter;
 use App\Middlewares\Middleware;
+use App\Autoload;
+
+require __DIR__."/../Autoload.php";
+
+define('STYLES', "/Assets/styles/main.css"); 
 
 session_start();
 
-require "../Autoload.php";
-
-\App\Autoload::register();
+Autoload::register();
 new ConstantMaker();
 
 $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
 $uri = $uriExploded[0];
 
+/*
+*	If the url pattern matches /site we must use the cms part of the project
+*	with its own routers mecanisms
+*/
 if( preg_match('/\/site\/+/', $uri) ){
-	if( file_exists('../Cms/index.php') ){
-		include '../Cms/index.php';
+	if( file_exists(__DIR__.'/../Cms/index.php') ){
+		include __DIR__.'/../Cms/index.php';
 		\CMS\handleCMS($uri);
 	}else{
-		die('Missing required cms file');
+		ErrorReporter::report("index for /site: Missing required cms file" );
+		Helpers::serverErrorStatus();
 	}
 	return;
 }
 
 
-$router = new Router($uri, "../routes.yml");
+$router = new Router($uri, __DIR__."/../routes.yml");
 $c = $router->getController();
 $a = $router->getAction();
 $m = $router->getMiddleware();
@@ -37,33 +43,24 @@ if($m){
 	Middleware::$m();
 }
 
-if( file_exists("../Controllers/".$c.".php")){
-
-	include "../Controllers/".$c.".php";
-	// SecurityController =>  App\Controller\SecurityController
-
-	$c = "App\\Controller\\".$c;
-	if(class_exists($c)){
-		// $controller ====> SecurityController
-		$cObjet = new $c();
-		if(method_exists($cObjet, $a)){
-			$cObjet->$a();
-		}else{
-			die("L'action' : ".$a." n'existe pas");
-		}
-
-	}else{
-		die("La classe controller : ".$c." n'existe pas");
+try{
+	if( !file_exists(__DIR__."/../Controllers/".$c.".php")){
+		throw new \Exception("Missing controller file: ".$c);
 	}
+	include __DIR__."/../Controllers/".$c.".php";
+	$c = "App\\Controller\\".$c;
 
-}else{
-	die("Le fichier controller : ".$c." n'existe pas");
+	if( !class_exists($c) ){
+		throw new \Exception("Missing controller class: ".$c);
+	}
+	$cObjet = new $c();
+
+	if( !method_exists($cObjet, $a) ){
+		throw new \Exception("Action: ".$a." doesn't exist");
+	}
+	$cObjet->$a();
+
+}catch(\Exception $e){
+	ErrorReporter::report("index: " . $e->getMessage() );
+	Helpers::serverErrorStatus();
 }
-
-
-
-
-
-
-
-

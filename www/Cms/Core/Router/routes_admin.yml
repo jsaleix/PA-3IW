@@ -1,4 +1,3 @@
-
 /:
   controller: admin
   action: default
@@ -52,7 +51,7 @@
   action: editdish
 
 /dishcategories:
-  controller: dishCategoryController
+  controller: DishCategoryController
   action: managedishcategories
 
 /dish/delete:
@@ -60,16 +59,16 @@
   action: deletedish
 
 /dishcategory/create:
-  controller: dishCategoryController
-  action: createdishCategory
+  controller: DishCategoryController
+  action: createDishCategory
 
 /dishcategory/edit:
-  controller: dishCategoryController
-  action: editdishcategory
+  controller: DishCategoryController
+  action: editDishCategory
 
 /dishcategory/delete:
-  controller: dishCategoryController
-  action: deletedishcategory
+  controller: DishCategoryController
+  action: deleteDishCategory
 
 /comments:
   controller: commentController
@@ -187,28 +186,3 @@
 /api/getfilters:
   controller: actionController
   action: getActionFilters
-
-#Entities 
-/ent/post:
-  controller: postcontroller
-  action: renderpost
-
-/ent/dish:
-  controller: dishController
-  action: renderdish
-
-/ent/menu:
-  controller: menuController
-  action: renderMenu
-
-/ent/api/booking/number:
-  controller: bookingController
-  action: apiCheckPersonNumber
-
-/ent/api/booking/calendar:
-  controller: bookingController
-  action: apiGetCalendar
-
-/ent/api/booking/time:
-  controller: bookingController
-  action: apiGetTimes

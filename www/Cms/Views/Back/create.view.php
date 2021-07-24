@@ -21,5 +21,26 @@
         <?php App\Core\FormBuilder::render($form)?>    
     </div>
 
-
     <?= $alert??''; ?>
+    
+<style>
+    form{
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        flex-direction: flex-start;
+    }
+
+    form input{
+        margin-bottom: 10px;
+        background-color: transparent;
+        border: 1px solid #2DC091;
+        color: black;
+        padding: 0.8em;
+        padding-left: 1em;
+        padding-right: 1em;
+        font-weight: normal;
+        outline: none;
+        font-size: 16px;
+    }
+</style>

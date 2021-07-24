@@ -1,0 +1,218 @@
+*::-webkit-scrollbar {
+    display: none;
+}
+*{
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+}
+.edit-site{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2em;
+    align-self: center;
+}
+
+.input {
+    width: 30%;
+    background-color: transparent;
+    border: 1px solid #2DC091;
+    color: black;
+    padding: 0.8em;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-weight: normal;
+    outline: none;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .input:disabled{
+      background-color: rgb(170, 170, 170);
+  }
+  .input:disabled:hover{
+    cursor:not-allowed;
+  }
+  
+  .input-100 {
+    width: 100%;
+  }
+  
+  .input::-moz-placeholder {
+    color: #959595;
+  }
+  
+  .input:-ms-input-placeholder {
+    color: #959595;
+  }
+  
+  .input::placeholder {
+    color: #959595;
+  }
+
+  .input-banner-container {
+    display: flex;
+    flex-direction: column;
+    border: 4px solid #2DC091;
+  }
+  
+  .input-banner-container img {
+    width: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    aspect-ratio: 0.93;
+  }
+  
+  .input-banner-container label {
+    width: 100%;
+    color: white;
+    background: #2DC091;
+    padding: 1em;
+    font-size: 16px;
+    text-align: center;
+    transition: 0.5s;
+  }
+  
+  .input-banner-container label:hover {
+    cursor: pointer;
+    transition: 0.5s;
+    color: #325348;
+  }
+  
+  .input-banner-container input {
+    display: none;
+  }
+
+
+  .btn {
+    display: flex;
+    border: none;
+    color: white;
+    background-color: #2DC091;
+    font-size: 16px;
+    padding: 0.5em;
+    padding-left: 2em;
+    padding-right: 2em;
+    transition: 0.5s;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .btn-100{
+    width: 100%;
+  }
+  
+  .btn-light {
+    color: #2DC091;
+    border: 1px solid #2DC091;
+    background-color: transparent;
+  }
+  
+  .btn:hover {
+    transition: 0.5s;
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+
+  .thumbnail-slider {
+    border-radius: 5px;
+    border: 4px solid #2DC091;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .thumbnail-slider .arrow-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  
+  .thumbnail-slider .arrow-container .arrow {
+    transition: 0.5s;
+  }
+  
+  .thumbnail-slider .arrow-container .arrow:hover {
+    transition: 0.5s;
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+  
+  .thumbnail-slider .slide {
+    width: 100%;
+    -o-object-fit: contain;
+       object-fit: contain;
+    vertical-align: middle;
+    display: none;
+  }
+
+  .form-100{
+    width: 100%;
+  }
+  .form-90{
+    width: 90%;
+  }
+
+  .alignedInputs{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .alignedInputs .input{
+    width: 48%;
+  }
+
+
+  .alert-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    top: 0;
+    max-width: 400px;
+    padding: 1em;
+    z-index: 100000 !important;
+  }
+  
+  .alert-container .alert {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: 100%;
+    padding: 1em;
+    color: white;
+    margin-bottom: 0.5em;
+    background-color: #B6B6B6;
+    border: 2px solid #6F6F6F;
+  }
+  
+  .alert-container .alert-warn {
+    background-color: #DBBA88;
+    border: 2px solid #BD985F;
+  }
+  
+  .alert-container .alert-error {
+    background-color: #BC5858;
+    border: 2px solid #822D2D;
+  }
+  
+  .alert-container .alert-success {
+    background-color: #92C7B6;
+    border: 2px solid #3B826B;
+  }
+  
+  .alert-container .alert-info {
+    background-color: #96BACE;
+    border: 2px solid #4C7F9B;
+  }

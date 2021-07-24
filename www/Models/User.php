@@ -299,37 +299,37 @@ class User extends Model
             "inputs"=>[
                 "firstname"=>[ 
                     "type"=>"text",
-                    "label"=>"Votre prénom",
+                    "label"=>"Your first name",
                     "minLength"=>2,
                     "maxLength"=>55,
                     "id"=>"firstname",
                     "class"=>"input input-100",
-                    "placeholder"=>"Exemple: Yves",
-                    "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
+                    "placeholder"=>"Example: John",
+                    "error"=>"Your name length must be between 2 and 55 characters",
                     "required"=>true,
                     "value"=> $this->getFirstname()
                 ],
                 "lastname"=>[ 
                     "type"=>"text",
-                    "label"=>"Votre nom",
+                    "label"=>"Your last name",
                     "minLength"=>2,
                     "maxLength"=>255,
                     "id"=>"lastname",
                     "class"=>"input input-100",
-                    "placeholder"=>"Exemple: SKRZYPCZYK",
-                    "error"=>"Votre nom doit faire entre 2 et 255 caractères",
+                    "placeholder"=>"Example: Doe",
+                    "error"=>"Your last name length must be between 2 and 255 characters",
                     "required"=>true,
                     "value"=> $this->getLastname()
                 ],
                 "email"=>[ 
                     "type"=>"email",
-                    "label"=>"Votre email",
+                    "label"=>"Your mail",
                     "minLength"=>8,
                     "maxLength"=>320,
                     "id"=>"email",
                     "class"=>"input input-100",
-                    "placeholder"=>"Exemple: nom@gmail.com",
-                    "error"=>"Votre email doit faire entre 8 et 320 caractères",
+                    "placeholder"=>"Example: name@gmail.com",
+                    "error"=>"Your mail must be between 8 and 320 characters",
                     "required"=>true,
                     "value"=> $this->getEmail()
                 ],
@@ -367,7 +367,7 @@ class User extends Model
                     "id"=>"pwd",
                     "class"=>"input-auth",
                     "placeholder"=>"Your current password",
-                    "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
+                    "error"=>"Your password must be at least 8 characters",
                     "required"=>true
                 ],
                 "pwd"=>[ 
@@ -377,7 +377,7 @@ class User extends Model
                     "id"=>"pwd",
                     "class"=>"input-auth",
                     "placeholder"=>"New password",
-                    "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
+                    "error"=>"Your password must be at least 8 characters",
                     "required"=>true
                 ],
                 "pwdConfirm"=>[ 
@@ -387,7 +387,7 @@ class User extends Model
                     "id"=>"pwdConfirm",
                     "class"=>"input-auth",
                     "placeholder"=>"New password confirmation",
-                    "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
+                    "error"=>"Your confirmation password does not match",
                     "required"=>true
                 ]
             ]

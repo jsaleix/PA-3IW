@@ -163,44 +163,31 @@
                 <div class="dashSection shadow-purple">
                     <div class="rowList">
                         <h2>Réservations en attente de validation</h2>
-                        <button class="cta-purple">Ajouter</button>
+                        <!--<button class="cta-purple">Ajouter</button>-->
                     </div>
-                    <div class="columnList">
-                        <div class="array">
-                            <h3>Nom</h3>
-                            <h3>Date</h3>
-                            <h3>Heure</h3>
-                            <h3>Pour</h3>
-                            <h3>Plus</h3>
+                    <?php if(isset($pendingBooking) && count($pendingBooking) > 0 ): ?>
+                        <div class="columnList">
+                            <div class="array">
+                                <h3>Nom</h3>
+                                <h3>Date</h3>
+                                <h3>Heure</h3>
+                                <h3>Pour</h3>
+                                <h3>Plus</h3>
+                            </div>
+                            <?php foreach($pendingBooking as $booking): ?>
+                                <div class="array">
+                                    <span><?= $booking['client'] ?></span>
+                                    <span><?= $booking['date'] ?></span>
+                                    <span><?= $booking['hour'] ?></span>
+                                    <span><?= $booking['number'] ?> persons</span>
+                                    <span><button class="cta-green-light">Details</button></span>
+                                </div>
+                            <?php endforeach;?>
                         </div>
-                        <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>
-                        <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>                                    <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>                                    <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>
+                    <?php else: ?>
+                        <p>No booking yet </p>
+                    <?php endif; ?>
 
-                    </div>
                 </div>
             </div>
 
@@ -209,42 +196,28 @@
                     <div class="rowList">
                         <h2>Réservations actuelles</h2>
                     </div>
-                    <div class="columnList">
-                        <div class="array">
-                            <h3>Nom</h3>
-                            <h3>Date</h3>
-                            <h3>Heure</h3>
-                            <h3>Pour</h3>
-                            <h3>Plus</h3>
+                    <?php if(isset($currentBooking) && count($currentBooking) > 0 ): ?>
+                        <div class="columnList">
+                            <div class="array">
+                                <h3>Nom</h3>
+                                <h3>Date</h3>
+                                <h3>Heure</h3>
+                                <h3>Pour</h3>
+                                <h3>Plus</h3>
+                            </div>
+                            <?php foreach($currentBooking as $booking): ?>
+                                <div class="array">
+                                    <span><?= $booking['client'] ?></span>
+                                    <span><?= $booking['date'] ?></span>
+                                    <span><?= $booking['hour'] ?></span>
+                                    <span><?= $booking['number'] ?> persons</span>
+                                    <span><button class="cta-green-light">Details</button></span>
+                                </div>
+                            <?php endforeach;?>
                         </div>
-                        <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>
-                        <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>                                    <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>                                    <div class="array">
-                            <span>John Doe</span>
-                            <span>Aujourd'hui</span>
-                            <span>19h15</span>
-                            <span>4 personnes</span>
-                            <span><button class="cta-green-light">Détails</button></span>
-                        </div>
-
-                    </div>
+                    <?php else: ?>
+                        <p>No booking yet </p>
+                    <?php endif; ?>
                 </div>
             </div>
 

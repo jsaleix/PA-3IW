@@ -3,6 +3,8 @@ namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
+use CMS\Core\CMSView as View;
+
 use App\Core\ErrorReporter;
 use App\Models\Site;
 use App\Models\Action;
@@ -96,6 +98,11 @@ class DynamicRouter extends Router implements RouterInterface
 		return $this->filter;
 	}
 
+	public function renderInvalidRoute() : void{
+		$view = new View('somethingWentWrong', 'front',  $this->site);
+		$view->assign('pageTitle', "Dashboard");
+	}
+
 	public function route(): void{
 		try{
 			if(!$this->site) {
@@ -117,7 +124,8 @@ class DynamicRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site, $f);
 		}catch(\Exception $e){
 			ErrorReporter::report("DynamicRouter route():" . $e->getMessage() );
-			echo $e->getMessage();
+			//echo $e->getMessage();
+			$this->renderInvalidRoute();
 		}
 	}
 

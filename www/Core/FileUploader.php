@@ -40,7 +40,12 @@ class FileUploader
 	}
 
 	public static function createUserDirs($user){
-		mkdir($_SERVER['DOCUMENT_ROOT']. '/public/uploads/users/' . $user);
+		try{
+			if(!mkdir($_SERVER['DOCUMENT_ROOT']. '/public/uploads/users/' . $user))
+			throw new \Exception('Couldn\'t create the folder');
+		}catch(\Exception $e){
+			ErrorReporter::report('FileUploader createUserDirs :'. $e->getMessage());
+		}
 	}
 
 	public static function uploadImage($file, $name, $dir){

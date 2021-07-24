@@ -4,7 +4,7 @@ namespace CMS\Controller;
 
 use CMS\Models\Dish;
 use CMS\Models\Menu;
-use CMS\Models\DishCategory;
+use CMS\Models\Dish_Category;
 use CMS\Models\Menu_dish_association;
 use App\Core\Helpers as Helpers;
 use CMS\Core\CMSView as View;
@@ -49,7 +49,7 @@ class MenuController{
             exit();
 		}
 		
-        $dishCatObj = new DishCategory($site->getPrefix());
+        $dishCatObj = new Dish_Category($site->getPrefix());
         $dishCatArr = $dishCatObj->findAll();
         $selectDishCat = [];
 
@@ -223,7 +223,7 @@ class MenuController{
 
 		$menuObj = new Menu($site->getPrefix());
         $dishObj = new Dish($site->getPrefix());
-        $dishCatObj = new DishCategory($site->getPrefix());
+        $dishCatObj = new Dish_Category($site->getPrefix());
         $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
 
         $menuData = [];
@@ -284,7 +284,7 @@ class MenuController{
 
             $menuObj = new Menu();
             $dishMenuAssocObj = new Menu_dish_association();
-            $dishCatObj = new DishCategory();
+            $dishCatObj = new Dish_Category();
 
             $dishesData = [];
             
