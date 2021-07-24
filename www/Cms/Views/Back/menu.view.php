@@ -1,10 +1,8 @@
 <form method="POST" id="form_content" class="form-content" action="" enctype="multipart/form-data">
         <div class="row" >
             <div class="col-12 col-sm-12 col-md-12 col-xl-12">
-                <div class="col-inner">
-                    <div class="pageTitle">
-                        <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
-                    </div>
+                <div class="pageTitle">
+                    <h2 style="font-weight: lighter;"><?=$pageTitle?></h2>
                 </div>
             </div>
         </div>
@@ -17,46 +15,35 @@
 
         <?php endif;?>
 
-        <?php if(isset($message)):?>
-            <h3> <?=$message?> </h3>
-        <?php endif;?>
-
-
         <div class="row" >
             <div class="col-4 col-sm-12 col-md-12 col-xl-4">
-                <div class="col-inner">
-                    <div class="darkSection">
-                    <form methode="POST" action="">
-                        <input 
-                            name="name" 
-                            type="text" 
-                            placeholder="Nom" 
-                            value="<?=$name??''?>"/>
-                        <input 
-                            name="description"  
-                            class="longInput" 
-                            type="text" 
-                            placeholder="Description" 
-                            value="<?=$description??''?>"/>
-                        <input 
-                            name="notes"  
-                            class="longInput" 
-                            type="text" 
-                            placeholder="Notes" 
-                            value="<?=$notes??''?>"/>
-                        <input 
-                            name="action"  
-                            class="longInput" 
-                            type="hidden" 
-                            value="apply"/>
-                        <div class="validateRow">
-                            <button type="submit" class="cta-white" >Apply</button>
-                        </div>
-                        </form>
+                <form methode="POST" action="form-col">
+                    <input 
+                        name="name" 
+                        type="text" 
+                        placeholder="Nom" 
+                        value="<?=$name??''?>"
+                        class="input input-100"
+                        />
+                    <textarea 
+                        name="description"
+                        type="text" 
+                        placeholder="Description" 
+                        class="input input-100"><?=$description??''?></textarea>
+                    <input 
+                        name="notes"
+                        type="text" 
+                        placeholder="Notes" 
+                        class="input input-100"
+                        value="<?=$notes??''?>"/>
+                    <input 
+                        name="action"
+                        type="hidden" 
+                        value="apply"/>
+                    <div class="validateRow">
+                        <button type="submit" class="btn btn-100" >Apply</button>
                     </div>
-                </div>
-
-                
+                </form>
             </div>
 
             <div class="col-8 col-sm-12 col-md-12 col-xl-8">
