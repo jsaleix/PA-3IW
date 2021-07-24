@@ -6,8 +6,15 @@ use App\Models\User;
 
 use CMS\Core\CMSView as View;
 use CMS\Models\Booking;
+use CMS\Models\Comment;
 
 class Admin{
+
+	private function getLastComments($prefix){
+		$commentObj = new Comment($prefix);
+		$comments = $commentObj->findAll(array('limit' => 5 ));
+		return $comments;
+	}
 
 	private function getPendingBooking($prefix){
 		$bookingObj = new Booking($prefix);
@@ -59,8 +66,9 @@ class Admin{
 					$client = new User();
 					$client->setId($item['client']);
 					$client->findOne(TRUE);
-					$item['date'] = (new \DateTime())->format('d/m/Y');
-					$item['hour'] = (new \DateTime())->format('H:i:s');
+					$date = new \DateTime($item['date']);
+					$item['date'] = $date->format('d/m/Y');
+					$item['hour'] = $date->format('H:i:s');
 					$item['client'] = ($client->getFirstname(). ' ' . $client->getLastname());
 					$list[] = $item;
 				}
@@ -72,6 +80,7 @@ class Admin{
 	public function defaultAction($site){
 		$pendingBooking = $this->getPendingBooking($site->getPrefix());
 		$currentBooking = $this->getCurrentBooking($site->getPrefix());
+		$comments = $this->getLastComments($site->getPrefix());
 
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
@@ -80,6 +89,7 @@ class Admin{
 		$view->assign('content', $html);
 		$view->assign('pendingBooking', $pendingBooking );
 		$view->assign('currentBooking', $currentBooking );
+		$view->assign('lastComments', $comments );
 
 	}
 

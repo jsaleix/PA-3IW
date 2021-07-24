@@ -161,7 +161,7 @@ class Database
 		}
 	}
 
-	public function findAll(){
+	public function findAll($params = null){
 		$columns = array_diff_key (
 			get_object_vars($this),
 			get_class_vars(get_class())
@@ -192,6 +192,13 @@ class Database
 				}
 			}
 		}
+
+		if($params && gettype($params) == 'array'){
+			if(isset($params['limit'])){
+				$req .= ' limit '. $params['limit'];
+			}
+		}
+
 		$query = $this->pdo->prepare($req);
 		$query->execute(array_values($columns));
 		$result = $query->fetchAll();
