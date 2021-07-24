@@ -67,7 +67,7 @@ class FileUploader
 				throw new \Exception('No size');
 			} 
 	
-			if ($file["size"] > 5000000) {
+			if ($file["size"] > 20000000) {
 				throw new \Exception('File too large');
 			}
 	
