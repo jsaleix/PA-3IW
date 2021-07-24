@@ -85,7 +85,6 @@ class Menu extends CMSModels
                 ],
 				"description"=>[ 
 					"type"=>"textarea",
-					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input input-100",
                     "placeholder"=>"Menu description",
