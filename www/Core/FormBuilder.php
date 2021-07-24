@@ -51,7 +51,8 @@ class FormBuilder
 				case 'file-img':
 					$html .= self::renderFileImgInput($name, $configInput);
 					break;
-
+				case 'textarea':
+					$html .= self::renderTextarea($name, $configInput);
 				default:
 					$html .= self::renderInput($name, $configInput);
 
@@ -124,6 +125,30 @@ class FormBuilder
 						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
 						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
 						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
+		return $html;
+	}
+
+	public static function renderTextarea($name, $configInput){
+		$html =  "<textarea 
+						name=\"".$name."\" 
+						type=\"".($configInput["type"]??"text")."\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						" value=\"" . ($configInput["value"]??"") . "\" />";
+						$html =  "<input 
+						name=\"".$name."\" 
+						type=\"".($configInput["type"]??"text")."\" 
+						id=\"".($configInput["id"]??"")."\" 
+						class=\"".($configInput["class"]??"")."\" 
+						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
+						(!empty($configInput["required"])?"required=\"required\"":"") .
+						(!empty($configInput["disabled"])?"disabled":"").
+						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
+						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
+						">".htmlspecialchars($configInput["value"]??"")."</textarea>";
 		return $html;
 	}
 
