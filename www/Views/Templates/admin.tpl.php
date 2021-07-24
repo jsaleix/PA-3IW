@@ -13,6 +13,7 @@
 <body>
 	<header>
 		<h1>Admin tpl</h1>
+		<hr>
 	</header>
 
 	<?php include $this->view ;?>
