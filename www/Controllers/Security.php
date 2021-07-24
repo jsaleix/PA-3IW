@@ -57,7 +57,7 @@ class Security{
 				$user->setFirstname(htmlspecialchars($_POST["firstname"]));
 				$user->setLastname(htmlspecialchars($_POST["lastname"]));
 				$user->setEmail(htmlspecialchars($_POST["email"]));
-				$user->setRole(0);
+				$user->setRole(1);
 				$user->setPwd( password_hash(htmlspecialchars($_POST["pwd"]), PASSWORD_BCRYPT) );
 				$res = $user->save();
 				if( !$res){
