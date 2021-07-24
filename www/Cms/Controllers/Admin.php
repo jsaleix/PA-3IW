@@ -28,7 +28,7 @@ class Admin{
 				$today = new \DateTime();
 				if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
 				{
-					$bookDate = new Booking($site->getPrefix());
+					$bookDate = new Booking($prefix);
 					$bookDate->setId($item['id']);
 					$bookDate->setStatus(2);
 					$bookDate->save();
@@ -58,7 +58,7 @@ class Admin{
 				$today = new \DateTime();
 				if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
 				{
-					$bookDate = new Booking($site->getPrefix());
+					$bookDate = new Booking($prefix);
 					$bookDate->setId($item['id']);
 					$bookDate->setStatus(2);
 					$bookDate->save();
