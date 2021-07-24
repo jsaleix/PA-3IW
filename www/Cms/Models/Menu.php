@@ -67,7 +67,7 @@ class Menu extends CMSModels
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_content",
-                "class"=>"form-content",
+                "class"=>"form-col col-8",
                 "submit"=>"Add",
                 "submitClass"=>"btn btn-100"
             ],
