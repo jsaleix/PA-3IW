@@ -27,6 +27,10 @@
   controller: Security
   action: mailconfirm
 
+/profile:
+  controller: Main
+  action: displayUserProfile
+
 # authenticated user routes
 /account:
   controller: Account
@@ -77,6 +81,11 @@
 /admin/roles:
   controller: Admin
   action: displayRoles
+  middleware: isAdmin
+
+/admin/role/create:
+  controller: Admin
+  action: createRole
   middleware: isAdmin
 
 /admin/role:

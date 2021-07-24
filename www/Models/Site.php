@@ -23,7 +23,7 @@ class Site extends Model
 	protected $prefix;
     protected $type;
     protected $theme;
-
+    protected $creationDate;
     protected $address;
     protected $phoneNumber;
     protected $emailPro;
@@ -45,6 +45,13 @@ class Site extends Model
         $this->id = $id;
     }
     
+    public function setCreationDate($creationDate){
+        $this->creationDate = $creationDate;
+    }
+
+    public function getCreationDate(){
+        return $this->creationDate;
+    }
 
     public function getTheme()
     {
@@ -181,68 +188,87 @@ class Site extends Model
         $this->type = htmlspecialchars($type);
     }
 
-    public function initializeSite(){
-        if(!$this->name){ throw new \InvalidArgumentException("missing fields"); }
-        if($this->id){ throw new \InvalidArgumentException("The site already exists"); }
-        if(!($this->save())){ return false; }
-
-
-        // Creation of new tables 
-        $dir = basename(__DIR__) . '/../Assets/scripts';
-        clearstatcache();
-        $sqlFiles = array(
-            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 'menu', 'menu_dish_association', 'post_medium_association'
-        );
-
-        foreach($sqlFiles as $file)
-        {
-            if(!file_exists($dir . '/' . $file .'.script' )){
-                die("Missing required file " . $file);
-                return false;
-            }
-        }
-
-        $toReplace = [':X', ':prefix'];
-        $replaceBy = [$this->prefix, DBPREFIXE];
-
-        try{
-            foreach( $sqlFiles as $table){
-                $table = file_get_contents($dir . '/'.$table.'.script');
-                $script = str_replace($toReplace, $replaceBy, $table);
-                $create = $this->createTable($script);
-                if(!$create){ echo '<br>' .  $table; return false; }
-            }
-            $insert = new Page();
-            $insert->setName('home');
-            $insert->setPrefix($this->prefix);
-            $insert->setCreator(Security::getUser());
-            $insert->save();
-
-            FileUploader::createCMSDirs($this->subDomain);
-
-            $postObj = new Post($this->prefix);
-            $postObj->setTitle('Welcome');
-            $postObj->setContent('This is your first article on your new website.');
-            $postObj->setPublisher(Security::getUser());
-            $postObj->save();
-
-            $dishCatObj = new DishCategory($this->prefix);
-            $dishCatArr = [ 'Starters', 'Dishes', 'Desserts', 'Drinks'];
-            foreach($dishCatArr as $cat){
-                $dishCatObj->setName($cat);
-                $dishCatObj->save();
-            }
-
-            return true;
-        }catch(\Exception $e){
-            return false;
-        }
-    }
-
     public function returnData() : array{
 		return get_object_vars($this);
 	}
 
+    //Overrides database->delete methode
+    public function delete(){
+        $sqlFiles = array(
+            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
+            'booking_planning_data', 'category', 'page', 'medium', 'post', 'content', 'comment', 
+            'menu', 'menu_dish_association', 'post_medium_association'
+        );
+
+        foreach($sqlFiles as $key => $value)
+        {
+            $sqlFiles[$key] = $this->getPrefix() . '_' . ucfirst($value);
+        }
+        $sqlFiles = array_reverse($sqlFiles);
+        if( $this->deleteTables($sqlFiles)){
+            FileUploader::renameCMSDir($this->getSubDomain());
+            return parent::delete();
+        }else{
+            return false;
+        }
+
+    }
+
+    public function formCreate(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_content",
+                "class"=>"edit-site col-5 col-sm-12",
+                "submit"=>"Create",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Name",
+                    "minLength"=>2,
+                    "maxLength"=>45,
+                    "id"=>"name",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Website name",
+                    "error"=>"The name cannot be empty!",
+                    "required"=>true,
+					"value"=> $this->name
+                ],
+				"description"=>[ 
+					"type"=>"text",
+					"placeholder"=>"Description",
+					"id"=>"description",
+					"class"=>"input input-100",
+                    "error"=>"The description cannot be empty!",
+					"required"=> false,
+					"value"=> $this->description
+                ],
+                "type"=>[ 
+					"type"=>"text",
+					"label"=>"type",
+					"id"=>"type",
+					"class"=>"input input-100",
+                    "placeholder"=>"Restaurant type",
+                    "error"=>"The type cannot be empty!",
+					"required"=> false,
+					"value"=> $this->type,
+                ],
+                "subDomain"=>[ 
+					"type"=>"text",
+					"label"=>"domain of the site",
+					"id"=>"subDomain",
+					"class"=>"input input-100",
+                    "error"=>"The domain cannot be empty!",
+					"required"=> true,
+					"value"=> $this->subDomain,
+                ],
+            ]
+        ];
+    }
 
     public function formThemeEdit($themes){
         return [
@@ -263,8 +289,25 @@ class Site extends Model
         ];
     }
 
+    public function formDelete(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10",
+                "submit"=>"Delete this site",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "_method"=>[
+                    "type"=>"hidden",
+                    "value"=> 'delete'
+                ],
+            ]
+        ];
+    }
 
-    public function formContactEdit($content){
+    public function formContactEdit(){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -278,7 +321,7 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Phone Number",
-                    "value"=>$content['phoneNumber']
+                    "value"=> $this->phoneNumber
                 ],
                 "action"=>[
                     "type"=>"hidden",
@@ -288,19 +331,19 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Email",
-                    "value"=>$content['emailPro']
+                    "value"=> $this->emailPro
                 ],
                 "address"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Restaurant address",
-                    "value"=>$content['address']
+                    "value"=> $this->address
                 ],
             ]
         ];
     }
 
-    public function formSocialEdit($content){
+    public function formSocialEdit(){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -318,27 +361,25 @@ class Site extends Model
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Instagram (Account link)",
-                    "value"=>$content['instagram']
+                    "value"=>$this->instagram
                 ],
                 "twitter"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Twitter (Account link)",
-                    "value"=>$content['twitter']
+                    "value"=>$this->twitter
                 ],
                 "facebook"=>[
                     "type"=>"text",
                     "class"=>"input input-100 input-select",
                     "placeholder"=>"Facebook (Page link)",
-                    "value"=>$content['facebook']
+                    "value"=>$this->facebook
                 ],
             ]
         ];
     }
 
-    
-
-    public function formEdit($content){
+    public function formEdit(){
         return [
 
             "config"=>[
@@ -361,7 +402,7 @@ class Site extends Model
                     "placeholder"=>"Website name",
                     "error"=>"The name cannot be empty!",
                     "required"=>true,
-					"value"=> $content['name']
+					"value"=> $this->name
                 ],
 				"description"=>[ 
 					"type"=>"text",
@@ -370,7 +411,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The description cannot be empty!",
 					"required"=> false,
-					"value"=> $content['description']
+					"value"=> $this->description
                 ],
                 "type"=>[ 
 					"type"=>"text",
@@ -380,7 +421,7 @@ class Site extends Model
                     "placeholder"=>"Restaurant food type",
                     "error"=>"The type cannot be empty!",
 					"required"=> false,
-					"value"=> $content['type'],
+					"value"=> $this->type,
                 ],
 				"image"=>[ 
 					"type"=>"file-img",
@@ -389,7 +430,7 @@ class Site extends Model
 					"class"=>"input-file",
                     "error"=>"",
 					"required"=> false,
-					"value"=> $content['image']
+					"value"=> $this->image
                 ],
                 "subDomain"=>[ 
 					"type"=>"text",
@@ -398,7 +439,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The subDomain cannot be empty!",
 					"required"=> false,
-					"value"=> $content['subDomain'],
+					"value"=> $this->subDomain,
                     "disabled" => true
                 ],
                 "creationDate"=>[ 
@@ -409,7 +450,7 @@ class Site extends Model
 					"class"=>"input input-100",
                     "error"=>"The creationDate cannot be empty!",
 					"required"=> false,
-					"value"=> $content['creationDate'],
+					"value"=> $this->creationDate,
                     "disabled" => true
                 ],
             ]

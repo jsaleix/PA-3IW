@@ -11,11 +11,11 @@ use CMS\Core\CMSView as View;
 class CommentController{
 
 	public function manageCommentsAction($site){
-		$commentObj = new Comment($site['prefix']);
+		$commentObj = new Comment($site->getPrefix());
 		$comments = $commentObj->findAll();
 
         $userObj = new User();
-        $postObj = new Post($site['prefix']);
+        $postObj = new Post($site->getPrefix());
 
         $content = "";
 		$fields = [ 'Id', 'Message', 'Post', 'Author', 'Date', 'Delete' ];
@@ -54,7 +54,7 @@ class CommentController{
     public function deleteCommentAction($site){
         try{
             if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('comment not set'); }
-            $commentObj = new Comment($site['prefix']);
+            $commentObj = new Comment($site->getPrefix());
             $commentObj->setId($_GET['id']??0);
             $comment = $commentObj->findOne();
             if(!$comment){ throw new \Exception('Cannot delete this comment'); }

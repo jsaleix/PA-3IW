@@ -3,9 +3,9 @@
 namespace CMS\Controller;
 
 use App\Core\FormValidator;
+use App\Models\User;
 
 use CMS\Core\CMSView as View;
-
 use CMS\Models\Booking;
 use CMS\Models\Booking_settings;
 use CMS\Models\Booking_planning as Planning;
@@ -13,7 +13,7 @@ use CMS\Models\Booking_planning as Planning;
 class BookingSettingsController{
     
     public function manageBookingSettingsAction($site){
-        $bookingSettingsObj = new Booking_settings($site['prefix']);
+        $bookingSettingsObj = new Booking_settings($site->getPrefix());
         if( !$bookingSettingsObj->findOne(TRUE)){//IF THERE IS NO SETTINGS MAKE THE USER SET THEM
             $this->setupSettings($site, $bookingSettingsObj);
             return;
@@ -29,7 +29,7 @@ class BookingSettingsController{
     }
 
     public function editSettingsAction($site){
-        $bookingSettingsObj = new Booking_settings($site['prefix']);//CREATE VIEW AND FORM TO EDIT THE BOOKING SETTINGS
+        $bookingSettingsObj = new Booking_settings($site->getPrefix());//CREATE VIEW AND FORM TO EDIT THE BOOKING SETTINGS
         $bookingSettingsObj->findOne(TRUE);
         $formEdit = $bookingSettingsObj->form();
         $view = new View('booking', 'back', $site);
@@ -55,12 +55,12 @@ class BookingSettingsController{
     }
 
     public function editPlanningsAction($site){
-        $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
+        $planObj = new Planning($site->getPrefix());//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
         $plans = $planObj->findAll();
         $forms = [];
         if( $plans && count($plans) > 0){
             foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
-                $plan = new Planning($site['prefix']);
+                $plan = new Planning($site->getPrefix());
                 $plan->populate($p);//POPULATE AN OBJECT WITH THE ARRAY VALUES
                 $forms[] = $plan;
             }
@@ -83,7 +83,7 @@ class BookingSettingsController{
             $index = 1;//INDEX THAT WILL BE INCREMENTED DEPENDING THE NUMBER OF INPUTS PER OBJECT, STARTS ON ONE FOR DB'S IDS
             for($i=1; $i<=$totalPost; $i++){//LOOP ON ALL THE MODIFIABLE INPUTS
                 if( $i % ( $totalPost/$fieldNumber ) == 0 ){//EVERY 4 INPUTS(BECAUSE WE HAVE 4 FIELDS MODIFIABLE BY OBJECT)
-                    $planObj = new Planning($site['prefix']);//WE CREATE A NEW PLAN OBJ
+                    $planObj = new Planning($site->getPrefix());//WE CREATE A NEW PLAN OBJ
                     $savedPlans = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));//AND SAVE THE 4 INPUTS IN OUR ARRAY
                     $this->sanatizeAssociativeKeys($savedPlans, "-".$index);//SANATIZE THE DATA OF OUR ARRAY
                     $savedPlans[ "id" ] = $index ;//SET ARRAY ID TO USE THE EDIT DB FUNCTION
@@ -96,7 +96,7 @@ class BookingSettingsController{
                     $index++;//INCREMENT THE INDEX TO PASS TO THE NEXT OBJECT WHEN WE ENTER IN THE IF
                 }
             }
-            $bsObj = new Booking_settings($site['prefix']);//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
+            $bsObj = new Booking_settings($site->getPrefix());//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
             $bsObj->setIsSetUp(1);
             $bsObj->save();
             $message = "Booking planning created !";
@@ -132,12 +132,12 @@ class BookingSettingsController{
     }
 
     private function setupPlanning($site, $bookingSettingsObj){
-        $planObj = new Planning($site['prefix']);//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
+        $planObj = new Planning($site->getPrefix());//CREATE A PLANNING OBJ AND GET ALL DAYS FROM THE WEEK FROM DB
         $plans = $planObj->findAll();
         $forms = [];
         if( $plans && count($plans) > 0){
             foreach($plans as $p){//STOCK THE DAYS ON AN ARRAY TO RENDER THE FORM FOR EVERY DAY IN VIEW
-                $plan = new Planning($site['prefix']);
+                $plan = new Planning($site->getPrefix());
                 $plan->populate($p);//POPULATE AN OBJECT WITH THE ARRAY VALUES
                 $forms[] = $plan;
             }
@@ -160,7 +160,7 @@ class BookingSettingsController{
             $index = 1;//INDEX THAT WILL BE INCREMENTED DEPENDING THE NUMBER OF INPUTS PER OBJECT, STARTS ON ONE FOR DB'S IDS
             for($i=1; $i<=$totalPost; $i++){//LOOP ON ALL THE MODIFIABLE INPUTS
                 if( $i % ( $totalPost/$fieldNumber ) == 0 ){//EVERY 4 INPUTS(BECAUSE WE HAVE 4 FIELDS MODIFIABLE BY OBJECT)
-                    $planObj = new Planning($site['prefix']);//WE CREATE A NEW PLAN OBJ
+                    $planObj = new Planning($site->getPrefix());//WE CREATE A NEW PLAN OBJ
                     $savedPlans = array_slice($_POST, $i - ($totalPost/$fieldNumber) , ($totalPost/$fieldNumber));//AND SAVE THE 4 INPUTS IN OUR ARRAY
                     $this->sanatizeAssociativeKeys($savedPlans, "-".$index);//SANATIZE THE DATA OF OUR ARRAY
                     $savedPlans[ "id" ] = $index ;//SET ARRAY ID TO USE THE EDIT DB FUNCTION
@@ -173,7 +173,7 @@ class BookingSettingsController{
                     $index++;//INCREMENT THE INDEX TO PASS TO THE NEXT OBJECT WHEN WE ENTER IN THE IF
                 }
             }
-            $bsObj = new Booking_settings($site['prefix']);//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
+            $bsObj = new Booking_settings($site->getPrefix());//MODIFY THE BOOKING SETTINGS TO UNDERSTAND THAT THE PLANNINGS WERE SET UP
             $bsObj->setId($bookingSettingsObj->getId());
             $bsObj->setIsSetUp(1);
             $bsObj->save();
@@ -193,26 +193,62 @@ class BookingSettingsController{
     }
 
     private function setupCalendar($site, $bookingSettingsObj){
-        $bookingObj = new Booking($site['prefix']);//TRY TO FIND RESERVATIONS FOR THE RESTAURANT
-        $bookingObj->setStatus("IS FALSE");
-        $booking = $bookingObj->findAll();
+        $bookingObj = new Booking($site->getPrefix());//TRY TO FIND RESERVATIONS FOR THE RESTAURANT
 
-        $fields = [ 'client', 'date', 'number', 'accept', 'delete' ];
-		$datas = [];
-
-        if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
-            foreach($booking as $item){
-                $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
-                $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
-                $buttonAccept = '<a href="' . $accept . '">Go</a>';
-                $buttonDelete = '<a href="' . $decline . '">Go</a>';
-                $formalized = "'" . $item['client'] . "','" . $item['date'] . "','" . $item['number'] .  "','" . $buttonAccept . "','" . $buttonDelete . "'";
-				$datas[] = $formalized;
+        //Get all the accepted bookings date
+            $bookingObj->setStatus(1);
+            $booking = $bookingObj->findAll();
+        
+            $accepted = [];
+            $accepted['fields'] = [ 'client', 'date', 'number' ];
+            $accepted['data'] = [];
+            if($booking){
+                foreach($booking as $item){
+                    $date  = new \DateTime($item["date"]);
+                    $today = new \DateTime();
+                    if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
+                    {
+                        $bookDate = new Booking($site->getPrefix());
+                        $bookDate->setId($item['id']);
+                        $bookDate->setStatus(2);
+                        $bookDate->save();
+                    }else{
+                        $client = new User();
+                        $client->setId($item['client']);
+                        $client->findOne(TRUE);
+                        $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] . "'";
+                        $accepted['data'][] = $formalized;
+                    }
+                }
             }
-        }
+        //----//
+
+        //Get all the pending bookings date
+            $bookingObj->setStatus("IS FALSE");
+            $booking = $bookingObj->findAll();
+
+            $pendings = [];
+            $pendings['fields'] = [ 'client', 'date', 'number', 'accept', 'delete' ];
+            $pendings['data'] = [];
+
+            if($booking){//IF THERE IS RESERVATIONS WAITING, STORE THEM IN AN ARRAY TO SHOW THEM ON FRONT
+                foreach($booking as $item){
+                    $client = new User();
+                    $client->setId($item['client']);
+                    $client->findOne(TRUE);
+                    $accept = \App\Core\Helpers::renderCMSLink( "admin/booking/accept?id=".$item['id'], $site);
+                    $decline = \App\Core\Helpers::renderCMSLink( "admin/booking/decline?id=".$item['id'], $site);
+                    $buttonAccept = '<a href="' . $accept . '">Go</a>';
+                    $buttonDelete = '<a href="' . $decline . '">Go</a>';
+                    $formalized = "'" . ($client->getFirstname(). ' ' . $client->getLastname()) . "','" . $item['date'] . "','" . $item['number'] .  "','" . $buttonAccept . "','" . $buttonDelete . "'";
+                    $pendings['data'][] = $formalized;
+                }
+            }
+        //----//
+
         $view = new View('booking.list', 'back', $site);
-		$view->assign("fields", $fields);
-		$view->assign("datas", $datas);
+		$view->assign("pendings", $pendings);
+		$view->assign("accepted", $accepted);
 		$view->assign('pageTitle', "Manage the comments");
         $view->assign('calendar', true);
     }
@@ -222,12 +258,13 @@ class BookingSettingsController{
 			echo 'Booking not found ';
 			exit();
 		}
-        $bookingObj = new Booking($site['prefix']);
+        $bookingObj = new Booking($site->getPrefix());
         $bookingObj->setId($_GET['id']);
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, ACCEPT IT
             $bookingObj->setStatus(1);
             $bookingObj->save();
         }
+        \App\Core\Helpers::customRedirect('/admin/booking', $site);
     }
 
     public function deleteBookingAction($site){//CHECK IF AN ID IS GIVEN
@@ -235,7 +272,7 @@ class BookingSettingsController{
 			echo 'Booking not found ';
 			exit();
 		}
-        $bookingObj = new Booking($site['prefix']);
+        $bookingObj = new Booking($site->getPrefix());
         $bookingObj->setId($_GET['id']);
         $bookingObj->findOne(TRUE);
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT

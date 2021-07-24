@@ -1,15 +1,42 @@
 <?php
 
 namespace App\Core;
+use App\Core\ErrorReporter;
 
 class FileUploader
 {
 
-	public static function createCMSDirs($name){
+	public static function createCMSDirs($name): bool{
 		$cmsRoot = '/uploads/cms/'. $name;
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot);
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes');
-		mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library');
+		if (mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot) &&
+			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes') &&
+			mkdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library')
+		){
+			return true;
+		}
+		return false;
+	}
+
+	public static function removeCMSDirs($name): bool{
+		$cmsRoot = '/uploads/cms/'. $name;
+		if (rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot) &&
+			rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/dishes') &&
+			rmdir($_SERVER['DOCUMENT_ROOT']. $cmsRoot . '/library')
+		){
+			return true;
+		}
+		return false;
+	}
+
+	public static function renameCMSDir($name): bool{
+		$oldDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/cms/'. $name;
+		$date = new \DateTime();
+		$newDir = $oldDir . '-deleted-' . $date->format("Ymd_Hisu");
+		if (rename($oldDir, $newDir))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public static function createUserDirs($user){
@@ -47,7 +74,7 @@ class FileUploader
 				throw new \Exception('Wrong directory ' . $target_dir);
 			}
 		}catch(\Exception $e){
-			//echo $e->getMessage();
+			ErrorReporter::report($e->getMessage());
 			return false;
 		}
 		

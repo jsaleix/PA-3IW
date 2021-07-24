@@ -19,7 +19,7 @@ class PmaController{
     public function createAssocAction($site){
         if(empty($_GET['post']) && empty($_GET['medium']))
             \App\Core\Helpers::customRedirect('/admin/medium', $site);
-        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj = new PMAssoc($site->getPrefix());
         $PMAObj->setMedium(htmlspecialchars($_GET['medium']));
         $PMAObj->setPost(htmlspecialchars($_GET['post']));
         $pma = $PMAObj->save();
@@ -30,7 +30,7 @@ class PmaController{
     public function deleteAssocFromPostAction($site){
         if(empty($_GET['id']))
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj = new PMAssoc($site->getPrefix());
         $PMAObj->setId($_GET['id']??0);
         $pma = $PMAObj->findOne();
         if(!$pma)
@@ -43,7 +43,7 @@ class PmaController{
     public function deleteAssocAction($site){
         if(empty($_GET['id']))
 			\App\Core\Helpers::customRedirect('/admin/medium', $site);
-        $PMAObj = new PMAssoc($site['prefix']);
+        $PMAObj = new PMAssoc($site->getPrefix());
         $PMAObj->setId($_GET['id']??0);
         $pma = $PMAObj->findOne();
         if(!$pma)

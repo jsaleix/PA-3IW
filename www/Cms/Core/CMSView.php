@@ -23,7 +23,7 @@ class CMSView extends View
 			$theme = "Default";
 
 			if(gettype($site) == "array"){
-				$theme = $site['theme'];
+				$theme = $site->getTheme();
 			}else if(gettype($site) === "object"){
 				$theme = $site->getTheme();
 			}

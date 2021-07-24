@@ -25,8 +25,8 @@
     }
 
     async function createSite(){
-        console.log('executed')
-        let category    = document.getElementById ('category').value;
+        let CSRF        = document.getElementById ('CSRF').value;
+        //let category    = document.getElementById ('category').value;
         let type        = document.getElementById ('type').value;
         let subDomain   = document.getElementById ('url').value;
         subDomain = subDomain.replace(/\s+/g, '');
@@ -34,7 +34,7 @@
         currentData = JSON.parse(currentData);
         let { name, description } = currentData;
 
-        let body = {name, description, type, category, subDomain};
+        let body = {name, description, type, subDomain, CSRF};
         let formBody = [];
         for (let property in body) {
             let encodedKey = encodeURIComponent(property);
@@ -52,15 +52,18 @@
                 },
                 body: formBody
             })
-            .then( (res) => {console.log(res); return res})
-            .then( (res) => res.status);
-            if(res === 201){
+            .then( (res) => res.json());
+            if(res.code === 201){
                 alert('Site crée !');
                 localStorage.removeItem('siteData');
                 window.location.replace("/site/" + subDomain );
 
             }else{
-                alert('Une erreur est survenue');
+                if(res?.status){
+                    alert(res?.status);
+                }else{
+                    alert(res?.status);
+                }
             }
         }catch(e){
             console.error(e);

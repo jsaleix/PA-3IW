@@ -3,8 +3,8 @@ namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
+use App\Core\ErrorReporter;
 use App\Models\Site;
-
 use App\Models\Action;
 
 use CMS\Models\Page;
@@ -25,24 +25,6 @@ class DynamicRouter extends Router implements RouterInterface
 			$requestedPage = $url[1];
 
 			$siteObj->setSubDomain($domain);
-			$site = $siteObj->findOne();
-			if(empty($site['id']) || !$site){ throw new \Exception('This site does not exist'); }
-
-			$siteObj->setId($site['id']);
-			$siteObj->setName($site['name']);
-			$siteObj->setDescription($site['description']);
-			$siteObj->setImage($site['image']);
-			$siteObj->setCreator($site['creator']);
-			$siteObj->setSubDomain($site['subDomain']);
-			$siteObj->setPrefix($site['prefix']);
-			$siteObj->setType($site['type']);
-			$siteObj->setTheme($site['theme']);
-			$siteObj->setInstagram($site['instagram']);
-			$siteObj->setFacebook($site['facebook']);
-			$siteObj->setTwitter($site['twitter']);
-			$siteObj->setPhoneNumber($site['phoneNumber']);
-			$siteObj->setEmailPro($site['emailPro']);
-			$siteObj->setAddress($site['address']);
 			$siteCheck = $siteObj->findOne(TRUE);
 			if(!$siteCheck){ throw new \Exception('This site does not exist'); }
 			
@@ -92,6 +74,8 @@ class DynamicRouter extends Router implements RouterInterface
 
 		}catch(\Exception $e){
 			echo $e->getMessage();
+			ErrorReporter::report("DynamicRouter Construct():" . $e->getMessage() );
+			\App\Core\Helpers::customRedirect('/');
 			//\App\Core\Helpers::customRedirect('/');
 		}
 	}
@@ -114,6 +98,10 @@ class DynamicRouter extends Router implements RouterInterface
 
 	public function route(): void{
 		try{
+			if(!$this->site) {
+				\App\Core\Helpers::customRedirect('/');
+				return;
+			}
 			$c = $this->getController();
 			$a = $this->getAction();
 			$f = $this->getFilter();
@@ -128,6 +116,7 @@ class DynamicRouter extends Router implements RouterInterface
 			if(!method_exists($cObjet, $a)) throw new \Exception("L'action: ".$a." n'existe pas");
 			$cObjet->$a($this->site, $f);
 		}catch(\Exception $e){
+			ErrorReporter::report("DynamicRouter route():" . $e->getMessage() );
 			echo $e->getMessage();
 		}
 	}

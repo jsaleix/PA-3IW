@@ -45,6 +45,7 @@
                 </select>
             </div>
             <input class="input input-100" name="notes" type="text" placeholder="Notes" value="<?=$notes??''?>"/>
+                <?= App\Core\FormBuilder::createCSRFToken() ?>
             <button type="submit" class="btn btn-light btn-100" ><?= $submitLabel ?></button>
         </div>
 

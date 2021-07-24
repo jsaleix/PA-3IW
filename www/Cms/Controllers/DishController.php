@@ -2,6 +2,8 @@
 
 namespace CMS\Controller;
 use App\Core\FileUploader;
+use App\Core\FormBuilder;
+use App\Core\FormValidator;
 
 use CMS\Models\Dish;
 use CMS\Models\DishCategory;
@@ -23,13 +25,13 @@ class DishController{
 	}
 
 	public function manageDishesAction($site){
-		$dishObj = new Dish($site['prefix']);
+		$dishObj = new Dish($site->getPrefix());
 		$dishes = $dishObj->findAll();
 		$dishesList = [];
 		$content = "";
 		$fields = [ 'id', 'image', 'name', 'category', 'price', 'Edit', 'Delete' ];
 		$datas = [];
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishCatObj = new DishCategory($site->getPrefix());
 
 		if($dishes){
 			foreach($dishes as $item){
@@ -61,11 +63,10 @@ class DishController{
 	}
 
 	public function createDishAction($site){
-		$dishObj = new Dish($site['prefix']);
-
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishObj 	= new Dish($site->getPrefix());
+		$dishCatObj = new DishCategory($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
-		$dishCatArr = [];
+		$dishCatArr 	= [];
 		
 		if($dishCategories){
 			foreach($dishCategories as $item){
@@ -79,43 +80,32 @@ class DishController{
 		$view->assign('pageTitle', "Add a dish");
 
 		if(!empty($_POST) ) {
-			$errors = [];
+			try{
+				$errors = [];
 
-			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-			[ "image" => $image ] = $_FILES;
+				[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
+				[ "image" => $image ] = $_FILES;
 
-			if(!empty($name) && !is_null($name)){
-
-				if(isset($image) && !empty($image) && $image['size'] != 0){
-
-					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-
-					$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
-					$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
-
-					$imgName = $site['subDomain'] . '_' . $imgTmpName;
-					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-
-					if($isUploaded != false){
-						$image = $isUploaded;
-					}else{
-						$image = null;
-					}
-				}else{
-					$image = null;
+				$form = $dishObj->formAdd();
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if(count($errors) != 0){ 
+					$errors[] = 'Form not accepted';
+					throw new \Exception('Form not accepted'); 
 				}
-				
-				$dishCat = ($dishCat == 0) ? null : $dishCat ;
-				$dishObj->setName($name);
-				$dishObj->setImage($image);
-				$dishObj->setDescription($description);
-				$dishObj->setPrice($price);
-				$dishObj->setCategory($dishCat);
-				$dishObj->setNotes($notes);
-				$dishObj->setAllergens($allergens);
-				$dishObj->setIsActive($isActive??1);
 
-				$adding = $dishObj->save();
+				$imgDir 	= "/uploads/cms/" . $site->getSubDomain() . "/dishes/";
+				$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+				$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
+				$imgName 	= $site->getSubDomain() . '_' . $imgTmpName;
+				$image = FileUploader::uploadImage($image, $imgName, $imgDir);
+				if( !$image ){ 
+					$errors[] = 'Invalid or missing image';
+					throw new \Exception('Invalid or missing image'); 
+				}
+
+				$data["image"] = $image;
+				$adding = $dishObj->populate($data, TRUE);
 
 				if($adding){
 					$message ='Dish successfully added!';
@@ -124,6 +114,9 @@ class DishController{
 					$errors[] = "Cannot insert this dish";
 					$view->assign("errors", $errors);
 				}
+
+			}catch(\Exception $e){
+				$view->assign("errors", $errors);
 			}
 		}
 
@@ -136,15 +129,16 @@ class DishController{
 			exit();
 		}
 
-		$dishObj = new Dish($site['prefix']);
+		$dishObj = new Dish($site->getPrefix());
 		$dishObj->setId($_GET['id']??0);
-		$dish = $dishObj->findOne();
+		$dish = $dishObj->findOne(TRUE);
+
 		if(!$dish){
 			header("Location: dishes");
 			exit();
 		}
 
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishCatObj = new DishCategory($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatArr = [];
 		
@@ -154,66 +148,71 @@ class DishController{
 			}
 		}
 
-		/*$dishArr = (array)$dish;
-		$form = $dishObj->formEdit($dishArr, $dishCatArr);
-		$form = $dishObj->formAdd($dishCatArr);*/
-
 		$view = new View('createDish', 'back', $site);
+
+		if(!empty($_POST) ) 
+		{
+			try{
+				$errors = [];
+
+				[ "name" => $name ]   = $_POST;
+				[ "image" => $image ] = $_FILES;
+
+				$form = $dishObj->formEdit();
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if(count($errors) != 0){ 
+					$errors[] = 'Form not accepted';
+					throw new \Exception('Form not accepted'); 
+				}
+
+				//image is optionnal in editing
+				if(!empty($image['name']) && strlen($image['name']) > 0)
+				{
+					$imgDir 	= "/uploads/cms/" . $site->getSubDomain() . "/dishes/";
+					$imgTmpName = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
+					$imgTmpName = preg_replace("/\s+/", "_", $imgTmpName);
+					$imgName 	= $site->getSubDomain() . '_' . $imgTmpName;
+					$image = FileUploader::uploadImage($image, $imgName, $imgDir);
+					if( !$image ){ 
+						$errors[] = 'Invalid or missing image';
+						throw new \Exception('Invalid or missing image'); 
+					}
+					$data["image"] = $image;
+				}
+
+				$adding = $dishObj->populate($data, TRUE);
+
+				if($adding){
+					$message ='Dish successfully added!';
+					$view->assign("alert", Helpers::displayAlert("success", $message, 3500));
+				}else{
+					$errors[] = "Cannot insert this dish";
+					$view->assign("errors", $errors);
+				}
+
+			}catch(\Exception $e){
+				$view->assign("errors", $errors);
+			}
+		}
+
 		$view->assign("categories", $dishCatArr);
-		$view->assign("name", preg_replace("/\\\+/", "", $dish['name']));
-		$view->assign("image", (DOMAIN . '/' . $dish['image']));
-		$view->assign("notes", $dish['notes']);
-		$view->assign("allergens", $dish['allergens']);
-		$view->assign("description", $dish['description']);
-		$view->assign("price", $dish['price']);
-		$view->assign("category", $dish['category']);
+		$view->assign("name", preg_replace("/\\\+/", "", $dishObj->getName()));
+		$view->assign("image", (DOMAIN . '/' . $dishObj->getImage()));
+		$view->assign("notes", $dishObj->getNotes());
+		$view->assign("allergens", $dishObj->getAllergens());
+		$view->assign("description", $dishObj->getDescription());
+		$view->assign("price", $dishObj->getPrice());
+		$view->assign("category", $dishObj->getCategory());
 		$view->assign('submitLabel', "Edit");
 		$view->assign('pageTitle', "Update a dish");
 
-		if(!empty($_POST) ) {
-			$errors = [];
-			[ "name" => $name, "description" => $description, "price" => $price, "category" => $dishCat, "notes" => $notes, "allergens" => $allergens ] = $_POST;
-			[ "image" => $image ] = $_FILES;
-
-			if( $name ){
-				if(isset($image) && !empty($image) && $image['size'] > 0){
-					$imgDir = "/uploads/cms/" . $site['subDomain'] . "/dishes/";
-					$imgName = $site['subDomain'].'_'. $_GET['id'];
-					$isUploaded = FileUploader::uploadImage($image, $imgName, $imgDir);
-					if($isUploaded != false){
-						$image = $isUploaded;
-					}else{
-						$image = null;
-					}
-				}else{
-					$image = null;
-				}
-
-				$dishObj->setName(htmlspecialchars($name));
-				$dishObj->setImage($image);
-				$dishObj->setDescription($description);
-				$dishObj->setPrice($price);
-				$dishObj->setCategory($dishCat);
-				$dishObj->setNotes($notes);
-				$dishObj->setAllergens($allergens);
-				$dishObj->setIsActive($isActive??1);
-
-				$adding = $dishObj->save();
-				if($adding){
-					$message ='Dish successfully updated!';
-					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
-				}else{
-					$errors[] = "Cannot update this dish";
-					$view->assign("errors", $errors);
-				}
-			}
-		}
 	}
 
 	public function deleteDishAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('Dish not set'); }
-			$dishObj = new Dish($site['prefix']);
+			$dishObj = new Dish($site->getPrefix());
 			$dishObj->setId($_GET['id']??0);
 			$dish = $dishObj->findOne();
 			if(!$dish){ throw new \Exception('No content found'); }
@@ -229,7 +228,7 @@ class DishController{
 
 	public function getDishAction($site){
 		$category = $_GET['category']??'';
-		$dishObj = new Dish($site['prefix']);
+		$dishObj = new Dish($site->getPrefix());
 		if(isset($category)){
 			$dishObj->setCategory($category);
 		}
@@ -256,24 +255,24 @@ class DishController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 
-	//$site is an instance of Site
 	public function renderDishAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
 			return 'dish id not set ';
 		}
+		$view = new View('dish', 'front', $site);
 
 		$dishObj = new Dish($site->getPrefix());
 		$dishObj->setId($_GET['id']);
-		$dishObj->setIsActive(1);
-        $dish = $dishObj->findOne();
+		$dish = $dishObj->findOne();
+		
         if(!$dish){
+			$view->assign('notFound', true);
+			$view->assign('pageTitle', 'Not found');
             return 'No content found :/';
         }
 
-		$view = new View('dish', 'front', $site);
 		$view->assign('pageTitle', 'Dishes available');
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('dish', $dish);

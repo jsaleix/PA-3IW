@@ -2,6 +2,7 @@
 namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 
+use App\Core\ErrorReporter;
 use App\Models\Site;
 use App\Models\Whitelist;
 use App\Core\Security;
@@ -19,14 +20,14 @@ class AdminRouter extends Router implements RouterInterface
                 \App\Core\Helpers::customRedirect('/login');
             }
 
-            $siteObj = new Site();
-            $siteObj->setSubDomain($uri[0]);
-            $site = $siteObj->findOne();
-            if(!$site || empty($site['id'])){ throw new \Exception('This site does not exist'); }
+            $site = new Site();
+            $site->setSubDomain($uri[0]);
+            $site->findOne(TRUE);
+            if(!$site || empty($site->getId())){ throw new \Exception('This site does not exist'); }
 
-            if( $site['creator'] !== Security::getUser()){
+            if( $site->getCreator() !== Security::getUser()){
                 $wlistObj = new Whitelist();
-                $wlistObj->setIdSite($site['id']);
+                $wlistObj->setIdSite($site->getId());
                 $wlistObj->setIdUser(Security::getUser());
                 $wlist = $wlistObj->findOne();
                 if( !$wlist ) { throw new \Exception('You\re not allowed to access this page'); }
@@ -38,6 +39,7 @@ class AdminRouter extends Router implements RouterInterface
             $this->uri  = $uri;
             $this->site = $site;
         }catch(\Exception $e){
+            ErrorReporter::report("AdminRouter Construct():" . $e->getMessage() );
 			echo $e->getMessage();
             \App\Core\Helpers::customRedirect('/', $site);
 		}
@@ -57,6 +59,7 @@ class AdminRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
 			echo $e->getMessage();
+            ErrorReporter::report("AdminRouter route():" . $e->getMessage() );
 		}
 
 	}

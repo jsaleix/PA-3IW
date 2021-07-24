@@ -95,7 +95,7 @@ class Role extends Model
         $this->isAdmin = $isAdmin;
     }
 
-    public function formEdit($data){
+    public function formEdit(){
         return [
 
             "config"=>[
@@ -104,7 +104,8 @@ class Role extends Model
                 "id"=>"role_form",
                 "class"=>"form",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype"=>"multipart/form-data"
             ],
             "inputs"=>[
                 "name"=>[ 
@@ -117,7 +118,7 @@ class Role extends Model
                     "placeholder"=>"Anything",
                     "error"=>"The role name must be between 2 and 55 caracters",
                     "required"=>true,
-                    "value"=> $data['name']
+                    "value"=> $this->name
 
                 ],
                 "description"=>[ 
@@ -129,7 +130,7 @@ class Role extends Model
                     "class"=>"input",
                     "placeholder"=>"Description",
                     "required"=>false,
-                    "value"=> $data['description']
+                    "value"=>  $this->description
 
                 ],
                 "icon"=>[ 
@@ -139,9 +140,83 @@ class Role extends Model
 					"class"=>"input-file",
                     "error"=>"",
 					"required"=> false,
-                    "value"=> $data['icon']
+                    "value"=> $this->icon
 
                 ],
+                "isAdmin"=>[
+                    "type"=>"radio",
+                    "label"=>"Has admin privileges ?",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+                    "options" => [
+                        0 => "no",
+                        1 => "yes"
+                    ],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify the privileges",
+                    "required"=>false,
+                    "value"=> $this->isAdmin
+                ]
+            ]
+        ];
+    }
+
+    public function formCreate(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"role_form",
+                "class"=>"form",
+                "submit"=>"Create",
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "enctype"=>"multipart/form-data"
+            ],
+            "inputs"=>[
+                "name"=>[ 
+                    "type"=>"text",
+                    "label"=>"Role name",
+                    "minLength"=>2,
+                    "maxLength"=>55,
+                    "id"=>"name",
+                    "class"=>"input",
+                    "placeholder"=>"Anything",
+                    "error"=>"The role name must be between 2 and 55 caracters",
+                    "required"=>true,
+
+                ],
+                "description"=>[ 
+                    "type"=>"text",
+                    "label"=>"Description",
+                    "minLength"=>2,
+                    "maxLength"=>255,
+                    "id"=>"description",
+                    "class"=>"input",
+                    "placeholder"=>"Description",
+                    "required"=>false,
+                ],
+                "icon"=>[ 
+                    "type"=>"file-img",
+					"label"=>"Role icon",
+					"id"=>"icon",
+					"class"=>"input-file",
+                    "error"=>"",
+					"required"=> false,
+                ],
+                "isAdmin"=>[
+                    "type"=>"radio",
+                    "label"=>"Has admin privileges ?",
+                    "minLength"=>1,
+                    "maxLength"=>1,
+                    "options" => [
+                        0 => "no",
+                        1 => "yes"
+                    ],
+                    "class"=>"input-content",
+                    "error"=>"You need to specify the privileges",
+                    "required"=>false,
+                ]
             ]
         ];
     }

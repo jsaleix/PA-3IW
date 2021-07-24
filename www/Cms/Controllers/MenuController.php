@@ -14,7 +14,7 @@ class MenuController{
 
 
     public function manageMenusAction($site){
-		$menuObj = new Menu($site['prefix']);
+		$menuObj = new Menu($site->getPrefix());
 		$menus = $menuObj->findAll();
 		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
 		$datas = [];
@@ -52,7 +52,7 @@ class MenuController{
             $this->manageDishInMenu($action, $site, $view, $_POST, $_GET);
 		}
 
-		$menuObj = new Menu($site['prefix']);
+		$menuObj = new Menu($site->getPrefix());
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
 		if(!$menu){
@@ -60,7 +60,7 @@ class MenuController{
             exit();
 		}
 		
-        $dishCatObj = new DishCategory($site['prefix']);
+        $dishCatObj = new DishCategory($site->getPrefix());
         $dishCatArr = $dishCatObj->findAll();
         $selectDishCat = [];
 
@@ -70,13 +70,13 @@ class MenuController{
             }
         }
 
-        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);
         $dishes = $dishMenuAssocObj->findAll();
         $dishesArr = [];
         if($dishes){
             foreach($dishes as $item){
-                $dishObj = new Dish($site['prefix']);
+                $dishObj = new Dish($site->getPrefix());
                 $dishObj->setId($item['dish']);
                 $dish = $dishObj->findOne();
                 if($dish){
@@ -94,7 +94,7 @@ class MenuController{
         $view->assign("notes", $menu['notes']);
         $view->assign("categories", $selectDishCat);
 		$view->assign('pageTitle', "Edit your menu");
-        $view->assign('subDomain', $site['subDomain']);
+        $view->assign('subDomain', $site->getSubDomain());
         $view->assign('dishes', $dishesArr);
 
     }
@@ -102,7 +102,7 @@ class MenuController{
     public function deleteMenuAction($site){
         try{
             if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('menu is not set'); }
-            $menuObj = new Menu($site['prefix']);
+            $menuObj = new Menu($site->getPrefix());
             $menuObj->setId($_GET['id']??0);
             $menu = $menuObj->findOne();
             if(!$menu){ throw new \Exception('Menu not found'); }
@@ -116,14 +116,14 @@ class MenuController{
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
-        $menuObj = new Menu($site['prefix']);
+        $menuObj = new Menu($site->getPrefix());
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
         
-        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);
 
-        $dishMenuAssocObj = new Menu_dish_association($site['prefix']);
+        $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);
 
         switch($action)
@@ -151,7 +151,7 @@ class MenuController{
 
             case 'add_dish':
                 [ "menu" => $menu, "dish" => $dish] = $_postFields;
-                $dishMenuAssocObj->setPrefix($site['prefix']);
+                $dishMenuAssocObj->setPrefix($site->getPrefix());
                 $dishMenuAssocObj->setMenu($menu);
                 $dishMenuAssocObj->setDish($dish);
                 $dishMenuId = $dishMenuAssocObj->findOne();
@@ -170,7 +170,7 @@ class MenuController{
                 [ "dish" => $dish] = $_postFields;
                 [ "id" => $menu] = $_getFields;
 
-                $dishMenuAssocObj->setPrefix($site['prefix']);
+                $dishMenuAssocObj->setPrefix($site->getPrefix());
                 $dishMenuAssocObj->setMenu($menu);
                 $dishMenuAssocObj->setDish($dish);
                 $dishMenuId = $dishMenuAssocObj->findOne();
@@ -183,7 +183,7 @@ class MenuController{
     }
 
     public function createMenuAction($site){
-        $menuObj = new Menu($site['prefix']);
+        $menuObj = new Menu($site->getPrefix());
 
 		$form = $menuObj->formAdd();
 
@@ -209,7 +209,7 @@ class MenuController{
                     $view->assign("message", $message);
                     $id = $menuObj->getLastId();
                     if($id){
-                        header('Location: '.DOMAIN . '/site/' . $site['subDomain'] . '/admin/menus/edit?id=' . $id);
+                        header('Location: '.DOMAIN . '/site/' . $site->getSubDomain() . '/admin/menus/edit?id=' . $id);
                         exit();
                     }
 				}else{
@@ -276,32 +276,40 @@ class MenuController{
 	}
 
     public function renderMenuAction($site, $filter = null){
-        if($filter){
-            $filter = json_decode($filter, true);
-            if(isset($filter['menu'])){
-                $menuId = $filter['menu'];
+        $view = new View('menu', 'front', $site);
+        try{
+            $error = false;
+            if($filter){
+                $filter = json_decode($filter, true);
+                if(isset($filter['menu'])){
+                    $menuId = $filter['menu'];
+                }else{
+                    throw new \Exception('No menu set');
+                }
+            }else if(isset($_GET['id']) && !empty($_GET['id']) ){
+                $menuId = $_GET['id'];
             }else{
-                return;
+                throw new \Exception('No id set');
             }
-        }else if(isset($_GET['id']) && !empty($_GET['id']) ){
-            $menuId = $_GET['id'];
-		}else{
-			return 'menu id not set ';
-        }
 
-        $menuObj = new Menu();
-        $dishMenuAssocObj = new Menu_dish_association();
-        $dishCatObj = new DishCategory();
+            $menuObj = new Menu();
+            $dishMenuAssocObj = new Menu_dish_association();
+            $dishCatObj = new DishCategory();
 
-        $dishesData = [];
-        
-        $menuObj->setPrefix($site->getPrefix());
-		$menuObj->setId($menuId);
-        $menu = $menuObj->findOne();
+            $dishesData = [];
+            
+            $menuObj->setPrefix($site->getPrefix());
+            $menuObj->setId($menuId);
+            $menu = $menuObj->findOne();
 
-        if(!$menu){
-            header('location: '.DOMAIN);
-            exit();
+
+            if(!$menu){
+                throw new \Exception('Menu not found');
+            }
+        }catch(\Exception $e){
+            $view->assign('notFound', true);
+            $view->assign('pageTitle', 'Not found');
+            return; 
         }
 
         $dishMenuAssocObj->setPrefix($site->getPrefix());
@@ -329,7 +337,6 @@ class MenuController{
                 }
             }
         }
-		$view = new View('menu', 'front', $site);
 		$view->assign('pageTitle', 'MENU ' . $menu['name']);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
         $view->assign('menu', $menu);

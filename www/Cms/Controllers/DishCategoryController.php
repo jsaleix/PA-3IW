@@ -22,7 +22,7 @@ class DishCategoryController{
 	}
 
 	public function manageDishCategoriesAction($site){
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishCatObj = new DishCategory($site->getPrefix());
 		$dishCategories = $dishCatObj->findAll();
 		$dishCatList = [];
 		$content = "";
@@ -51,7 +51,7 @@ class DishCategoryController{
 	}
 
 	public function createDishCategoryAction($site){
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishCatObj = new DishCategory($site->getPrefix());
 		$dishCatArr = [];
 		$dishCatArr[0] = 'None';
 
@@ -87,7 +87,7 @@ class DishCategoryController{
 			exit();
 		}
 
-		$dishCatObj = new DishCategory($site['prefix']);
+		$dishCatObj = new DishCategory($site->getPrefix());
 		$dishCatObj->setId($_GET['id']??0);
 		$dish = $dishCatObj->findOne();
 		if(!$dish){
@@ -127,7 +127,7 @@ class DishCategoryController{
 	public function deleteDishCategoryAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('dish category not set');}
-			$dishCatObj = new DishCategory($site['prefix']);
+			$dishCatObj = new DishCategory($site->getPrefix());
 			$dishCatObj->setId($_GET['id']??0);
 			$dish = $dishCatObj->findOne();
 			if(!$dish){ throw new \Exception('dish category not found');}

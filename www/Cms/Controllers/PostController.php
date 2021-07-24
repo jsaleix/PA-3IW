@@ -26,7 +26,7 @@ class PostController{
 	}
 
 	public function createArticleAction($site){
-		$postObj = new Post($site['prefix']);
+		$postObj = new Post($site->getPrefix());
 
 		$form = $postObj->formAddContent();
 		$view = new View('create', 'back',  $site);
@@ -54,7 +54,7 @@ class PostController{
 	}
 
 	public function manageArticlesAction($site){
-		$postObj = new Post($site['prefix']);
+		$postObj = new Post($site->getPrefix());
 		$posts = $postObj->findAll();
 		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit', 'Delete' ];
 		$datas = [];
@@ -81,7 +81,7 @@ class PostController{
 			echo 'article not set ';
 		}
 
-		$contentObj = new Post($site['prefix']);
+		$contentObj = new Post($site->getPrefix());
 		$contentObj->setId($_GET['id']);
 		$content = $contentObj->findOne();
 		if(!$content){
@@ -95,7 +95,7 @@ class PostController{
 		$view->assign('errors', $errors??[]);
 
 		$contentObj->findOne(TRUE);
-		$PMAObj = new PMAssoc($site['prefix']);
+		$PMAObj = new PMAssoc($site->getPrefix());
 		$PMAObj->setPost($contentObj->getId());
 		$PMAS = $PMAObj->findAll();
 		$fields = ['name', 'image', 'Remove'];
@@ -103,7 +103,7 @@ class PostController{
 		$mediumAssociated = [];
 		if($PMAS){
 			foreach($PMAS as $item){
-				$mediumObj = new Medium($site['prefix']);
+				$mediumObj = new Medium($site->getPrefix());
 				$mediumObj->setId($item['medium']);
 				$mediumObj->findOne(TRUE);
 				$mediumAssociated [] = $mediumObj->getId();
@@ -114,7 +114,7 @@ class PostController{
 			}
 			$lists[] = array( "title" => "Media on post", "datas" => $datas, "id" => "owned_media", "fields" => $fields );
 		}
-		$mediumObj = new Medium($site['prefix']);
+		$mediumObj = new Medium($site->getPrefix());
 		$mediums = $mediumObj->findAll();
 		$fields = ['name', 'image', 'Add'];
 		$datas = [];
@@ -152,7 +152,7 @@ class PostController{
 	public function deleteArticleAction($site){
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('article not set');}
-			$contentObj = new Post($site['prefix']);
+			$contentObj = new Post($site->getPrefix());
 			$contentObj->setId($_GET['id']);
 			$content = $contentObj->findOne();
 			if(!$content){ throw new \Exception('No content found');}
@@ -167,7 +167,6 @@ class PostController{
 
 	/*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
 	public function renderList($site, $filter = null){
 		$postObj = new Post($site->getPrefix());
@@ -195,34 +194,42 @@ class PostController{
 		$view->assign('posts', $tmp_posts);
 	}
 
-	//$site is an instance of Site
 	public function renderPostAction($site, $filter = null){
-		if(!empty($filter)){
-            $filter = json_decode($filter, true);
-            if(isset($filter['post'])){
-                $postId = $filter['post'];
-            }else{
-                return;
-            }
-		}else if(isset($_GET['id']) && !empty($_GET['id']) ){
-			$postId = $_GET['id'];
-		}else{
-			return 'article not set ';
+		$view = new View('post', 'front',  $site);
+		//Checks if the methode is called as an action of the site or as an entity
+		try{
+			if(!empty($filter)){
+				$filter = json_decode($filter, true);
+				if(isset($filter['post'])){
+					$postId = $filter['post'];
+				}else{
+                    throw new \Exception('Filter is not set');
+				}
+			}else if(isset($_GET['id']) && !empty($_GET['id']) ){
+				$postId = $_GET['id'];
+			}else{
+				throw new \Exception('article is not set');
+			}
+
+			$errors = [];
+			$user = Security::getUser();
+
+			$userObj 	= new User();
+			$commentObj = new Comment($site->getPrefix());
+
+			$postObj = new Post($site->getPrefix());
+			$postObj->setId($postId);
+			$post = $postObj->findOne();
+			if(!$post){
+				throw new \Exception('Post not found');
+			}
+		}catch(\Exception $e){
+			$view->assign('notFound', true);
+			$view->assign('pageTitle', 'Not found');
+			return 'No content found :/';	
 		}
-
-		$user = Security::getUser();
-        $userObj = new User();
-
-		$commentObj = new Comment($site->getPrefix());
-
-		$postObj = new Post($site->getPrefix());
-		$postObj->setId($postId);
-        $post = $postObj->findOne();
-        if(!$post){
-            return 'No content found :/';
-        }
 		
-		/* Retrieve post author */
+		// Retrieve post author
 		if(!empty($post['publisher']))
         {
 			$userObj->setId($post['publisher']);
@@ -232,21 +239,34 @@ class PostController{
 			$post['author'] = 'Unknown';
 		}
 
-		#if the admin allows the post to get commented
+		//if the admin allows the post to get comments
 		if($post['allowComment'] === 1){
 			$commentObj->setIdPost($postId);
-
-			if(isset($_POST['message']) && !empty($_POST['message']) && $user)
+			$form = $commentObj->form();
+			if($_POST)
 			{
-				$commentObj->setMessage($_POST['message']);
-				$commentObj->setIdUser($user);
-				$commentPublished = $commentObj->save();
-				if(!$commentPublished){
-					$errors[] = 'Your comment could not be published';
-				} else {
-					$commentObj->setMessage(null);
-					$commentObj->setIdUser(null);
+				if($user)
+				{
+					try{
+						$errors = FormValidator::check($form, $_POST); //CHECK AND SANATIZE FORM
+						if( count($errors) > 0){
+							throw new \Exception('Invalid data');
+						}
+	
+						$commentObj->setIdUser($user);
+						$commentPublished = $commentObj->populate($_POST, TRUE);
+						if(!$commentPublished){
+							$errors[] = 'Your comment could not be published';
+						}
+	
+						$commentObj->setMessage(null);
+						$commentObj->setIdUser(null);
+						
+					}catch(\Exception $e){}
+				}else{
+					$errors[] = 'You must be logged in to comment a post';
 				}
+				
 			}
 	
 			$comments = $commentObj->findAll();
@@ -266,14 +286,14 @@ class PostController{
 			} 
 		}
 		
-		$errors = [];
-
-		$view = new View('post', 'front',  $site);
 		$view->assign('pageTitle', $post['title']);
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
 		$view->assign('canPostComment', !Security::getUser() == 0 );
+		if($post['allowComment'] && !(Security::getUser() == 0)){
+			$view->assign('commentForm', $form );
+		}
 		$view->assign('comments', $comments??[]);
 
 	}

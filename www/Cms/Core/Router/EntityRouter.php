@@ -3,6 +3,7 @@ namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
 
+use App\Core\ErrorReporter;
 use App\Models\Site;
 
 use CMS\Models\Page;
@@ -25,21 +26,8 @@ class EntityRouter extends Router implements RouterInterface
 			$requestedPage = $url[1];
 
 			$siteObj->setSubDomain($domain);
-			$site = $siteObj->findOne();
-
-			if(empty($site['id']) || !$site){
-				throw new \Exception('This site does not exist');
-			}
-
-			$siteObj->setId($site['id']);
-			$siteObj->setName($site['name']);
-			$siteObj->setDescription($site['description']);
-			$siteObj->setImage($site['image']);
-			$siteObj->setCreator($site['creator']);
-			$siteObj->setSubDomain($site['subDomain']);
-			$siteObj->setPrefix($site['prefix']);
-			$siteObj->setType($site['type']);
-			$siteObj->setTheme($site['theme']);
+			$siteCheck = $siteObj->findOne(TRUE);
+			if(!$siteCheck){ throw new \Exception('This site does not exist'); }
 
 			$uri = array_slice($url, 1);
 			if(empty($uri[0])){
@@ -53,7 +41,9 @@ class EntityRouter extends Router implements RouterInterface
 			$this->site = $siteObj;
 
 		}catch(\Exception $e){
+			ErrorReporter::report("EntityRouter Construct():" . $e->getMessage() );
 			echo $e->getMessage();
+			\App\Core\Helpers::customRedirect('/');
 			return;
 		}
 	}
@@ -75,6 +65,7 @@ class EntityRouter extends Router implements RouterInterface
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
 			echo $e->getMessage();
+			ErrorReporter::report("EntityRouter route():" . $e->getMessage() );
 		}
 	}
 
