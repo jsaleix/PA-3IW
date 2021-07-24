@@ -82,7 +82,16 @@ class Admin{
 		}
 		$siteObj = new Site();
 		$view = new View('back/editUser', 'admin');
-		$form = $userObj->formEdit();
+
+		$roleObj = new Role();
+		$roles = $roleObj->findAll();
+		$rolesArr = [];
+		if($roles){
+			foreach($roles as $item){
+				$rolesArr[$item['id']] = $item['name'];
+			}
+		}
+		$form = $userObj->formAdminEdit($rolesArr);
 
 		##########
 		/*update process here */
@@ -120,7 +129,7 @@ class Admin{
 				if($userObj->populate($data, TRUE)){
 					$message = "Profile successfully updated!";
 					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
-					$form = $userObj->formEdit();
+					$form = $userObj->formAdminEdit($rolesArr);
 
 				} else {
 					$message = "Cannot update your profile";
@@ -224,7 +233,7 @@ class Admin{
 		$form = $roleObj->formCreate();
 
 		$view = new View('back/form', 'admin');
-		$view->assign('pageTitle', "Edit a role");
+		$view->assign('pageTitle', "Create a role");
 		$view->assign("form", $form);
 		if(!empty($_POST))
 		{

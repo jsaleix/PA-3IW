@@ -101,8 +101,10 @@ class Database
 					}
 				}
 				$req 	= "UPDATE " . $this->table . " SET " . implode(', ', $setCmd) . ' WHERE id = ' . $this->getId();
-				/*echo '<br>' . $req . '<br>';
-				echo implode('--', $columns);
+				/*echo '<hr><br>' . $req . '<br>';
+				foreach($columns as $key => $col){
+					echo $key . ': ' .$columns[$key] . '<br>';
+				}
 				echo '<br>';*/
 				$query 	= $this->pdo->prepare($req);
 			}
