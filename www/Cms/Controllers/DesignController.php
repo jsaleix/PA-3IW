@@ -5,6 +5,8 @@ namespace CMS\Controller;
 use CMS\Core\CMSView as View;
 
 use App\Models\Site as Site;
+use App\Core\FormValidator;
+
 
 class DesignController{
 
@@ -28,6 +30,11 @@ class DesignController{
 
         if(!empty($_POST)){
             if(($_POST['theme'] !== $site->getTheme()) && array_search($_POST['theme'], $themes)){
+                $errors = FormValidator::check($form, $_POST);
+                if( count($errors) > 0){
+                    $view->assign("errors", $errors);
+                    return;
+                }
                 $siteObj->setTheme($_POST['theme']);
                 $siteObj->save();
                 $site = $siteObj->findOne();
