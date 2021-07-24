@@ -22,3 +22,7 @@
 /ent/api/booking/time:
   controller: bookingController
   action: apiGetTimes
+
+/ent/sitemap.xml:
+  controller: sitemapcontroller
+  action: renderSiteMap
