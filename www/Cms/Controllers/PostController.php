@@ -29,7 +29,7 @@ class PostController{
 		$postObj = new Post($site->getPrefix());
 
 		$form = $postObj->formAddContent();
-		$view = new View('create', 'back',  $site);
+		$view = new View('post.association', 'back',  $site);
 		$view->assign("form", $form);
 		$view->assign('pageTitle', "Add an article");
 
