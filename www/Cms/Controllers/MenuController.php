@@ -16,15 +16,7 @@ class MenuController{
     public function manageMenusAction($site){
 		$menuObj = new Menu($site->getPrefix());
 		$menus = $menuObj->findAll();
-
-		// if($menus){
-		// 	foreach($menus as $item){
-		// 		$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
-        //         $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
-		// 		// $datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
-		// 	}
-		// }
-
+        
 		$addMenuButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
 		
 		$view = new View('menus', 'back', $site);
