@@ -4,6 +4,8 @@ namespace CMS\Controller;
 
 use CMS\Core\CMSView as View;
 use App\Models\Site as Site;
+use App\Core\FormValidator;
+use App\Core\Helpers as Helpers;
 
 class ContactsController{
 
@@ -11,63 +13,46 @@ class ContactsController{
         $siteObj = $site;
 
         $view = new View("contacts", "back", $site);
+        $contactForm = $siteObj->formContactEdit();
+        $socialForm = $siteObj->formSocialEdit();
+
         
         if(!empty($_POST)){
             ["action" => $action] = $_POST;
-
             if($action === "contact"){
-                ["phoneNumber" => $phoneNumber, "emailPro" => $emailPro, "address" => $address] = $_POST;
-                
-                if(!empty($phoneNumber) && !is_null($phoneNumber)){
-                    $siteObj->setPhoneNumber($phoneNumber);
-                }else{
-                    $siteObj->setPhoneNumber("IS NULL");
+                $errors = FormValidator::check($contactForm, $_POST);
+                if( count($errors) > 0){
+                    $view->assign("errors", $errors);
+                    return;
                 }
-
-                if(!empty($emailPro) && !is_null($emailPro)){
-                    $siteObj->setEmailPro($emailPro);
+                $adding = $siteObj->edit($_POST);
+                if($adding){
+                    $message ='Contact succesfully modified!';
+                    $view->assign("alert", Helpers::displayAlert("success",$message,3500));
+                    $contactForm = $siteObj->formContactEdit();
                 }else{
-                    $siteObj->setEmailPro("IS NULL");
+                    $view->assign("errors", "An error from our servers occured, try again later");
                 }
-
-                if(!empty($address) && !is_null($address)){
-                    $siteObj->setAddress($address);
-                }else{
-                    $siteObj->setAddress("IS NULL");
-                }
-
-                $siteObj->save();
-
             }
             if($action === "socials"){
-                ["instagram" => $instagram, "twitter" => $twitter, "facebook" => $facebook] = $_POST;
-
-                if(!empty($instagram) && !is_null($instagram)){
-                    $siteObj->setInstagram($instagram);
-                }else{
-                    $siteObj->setInstagram("IS NULL");
+                $errors = FormValidator::check($socialForm, $_POST);
+                if( count($errors) > 0){
+                    $view->assign("errors", $errors);
+                    return;
                 }
-
-                if(!empty($twitter) && !is_null($twitter)){
-                    $siteObj->setTwitter($twitter);
+                $adding = $siteObj->edit($_POST);
+                if($adding){
+                    $message ='Socials succesfully modified!';
+                    $view->assign("alert", Helpers::displayAlert("success",$message,3500));
+                    $socialForm = $siteObj->formSocialEdit();
                 }else{
-                    $siteObj->setTwitter("IS NULL");
+                    $view->assign("errors", "An error from our servers occured, try again later");
                 }
-
-                if(!empty($facebook) && !is_null($facebook)) { 
-                    $siteObj->setFacebook($facebook);
-                }else{
-                    $siteObj->setFacebook("IS NULL");
-                }
-
-                $siteObj->save();
             }
 
         }
 
-        $contactForm = $siteObj->formContactEdit();
-        $socialForm = $siteObj->formSocialEdit();
-
+        
         $view->assign("contactForm", $contactForm);
         $view->assign("socialForm", $socialForm);
         $view->assign("site", $site);
