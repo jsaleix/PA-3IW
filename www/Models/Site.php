@@ -134,6 +134,11 @@ class Site extends Model
         return $this->name;
     }
 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
     public function setDescription($description)
     {
         $this->description = htmlspecialchars($description);
@@ -318,7 +323,8 @@ class Site extends Model
                 "action"=>"",
                 "class"=>"col-10 form-90",
                 "submit"=>"Update contacts",
-                "submitClass"=>"btn btn-100 btn-light"
+                "submitClass"=>"btn btn-100 btn-light",
+                "name"=>"contact"
             ],
             "inputs"=>[
                 "phoneNumber"=>[
@@ -354,7 +360,8 @@ class Site extends Model
                 "action"=>"",
                 "class"=>"col-10 form-90",
                 "submit"=>"Update socials",
-                "submitClass"=>"btn btn-100 btn-light"
+                "submitClass"=>"btn btn-100 btn-light",
+                "name"=>"socials"
             ],
             "inputs"=>[
                 "action"=>[

@@ -62,7 +62,6 @@ class Menu extends CMSModels
 
 	public function formAdd(){
         return [
-
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
@@ -100,43 +99,44 @@ class Menu extends CMSModels
         ];
     }
 
-	public function formEdit($content){
+	public function formEdit(){
         return [
             "config"=>[
                 "method"=>"POST",
-                "action"=>"",
-                "id"=>"form_content",
-                "class"=>"form-content",
+                "action"=>"form-col",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "class" => "",
+                "submitClass"=>"btn btn-100"
             ],
             "inputs"=>[
                 "name"=>[ 
                     "type"=>"text",
-                    "label"=>"Name",
                     "minLength"=>2,
                     "maxLength"=>45,
-                    "id"=>"title",
-                    "class"=>"input-content",
-                    "placeholder"=>"New dish",
-                    "error"=>"The title cannot be empty!",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Nom",
+                    "error"=>"The name cannot be empty!",
                     "required"=>true,
-					"value"=> $content['name']
+					"value"=> $this->name
                 ],
 				"description"=>[ 
 					"type"=>"textarea",
 					"label"=>"Description",
 					"id"=>"description",
-					"class"=>"input-description",
-					"value"=> $content['description']
+					"class"=>"input input-100",
+					"value"=> $this->description
                 ],
                 "notes"=>[ 
 					"type"=>"text",
 					"label"=>"notes",
 					"id"=>"notes",
-					"class"=>"input-notes",
-					"value"=> $content['notes']
+					"class"=>"input input-100",
+					"value"=> $this->notes
                 ],
+                "action"=>[
+                    "type"=>"hidden",
+                    "value"=>"apply"
+                ]
             ]
         ];
     }
