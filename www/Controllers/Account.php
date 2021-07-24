@@ -137,6 +137,7 @@ class Account{
 			foreach($ownedSites as $item){
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
+				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/Y H:i:s');
 				$datas[] = $item;
 			}
 			$lists[] = array( "title" => "My Sites", "datas" => $datas);
@@ -162,6 +163,7 @@ class Account{
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
 				$item['creator'] = $creator;
+				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/Y H:i:s');
 				$datas[] = $item;
 			}
 		}
