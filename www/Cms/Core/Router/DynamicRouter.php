@@ -99,7 +99,7 @@ class DynamicRouter extends Router implements RouterInterface
 	}
 
 	public function renderInvalidRoute() : void{
-		$view = new View('featureNotAvailable', 'front',  $this->site);
+		$view = new View('somethingWentWrong', 'front',  $this->site);
 		$view->assign('pageTitle', "Dashboard");
 	}
 

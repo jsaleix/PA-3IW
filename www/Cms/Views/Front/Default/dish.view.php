@@ -29,7 +29,7 @@
         <?php else: ?>
             <h1>Not Found :/</h1>
             <hr/>
-            <p>Sorry, we're unable to find the article you're looking for.</p>
+            <p>Sorry, we're unable to find the dish you're looking for.</p>
         <?php endif; ?>
     </div>
 
