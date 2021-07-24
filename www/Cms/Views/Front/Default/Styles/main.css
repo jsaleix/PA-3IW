@@ -1023,6 +1023,7 @@ hr {
   outline: none;
   font-size: 16px;
   margin: 5px;
+  resize: vertical;
 }
 
 .input-100 {

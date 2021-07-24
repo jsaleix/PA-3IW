@@ -388,7 +388,7 @@ class Site extends Model
                 "id"=>"form_content",
                 "class"=>"edit-site col-5 col-sm-12",
                 "submit"=>"Apply",
-                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "submitClass"=>"btn btn-light btn-100",
                 "enctype"=>"multipart/form-data",
             ],
             "inputs"=>[

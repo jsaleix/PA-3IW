@@ -67,9 +67,9 @@ class Menu extends CMSModels
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_content",
-                "class"=>"form-content",
+                "class"=>"form-col col-8",
                 "submit"=>"Add",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"btn btn-100"
             ],
             "inputs"=>[
                 "name"=>[ 
@@ -78,24 +78,23 @@ class Menu extends CMSModels
                     "minLength"=>2,
                     "maxLength"=>45,
                     "id"=>"title",
-                    "class"=>"input-content",
-                    "placeholder"=>"New dish",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Menu name",
                     "error"=>"The title cannot be empty!",
                     "required"=>true,
                 ],
 				"description"=>[ 
-					"type"=>"text",
-					"label"=>"Description",
+					"type"=>"textarea",
 					"id"=>"description",
-					"class"=>"input-description",
-                    "placeholder"=>"Description here",
+					"class"=>"input input-100",
+                    "placeholder"=>"Menu description",
                 ],
                 "notes"=>[ 
 					"type"=>"text",
 					"label"=>"notes",
 					"id"=>"notes",
-					"class"=>"input-notes",
-                    "placeholder"=>"Notes",
+					"class"=>"input input-100",
+                    "placeholder"=>"Notes about the menu",
                 ]
             ]
         ];
@@ -125,7 +124,7 @@ class Menu extends CMSModels
 					"value"=> $content['name']
                 ],
 				"description"=>[ 
-					"type"=>"text",
+					"type"=>"textarea",
 					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input-description",

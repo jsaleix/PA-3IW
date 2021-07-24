@@ -6,7 +6,7 @@ use CMS\Models\Dish;
 use CMS\Models\Menu;
 use CMS\Models\DishCategory;
 use CMS\Models\Menu_dish_association;
-
+use App\Core\Helpers as Helpers;
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
 
@@ -16,23 +16,12 @@ class MenuController{
     public function manageMenusAction($site){
 		$menuObj = new Menu($site->getPrefix());
 		$menus = $menuObj->findAll();
-		$fields = [ 'id', 'name', 'description', 'notes', 'edit', 'delete'];
-		$datas = [];
 
-		if($menus){
-			foreach($menus as $item){
-				$buttonEdit = '<a href="menus/edit?id=' . $item['id'] . '">Go</a>';
-                $buttonDelete = '<a href="menus/delete?id=' . $item['id'] . '">Go</a>';
-				$datas[] = "'".$item['id']."','".$item['name']."','".$item['description']."','".$item['notes']. "','" . $buttonEdit . "','" . $buttonDelete . "'";
-			}
-		}
-
-		$addCatButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
+		$addMenuButton = ['label' => 'Create a new menu', 'link' => 'menus/create'];
 		
-		$view = new View('list', 'back', $site);
-		$view->assign("createButton", $addCatButton);
-		$view->assign("fields", $fields);
-		$view->assign("datas", $datas);
+		$view = new View('menus', 'back', $site);
+		$view->assign("createButton", $addMenuButton);
+		$view->assign("menus", $menus);
 		$view->assign('pageTitle', "Manage your menus");
 	}
 
@@ -141,7 +130,7 @@ class MenuController{
                     $adding = $menuObj->save();
                     if($adding){
                         $message ='Menu successfully updated!';
-                        $viewObj->assign("message", $message);
+					    $viewObj->assign("alert", Helpers::displayAlert("success",$message,3500));
                     }else{
                         $errors[] = "Cannot update this menu";
                         $viewObj->assign("errors", $errors);
@@ -159,7 +148,7 @@ class MenuController{
                 $adding = $dishMenuAssocObj->save();
                 if($adding){
                     $message ='Dish successfully added!';
-                    $viewObj->assign("message", $message);
+					$viewObj->assign("alert", Helpers::displayAlert("success",$message,3500));
                 }else{
                     $errors[] = "Cannot update this menu";
                     $viewObj->assign("errors", $errors);
@@ -205,8 +194,9 @@ class MenuController{
 
 				$adding = $menuObj->save();
 				if($adding){
-                    $message ='Dish category successfully added!';
-                    $view->assign("message", $message);
+                    $message ='New menu successfully created!';
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+
                     $id = $menuObj->getLastId();
                     if($id){
                         header('Location: '.DOMAIN . '/site/' . $site->getSubDomain() . '/admin/menus/edit?id=' . $id);

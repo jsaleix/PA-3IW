@@ -44,12 +44,17 @@ class FormBuilder
 						self::renderCheckBox($name, $configInput);
 					}
 					break;
-				case 'img':
+
 				case 'file':
 					$html .= self::renderFileInput($name, $configInput);
 					break;
+
 				case 'file-img':
 					$html .= self::renderFileImgInput($name, $configInput);
+					break;
+
+				case 'textarea':
+					$html .= self::renderTextarea($name, $configInput);
 					break;
 
 				default:
@@ -57,20 +62,6 @@ class FormBuilder
 
 
 			}
-			/*if($configInput["type"] == "select"){
-				$html .= self::renderSelect($name, $configInput);
-			}else if($configInput["type"] == "checkbox"){
-				if($form["config"]["class"] === "form-auth"){
-					$html .= '<legend style="width: 80%; margin-top:0;"><a href="#" id="forgotpwd">Mot de passe oublié ?</a></legend>';
-					$html .= '<div class="checkbox-container" style="width: 80%; margin-top: 5;">'.
-						self::renderCheckBox($name, $configInput)
-					.'</div>';
-				}else{
-					self::renderCheckBox($name, $configInput);
-				}
-			}else{
-				$html .= self::renderInput($name, $configInput);
-			}*/
 			
 		}
 
@@ -112,8 +103,14 @@ class FormBuilder
 						placeholder=\"".($configInput["placeholder"]??"")."\" ". 
 						(!empty($configInput["required"])?"required=\"required\"":"") .
 						(!empty($configInput["disabled"])?"disabled":"").
-						" value=\"" . ($configInput["value"]??"") . "\" />";
-						$html =  "<input 
+						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
+						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
+						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
+		return $html;
+	}
+
+	public static function renderTextarea($name, $configInput){
+		$html =  "<textarea
 						name=\"".$name."\" 
 						type=\"".($configInput["type"]??"text")."\" 
 						id=\"".($configInput["id"]??"")."\" 
@@ -123,7 +120,7 @@ class FormBuilder
 						(!empty($configInput["disabled"])?"disabled":"").
 						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
 						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
-						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
+						">".htmlspecialchars($configInput["value"]??"")."</textarea>";
 		return $html;
 	}
 

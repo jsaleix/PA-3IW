@@ -2,7 +2,7 @@
 <html lang="FR">
 <head>
 	<meta charset="UTF-8">
-	<title>Template de BACK</title>
+	<title>Easymeal | Restaurant CMS</title>
 	<link rel="icon" href="/Assets/images/logo.png" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="/Assets/js/jquery-3.5.1.min.js"></script>
