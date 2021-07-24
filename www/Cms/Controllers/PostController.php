@@ -239,6 +239,18 @@ class PostController{
 			$post['author'] = 'Unknown';
 		}
 
+		$PMAObj = new PMAssoc($site->getPrefix());
+		$PMAObj->setPost($post['id']);
+		$PMAS = $PMAObj->findAll();
+		$medias = [];
+		if($PMAS){
+			foreach($PMAS as $item){
+				$mediumObj = new Medium($site->getPrefix());
+				$mediumObj->setId($item['medium']);
+				$medias[] = $mediumObj->findOne();
+			}
+		}
+
 		//if the admin allows the post to get comments
 		if($post['allowComment'] === 1){
 			$commentObj->setIdPost($postId);
@@ -294,6 +306,7 @@ class PostController{
 		if($post['allowComment'] && !(Security::getUser() == 0)){
 			$view->assign('commentForm', $form );
 		}
+		$view->assign('medias', $medias);
 		$view->assign('comments', $comments??[]);
 
 	}
