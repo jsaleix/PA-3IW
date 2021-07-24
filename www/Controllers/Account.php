@@ -115,7 +115,8 @@ class Account{
 
 				}
 			}catch(\Exception $e){
-				echo $e->getMessage();
+				$view->assign("errors", $errors);
+				//echo $e->getMessage();
 			}
 		}
 
@@ -133,15 +134,9 @@ class Account{
 
 		if($ownedSites){
 			$datas = [];
-			// $fields = [ 'id', 'version', 'name', 'subDomain', 'creation date', 'prefix', 'type', 'visit','edit' ];
 			foreach($ownedSites as $item){
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
-				// $visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
-				// $editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';
-                // $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
-				// $img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				// $formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $item;
 			}
 			$lists[] = array( "title" => "My Sites", "datas" => $datas);
@@ -167,16 +162,10 @@ class Account{
                 $userObj->setId($item['creator']);
                 $creator = $userObj->findOne();
 				$item['creator'] = $creator;
-				// $visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
-				// $editBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '/admin/settings">Edit</a>';
-                // $creatorBtn = '<a href="user?id=' .  $item['creator'] . '">' . $creator['firstname'] . ' ' . $creator['lastname']. '</a>';
-				// $img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				// $formalized = "'" . $item['id'] . "','" . 0.0 . "','" . $item['name'] . "','" .$creatorBtn .  "','" . $item['subDomain'] . "','" . $item['creationDate'] . "','". $item['prefix'] . "','". $item['type'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $item;
 			}
 		}
-		$lists[] = array( "title" => "Whitelisted", "datas" => $datas);
-		//var_dump($lists[1]);
+		$lists[] = array( "title" => "Sites you are whitelisted on", "datas" => $datas);
 		$view = new View('front/list.account', 'front');
 		$view->assign("lists", $lists);
 		$view->assign('pageTitle', "Manage the sites");
