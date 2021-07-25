@@ -117,7 +117,7 @@ class Menu extends CMSModels
                     "minLength"=>2,
                     "maxLength"=>45,
                     "id"=>"title",
-                    "class"=>"input-content",
+                    "class"=>"input",
                     "placeholder"=>"New dish",
                     "error"=>"The title cannot be empty!",
                     "required"=>true,
@@ -127,14 +127,14 @@ class Menu extends CMSModels
 					"type"=>"textarea",
 					"label"=>"Description",
 					"id"=>"description",
-					"class"=>"input-description",
+					"class"=>"input",
 					"value"=> $content['description']
                 ],
                 "notes"=>[ 
 					"type"=>"text",
 					"label"=>"notes",
 					"id"=>"notes",
-					"class"=>"input-notes",
+					"class"=>"input",
 					"value"=> $content['notes']
                 ],
             ]
@@ -148,7 +148,7 @@ class Menu extends CMSModels
                 "action"=>"",
 				"href" => "editDish_Category?id=" . $data['id'],
                 "id"=>"form_content",
-                "class"=>"inline-list",
+                "class"=>"input",
                 "submit"=>"Edit",
                 "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],

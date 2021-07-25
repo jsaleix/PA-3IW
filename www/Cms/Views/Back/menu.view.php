@@ -46,41 +46,39 @@
                 </form>
             </div>
 
-            <div class="col-8 col-sm-12 col-md-12 col-xl-8">
+            <div class="col-8 col-sm-12 col-md-12 col-xl-8" style="padding-left:1em; padding-right:1em;">
 
                 <?php if(isset($dishes) && !empty($dishes)): ?>
-                    <div class="col-inner">
-                        <div class="darkSection">
-                            <div class="dish-list">
-                                <?php foreach($dishes as $dish): ?>
-                                    <div class="dish-data no-pointer">
-                                    <form action="" method="POST">
-                                        <img src="<?=$dish['image']?>"/>
-                                        <p><?=$dish['name']?></p>
-                                        <input type="hidden" name="action" value="remove_dish"/>
-                                        <input type="hidden" name="dish" value="<?=$dish['id']?>"/>
-                                        <button class="remove-btn" type="submit" >
-                                            <img src="/Assets/images/icons/remove.png"  alt="delete"/>
-                                        </button>
-                                    </form>
-                                    </div>
-                                <?php endforeach; ?>
+                    <div class="row">
+                        <?php foreach($dishes as $dish): ?>
+                            <div class="dish-data no-pointer">
+                            <form action="" method="POST">
+                                <img src="<?=$dish['image']?>"/>
+                                <p><?=$dish['name']?></p>
+                                <input type="hidden" name="action" value="remove_dish"/>
+                                <input type="hidden" name="dish" value="<?=$dish['id']?>"/>
+                                <button class="remove-btn" type="submit" >
+                                    <img src="/Assets/images/icons/remove.png"  alt="delete"/>
+                                </button>
+                            </form>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
 
-                <div class="col-inner">
-                    <div class="darkSection">
-                        <h2>Add product in your menu </h2>
-                        <select name="category" id="category-selector" onChange="getDishes()">
-                            <option value="0">None</option>
-                                <?php foreach ($categories as $key => $value):?>
-                                    <option value='<?=$key?>'><?=$value?></option>
-                                <?php endforeach;?>
-                        </select>
+                <div class="add-product">
+                    <h2>Add product in your menu </h2>
 
-                        <div id="add-section" class="dish-list"></div>
+                    <p>Product category: </p>
+                    <select class="input input-100 input-select" name="category" id="category-selector" onChange="getDishes()">
+                        <option value="0">None</option>
+                            <?php foreach ($categories as $key => $value):?>
+                                <option value='<?=$key?>'><?=$value?></option>
+                            <?php endforeach;?>
+                    </select>
+
+                    <div id="add-section" class="row">
+                        
                     </div>
                 </div>
 
@@ -171,58 +169,4 @@
 
     }
 </script>
-
-<style>
-
-    .dish-list{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .dish-data{
-        display: flex;
-        flex-direction: column;
-        justify-content: 'flex-start';
-        width: 25%;
-        padding: 1%;
-        border-radius: 5px;
-        position: relative;
-    }
-
-    .dish-data:hover{
-        background-color: white;
-        cursor: pointer;
-    }
-
-    .dish-data img{
-        width: 100%;
-    }
-
-    .remove-btn{
-        width: 3em ;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transition: 0.5s;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        cursor: pointer;
-    }
-
-    .remove-btn img{
-        width: 100%;
-    }
-
-    .remove-btn:hover{
-        transform: scale(0.8);
-    }
-
-    .no-pointer{
-        cursor: default !important;
-    }
-</style>
-
 <?= $alert??''; ?>

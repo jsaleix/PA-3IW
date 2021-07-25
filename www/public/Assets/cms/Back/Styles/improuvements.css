@@ -277,3 +277,71 @@ textarea{
   display: flex;
   flex-direction: column;
 }
+
+.add-product{
+  display: flex;
+  flex-direction: column;
+  padding:0.5em;
+}
+
+.add-product h2{
+  color: black;
+}
+
+.dish-data{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25%;
+  padding: 0;
+  border: 1px solid #2DC091;
+  position: relative;
+  margin-right: 10px;
+  transition: 0.5s;
+}
+
+.dish-data form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dish-data:hover{
+  transition: 0.5s;
+  transform: scale(1.05);
+  cursor: pointer;
+
+}
+
+.dish-data img{
+  width: 100%;
+}
+
+.remove-btn{
+  width: 3em ;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  transition: 0.5s;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.remove-btn img{
+  width: 100%;
+}
+
+.remove-btn:hover{
+  transform: scale(1.2);
+}
+
+.no-pointer{
+  cursor: default !important;
+}
+
+.no-pointer:hover{
+  cursor: default!important;
+  transform: none;
+}

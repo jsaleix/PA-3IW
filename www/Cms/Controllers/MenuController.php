@@ -104,6 +104,10 @@ class MenuController{
         }
     }
 
+    public function exportMenu(){
+        
+    }
+
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
         $menuObj = new Menu($site->getPrefix());
 		$menuObj->setId($_GET['id']??0);

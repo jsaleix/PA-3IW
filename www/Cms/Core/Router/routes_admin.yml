@@ -94,6 +94,10 @@
   controller: menuController
   action: deleteMenu
 
+/menus/export:
+  controller: menuController
+  action: exportMenu
+
 /booking:
   controller: bookingSettingsController
   action: manageBookingSettings
