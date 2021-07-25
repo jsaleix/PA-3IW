@@ -29,6 +29,7 @@ class Site extends Model
     protected $emailPro;
     protected $instagram;
     protected $facebook;
+    protected $styles;
     protected $twitter;
     private $invalidDomains = [ 'public', 'uploads', 'assets' ];
 
@@ -62,6 +63,16 @@ class Site extends Model
     public function setTheme($theme)
     {
         $this->theme = $theme;
+    }
+
+    public function getStyles()
+    {
+        return $this->styles;
+    }
+
+    public function setStyles($styles)
+    {
+        $this->styles = $styles;
     }
 
     public function getEmailPro()
@@ -293,6 +304,28 @@ class Site extends Model
                     "type"=>"select",
                     "class"=>"input input-100 input-select",
                     "options"=>$themes
+                ],
+                "type"=>[
+                    "type"=>"hidden",
+                    "value"=>"themes"
+                ]
+            ]
+        ];
+    }
+
+    public function formStylesEdit($styles=""){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10",
+                "submit"=>"Change Styles",
+                "submitClass"=>"btn btn-100 btn-light"
+            ],
+            "inputs"=>[
+                "type"=>[
+                    "type"=>"hidden",
+                    "value"=>"styles"
                 ]
             ]
         ];

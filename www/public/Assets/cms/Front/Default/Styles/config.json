@@ -1,0 +1,12 @@
+{
+    "theme" : "Default",
+    "elements" : {
+        "navbar" : {
+            "associated-class" : "default-navbar",
+            "style" : {
+                "color" : true,
+                "background-color" : false
+            }
+        }
+    }
+}
