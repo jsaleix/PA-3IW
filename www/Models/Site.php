@@ -419,6 +419,7 @@ class Site extends Model
 					"type"=>"text",
 					"placeholder"=>"Description",
 					"id"=>"description",
+                    "label"=>"Description",
 					"class"=>"input input-100",
                     "error"=>"The description cannot be empty!",
 					"required"=> false,
