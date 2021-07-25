@@ -14,12 +14,14 @@ class Admin{
 		$commentObj = new Comment($prefix);
 		$comments = $commentObj->findAll(array('limit' => 5 ));
 		$tmpComments = [];
-		foreach($comments as $comment){
-			$author = new User();
-			$author->setId($comment['idUser']);
-			$author->findOne(TRUE);
-			$comment['author'] = $author->getFullName();
-			$tmpComments[] = $comment;
+		if($comments){
+			foreach($comments as $comment){
+				$author = new User();
+				$author->setId($comment['idUser']);
+				$author->findOne(TRUE);
+				$comment['author'] = $author->getFullName();
+				$tmpComments[] = $comment;
+			}
 		}
 		return $tmpComments;
 	}
