@@ -4,6 +4,7 @@ namespace CMS\Controller;
 
 use App\Core\FormValidator;
 use App\Models\User;
+use App\Models\Mail;
 
 use CMS\Core\CMSView as View;
 use CMS\Models\Booking;
@@ -263,6 +264,7 @@ class BookingSettingsController{
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, ACCEPT IT
             $bookingObj->setStatus(1);
             $bookingObj->save();
+            $this->sendAcceptMail($bookingObj, $site);
         }
         \App\Core\Helpers::customRedirect('/admin/booking', $site);
     }
@@ -278,6 +280,7 @@ class BookingSettingsController{
                 throw new \Exception('Booking date not found');
             }
             $delete = $bookingObj->delete();
+            $this->sendDeclineMail($bookingObj, $site);
             if(!$delete){
                 throw new \Exception('Couldn\'t delete this booking');
             }
@@ -285,5 +288,32 @@ class BookingSettingsController{
             \App\Core\Helpers::customRedirect('/admin/booking?delete=failed', $site);
         }
         \App\Core\Helpers::customRedirect('/admin/booking?delete=success', $site);
+    }
+
+    public function sendAcceptMail($booking, $site){
+        $receiver = new User();
+		$receiver->setId($booking->getClient());
+		$receiver->findOne(TRUE);
+
+		$body = "<h3>EasyMeal</h3><br>";
+		$body .= "<h2> Your reservation for the date : ". $booking->getDate(). " has been accepted</h2>";
+		$body .= "<hr>";
+		$body .= "<p>We mind to remember you that you reserved for ". $booking->getNumber(). " persons, if you come with more people, the restaurant has the right to decline your entrance. Kind regards</p>";
+		$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => "Your reservation for ". $site->getName(). " has been accepted" , 'body' => $body);
+		$mailer = new Mail();
+		$mailer->sendMail($mail);
+    }
+
+    public function sendDeclineMail($booking, $site){
+        $receiver = new User();
+		$receiver->setId($booking->getClient());
+		$receiver->findOne(TRUE);
+
+		$body = "<h3>EasyMeal</h3><br>";
+		$body .= "<h2> We're sorry but the restaurant couldn't accept your reservations, if you want more information you can contact them !</h2>";
+		$body .= "<hr>";
+		$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => "Your reservation for ". $site->getName(). " has been declined" , 'body' => $body);
+		$mailer = new Mail();
+		$mailer->sendMail($mail);
     }
 }
