@@ -2,7 +2,7 @@
 
 * {
     box-sizing: border-box;
-    font-family: "Yomogi", cursive;
+    /* font-family: "Yomogi", cursive; */
   }
   html,body{
       width: 100%;

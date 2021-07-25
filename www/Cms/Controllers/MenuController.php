@@ -99,7 +99,46 @@ class MenuController{
 
             if(!$menu){ throw new \Exception('Menu not found'); }
 
-            // echo "Menu : " . $menu['name'];
+            $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
+
+            // Liste plats du menu
+            $dishesInMenuObj = $dishMenuAssocObj->findAll();
+            $dishesInMenu = [];
+
+            $dishMenuAssocObj->setMenu($menu['id']);
+            $dishes = $dishMenuAssocObj->findAll();
+
+            $dishCatObj = new Dish_Category($site->getPrefix());
+            $allCategories = $dishCatObj->findAll();
+
+            if($allCategories){
+                foreach($allCategories as $category){
+                    $catName = $category['name'];
+                    $tmpMenu[$catName] = []; 
+                }
+                $tmpMenu['Others'] = [];
+            }
+
+            if($dishes){
+            
+                foreach($dishes as $dish){
+                    $category = "Others";
+                    echo "<br/><br/>";
+                    $dishObj = new Dish($site->getPrefix());
+                    $dishObj->setId($dish['dish']);
+                    $dish = $dishObj->findOne();
+
+                    if($dish['category']){
+                        $dishCatObjM = new Dish_Category($site->getPrefix());
+                        $dishCatObjM->setId($dish['category']);
+                        $dishCat = $dishCatObjM->findOne();
+                        $category = $dishCat['name'];
+                    }
+
+                    array_push($tmpMenu[$category], $dish);
+                }
+            }
+
             include_once($_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Menus/Default/Default.php');
 
         }catch(\Exception $e){
@@ -128,9 +167,6 @@ class MenuController{
         $menuObj = new Menu($site->getPrefix());
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
-        
-        $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
-        $dishMenuAssocObj->setMenu($menu['id']);
 
         $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);
