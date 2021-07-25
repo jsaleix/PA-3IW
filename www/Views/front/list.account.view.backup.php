@@ -28,7 +28,7 @@
     <?php foreach($lists as $list): ?>
         var dataSet_<?=$list['id']?> = [
             <?php foreach($list['datas'] as $data):?>
-                    [ <?=$data?> ],
+                [ <?= \App\Core\Helpers::sanitizeList($data); ?> ],
             <?php endforeach;?>
             ];
         

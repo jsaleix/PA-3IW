@@ -34,7 +34,7 @@
 <script>
     var pendingDataSet = [
         <?php foreach($pendings['data'] as $data):?>
-                [ <?=$data?> ],
+            [ <?= \App\Core\Helpers::sanitizeList($data); ?> ],
         <?php endforeach;?>
         ];
     
@@ -51,7 +51,7 @@
 
     var acceptedDataSet = [
         <?php foreach($accepted['data'] as $data):?>
-                [ <?=$data?> ],
+            [ <?= \App\Core\Helpers::sanitizeList($data); ?> ],
         <?php endforeach;?>
         ];
     

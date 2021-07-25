@@ -60,6 +60,9 @@ class Helpers
 	public static function displayAlert($type, $message, $time){
 
 		return '<script>displayAlert("'.$type.'", "'.$message.'", '.$time.');</script>';
+	}
 
+	public function sanitizeList($string){
+		return trim(preg_replace('/\s\s+/', ' ', nl2br($string) ));
 	}
 }

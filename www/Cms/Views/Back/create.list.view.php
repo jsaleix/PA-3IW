@@ -32,7 +32,7 @@
 <script>
     var dataSet = [
         <?php foreach($datas as $data):?>
-                [ <?=$data?> ],
+            [ <?= \App\Core\Helpers::sanitizeList($data); ?> ],
         <?php endforeach;?>
         ];
     
