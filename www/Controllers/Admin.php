@@ -41,7 +41,6 @@ class Admin{
 				$datas[] = $formalized;
 			}
 		}
-		//$addDishButton = ['label' => 'Add a new dish', 'link' => 'createdish'];
 		
 		$view = new View('back/list', 'admin');
 		$view->assign("fields", $fields);
@@ -56,16 +55,66 @@ class Admin{
 		}
 		$siteObj = new Site();
 		$siteObj->setId($_GET['id']);
-		$site = $siteObj->findOne();
+		$site = $siteObj->findOne(TRUE);
 		if(!$site){
 			header("Location:" . DOMAIN . '/admin/sites');
 			exit();
 		}
-		$form = $siteObj->formEdit($site);
-
+		$form = $siteObj->formEdit();
 		$view = new View('back/form', 'admin');
 		$view->assign('pageTitle', "Manage a site");
 		$view->assign("form", $form);
+		##########
+		/*update process here */
+		if(!empty($_POST)){
+			$errors = [];
+
+			$data = array_merge($_POST, $_FILES);
+			try{
+				$errors = FormValidator::check($form, $data);
+				if( count($errors) > 0)
+				{
+					$view->assign("errors", $errors);
+					throw new \Exception('Invalid form');
+				}
+
+				if($data['name'] !== $siteObj->getName()){
+					$newSite = new Site();
+					$newSite->setName($data['name']);
+					if($newSite->findOne()){
+						$message = "Site name already taken";
+						$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+						throw new \Exception('Invalid name');
+					}
+				}
+
+				if(isset($_FILES['image']))
+				{
+					$imgDir = "/uploads/cms/" . $siteObj->getSubDomain() . '/';
+					$imgName = 'banner';
+					$isUploaded = FileUploader::uploadImage($_FILES["image"], $imgName, $imgDir);
+					$data['image'] = $isUploaded ? $isUploaded : null;
+				}
+
+				if($siteObj->populate($data, TRUE)){
+					$message = "Site successfully updated!";
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+					$form = $siteObj->formEdit();
+					$view->assign("form", $form);
+
+				} else {
+					$message = "Cannot update this site";
+					$view->assign("alert", Helpers::displayAlert("error", $message, 3500));
+				}
+			}catch(\Exception $e){
+				//echo $e->getMessage();
+				$errors[] = $e->getMessage();
+				$view->assign('errors', $errors);
+			}
+			
+		}
+		##########
+
 	}
 
 	public function displayUserAction(){
