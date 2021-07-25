@@ -46,8 +46,9 @@ class Admin{
 					$client = new User();
 					$client->setId($item['client']);
 					$client->findOne(TRUE);
-					$item['date'] = (new \DateTime())->format('d/m/Y');
-					$item['hour'] = (new \DateTime())->format('H:i:s');
+					$date = new \DateTime($item['date']);
+					$item['date'] = $date->format('d/m/Y');
+					$item['hour'] = $date->format('H:i:s');
 					$item['client'] = ($client->getFirstname(). ' ' . $client->getLastname());
 					$list[] = $item;
 				}
