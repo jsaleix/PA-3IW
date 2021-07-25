@@ -30,7 +30,7 @@
         </div>
         <div class="col-7 col-sm-12 col-md-12">
             <input class="input input-100" name="name" type="text" placeholder="Name" value="<?=$name??''?>"/>
-            <input  name="description" class="input input-100" type="text" placeholder="Description" value="<?=$description??''?>"/>
+            <input  name="description" class="input input-100" type="text" placeholder="Composition" value="<?=$description??''?>"/>
             <div class="alignedInputs">
                 <input class="input" name="price" type="number" placeholder="Price" step="0.1" value="<?=$price?>"/>
                 <select class="input" name="category">
@@ -44,7 +44,7 @@
                         <?php endforeach;?>
                 </select>
             </div>
-            <input class="input input-100" name="notes" type="text" placeholder="Notes" value="<?=$notes??''?>"/>
+            <input class="input input-100" name="notes" type="text" placeholder="Notes / Allergens" value="<?=$notes??''?>"/>
                 <?= App\Core\FormBuilder::createCSRFToken() ?>
             <button type="submit" class="btn btn-light btn-100" ><?= $submitLabel ?></button>
         </div>

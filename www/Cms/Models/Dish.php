@@ -149,7 +149,6 @@ class Dish extends CMSModels
                 ],
 				"description"=>[ 
 					"type"=>"text",
-					"label"=>"Description",
 					"id"=>"description",
 					"class"=>"input-description",
                     "placeholder"=>"Description here",

@@ -37,8 +37,8 @@
                                     <img alt="Dish" src="<?= $dish['image'] ?>" />
                                     <div class="col-infos">
                                         <span class="dish-name"><?= $dish['name'] ?></span>
-                                        <span class="dish-content"><?= $dish['description'] ?></span>
-                                        <span class="dish-content"><?= $dish['notes'] ?></span>
+                                        <span class="dish-content">(Composition : <?= $dish['description'] ?>)</span>
+                                        <span class="dish-content">(Notes / Allergens : <?= $dish['notes'] ?>)</span>
                                     </div>
                                 </div>
                                 <p class="price"><?= $dish['price'] ?>$</p>
