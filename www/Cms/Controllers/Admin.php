@@ -13,7 +13,17 @@ class Admin{
 	private function getLastComments($prefix){
 		$commentObj = new Comment($prefix);
 		$comments = $commentObj->findAll(array('limit' => 5 ));
-		return $comments;
+		$tmpComments = [];
+		if($comments){
+			foreach($comments as $comment){
+				$author = new User();
+				$author->setId($comment['idUser']);
+				$author->findOne(TRUE);
+				$comment['author'] = $author->getFullName();
+				$tmpComments[] = $comment;
+			}
+		}
+		return $tmpComments;
 	}
 
 	private function getPendingBooking($prefix){
@@ -28,7 +38,7 @@ class Admin{
 				$today = new \DateTime();
 				if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
 				{
-					$bookDate = new Booking($site->getPrefix());
+					$bookDate = new Booking($prefix);
 					$bookDate->setId($item['id']);
 					$bookDate->setStatus(2);
 					$bookDate->save();
@@ -58,7 +68,7 @@ class Admin{
 				$today = new \DateTime();
 				if($date < $today)  //Check if the date is not past, if yes updates the booking item status to 2 in order to mean it's gone
 				{
-					$bookDate = new Booking($site->getPrefix());
+					$bookDate = new Booking($prefix);
 					$bookDate->setId($item['id']);
 					$bookDate->setStatus(2);
 					$bookDate->save();

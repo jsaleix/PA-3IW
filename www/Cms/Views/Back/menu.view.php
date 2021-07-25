@@ -17,33 +17,7 @@
 
         <div class="row" >
             <div class="col-4 col-sm-12 col-md-12 col-xl-4">
-                <form methode="POST" action="form-col">
-                    <input 
-                        name="name" 
-                        type="text" 
-                        placeholder="Nom" 
-                        value="<?=$name??''?>"
-                        class="input input-100"
-                        />
-                    <textarea 
-                        name="description"
-                        type="text" 
-                        placeholder="Description" 
-                        class="input input-100"><?=$description??''?></textarea>
-                    <input 
-                        name="notes"
-                        type="text" 
-                        placeholder="Notes" 
-                        class="input input-100"
-                        value="<?=$notes??''?>"/>
-                    <input 
-                        name="action"
-                        type="hidden" 
-                        value="apply"/>
-                    <div class="validateRow">
-                        <button type="submit" class="btn btn-100" >Apply</button>
-                    </div>
-                </form>
+                <?php App\Core\FormBuilder::render($form)?>
             </div>
 
             <div class="col-8 col-sm-12 col-md-12 col-xl-8" style="padding-left:1em; padding-right:1em;">
@@ -94,10 +68,13 @@
 
     async function getDishes(){
         eraseDishList();
+        let menuId = (new URL(document.location)).searchParams;
+        menuId = menuId.get('id');
+        if(!menuId) return;
         let select = document.getElementById('category-selector');
         select = select.value;
         try{
-            let res = await fetch('<?=DOMAIN?>/site/<?=$subDomain?>/admin/api/searchdish?category=' + select, 
+            let res = await fetch('<?=DOMAIN?>/site/<?=$subDomain?>/admin/api/searchdish?category=' + select + '&menu=' + menuId, 
             {
                 method: 'GET',
                 headers:{

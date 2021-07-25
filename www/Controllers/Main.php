@@ -38,7 +38,7 @@ class Main{
 			exit();
 		}
 		$role = new Role();
-		$role->setId($userObj->getId());
+		$role->setId($userObj->getRole());
 		$role->findOne(TRUE);
 
 		$view = new View('front/profile', 'front');
@@ -47,21 +47,7 @@ class Main{
 		$siteObj->setCreator($_GET['id']);
 		$sites = $siteObj->findAll();
 
-		if($sites){
-			$fields = [ 'img', 'name', 'creation date', 'visit' ];
-			$datas = [];
-			foreach($sites as $item){
-				$visitBtn = '<a target="_blank" href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
-				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
-				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/y H:i:s');
-				$formalized = "'" . $img . "','" . $item['name'] . "','" . $item['creationDate'] . "','" . $visitBtn . "'";
-				$datas[] = $formalized;
-			}
-			$view->assign("fields", $fields);
-			$view->assign("datas", $datas);
-			$view->assign("list", true);
-		}
-
+		$view->assign("sites", $sites);
 		$view->assign('pageTitle', $userObj->getFirstname() . ' ' . $userObj->getLastname() . '\'s profile');
 		$view->assign("user", $userObj);
 		$view->assign("role", $role);

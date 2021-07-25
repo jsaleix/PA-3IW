@@ -252,7 +252,7 @@ class PostController{
 		}
 
 		//if the admin allows the post to get comments
-		if($post['allowComment'] === 1){
+		if($post['allowComment'] == 1){
 			$commentObj->setIdPost($postId);
 			$form = $commentObj->form();
 			if($_POST)
@@ -302,8 +302,8 @@ class PostController{
 		$view->assign("errors", $errors);
 		$view->assign("style", StyleBuilder::renderStyle($site->returnData()));
 		$view->assign('post', $post);
-		$view->assign('canPostComment', !Security::getUser() == 0 );
-		if($post['allowComment'] && !(Security::getUser() == 0)){
+		$view->assign('canPostComment', $user );
+		if($post['allowComment'] && $user){
 			$view->assign('commentForm', $form );
 		}
 		$view->assign('medias', $medias);

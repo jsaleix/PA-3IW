@@ -5,6 +5,7 @@ namespace CMS\Controller;
 use App\Models\User;
 use App\Models\Whitelist;
 use App\Core\Security;
+use App\Core\FormValidator;
 use App\Models\Mail;
 
 use CMS\Core\CMSView as View;
@@ -49,8 +50,6 @@ class UserController{
 		$form = $wlistObj->formAdd();
 
 		$view = new View('whitelist', 'back', $site);
-		$view->assign("form", $form);
-		$view->assign('pageTitle', "Allow a user to manage your site");
 
 		try{
 			if(!empty($_POST) )
@@ -61,41 +60,29 @@ class UserController{
 				if($user == Security::getUser()){ throw new \Exception('Cannot add yourself'); }
 				if($site->getCreator() != Security::getUser()){ throw new \Exception('Cannot do this action'); }
 
+				unset($_POST['username-visible']);//UNSET THE FIELD ONLY USED BY JS/FRONT
+				$errors = FormValidator::check($form, $_POST);
+                if( count($errors) > 0){
+                    $view->assign("errors", $errors);
+                    return;
+                }
 				$wlistObj->setIdUser($user);
-				$wlistObj->setIdSite($site->getId());
 				$check = $wlistObj->findOne();
 				if($check){  throw new \Exception('User already authorized');  }
 				$adding = $wlistObj->save();
 				if($adding){
-					$message ='User successfully added!';
-					$view->assign("message", $message);
-
-					/*Sending mail to inform the new administrator*/
-					$receiver = new User();
-					$receiver->setId($user);
-					$receiver->findOne(TRUE);
-
-					$sender = new User();
-					$sender->setId(Security::getUser());
-					$sender->findOne(TRUE);
-					$body = "<h3>EasyMeal</h3><br>";
-					$body .= "<h2>".$sender->getFullName()." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site->getName() ."/" . $site->getSubDomain() . "</a></h2>";
-					$body .= "<hr>";
-					$body .= "<p>To access the admin panel add in the url after the site domain /admin or click <a href='" . \App\Core\Helpers::renderCMSLink('admin', $site) . "'>here</a></p>";
-					$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => $sender->getFullName() .' allowed you on '.$site->getName() , 'body' => $body);
-					$mailer = new Mail();
-					$mailer->sendMail($mail);
+					$this->sendAdminMail($user);
 					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 				}else{
-					$errors[] = "Cannot add this user";
-					$view->assign("errors", $errors);
 					\App\Core\Helpers::customRedirect('/admin/users?error', $site);
 				}
 			}
 		}catch(\Exception $e){
 			\App\Core\Helpers::customRedirect('/admin/users?error', $site);
+		}finally{
+			$view->assign("form", $form);
+			$view->assign('pageTitle', "Allow a user to manage your site");
 		}
-		
     }
 
     public function deleteAdminAction($site){
@@ -117,5 +104,23 @@ class UserController{
 			\App\Core\Helpers::customRedirect('/admin/users?error', $site);
 		}
     }
+
+	public function sendAdminMail($user){
+		/*Sending mail to inform the new administrator*/
+		$receiver = new User();
+		$receiver->setId($user);
+		$receiver->findOne(TRUE);
+
+		$sender = new User();
+		$sender->setId(Security::getUser());
+		$sender->findOne(TRUE);
+		$body = "<h3>EasyMeal</h3><br>";
+		$body .= "<h2>".$sender->getFullName()." has allowed you to manage his site <a href='" . \App\Core\Helpers::renderCMSLink('', $site) . "'>" . $site->getName() ."/" . $site->getSubDomain() . "</a></h2>";
+		$body .= "<hr>";
+		$body .= "<p>To access the admin panel add in the url after the site domain /admin or click <a href='" . \App\Core\Helpers::renderCMSLink('admin', $site) . "'>here</a></p>";
+		$mail = array( 'from' => 'EasyMeal', 'to' => $receiver->getEmail(), 'subject' => $sender->getFullName() .' allowed you on '.$site->getName() , 'body' => $body);
+		$mailer = new Mail();
+		$mailer->sendMail($mail);
+	}
 
 }

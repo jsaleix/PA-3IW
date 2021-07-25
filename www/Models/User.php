@@ -348,6 +348,20 @@ class User extends Model
         ];
     }
 
+    public function formAdminEdit($roleValues){
+        $form = $this->formEdit();
+        $roleInput =  [
+                "type"=>"select",
+                "label"=>"Role",
+                "id"=>"role",
+                "class"=>"input-role-select",
+                "value" => $this->role,
+                "options" => $roleValues
+        ];
+        $form['inputs']['role'] = $roleInput;
+        return $form;
+    }
+
     public function formPwd(){
         return [
 

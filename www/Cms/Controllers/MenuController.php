@@ -2,11 +2,13 @@
 
 namespace CMS\Controller;
 
+use App\Core\Helpers as Helpers;
+use App\Core\FormValidator;
+
 use CMS\Models\Dish;
 use CMS\Models\Menu;
 use CMS\Models\Dish_Category;
 use CMS\Models\Menu_dish_association;
-use App\Core\Helpers as Helpers;
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
 
@@ -31,23 +33,24 @@ class MenuController{
 			header("Location: /");
             exit();
 		}
-
+		$menuObj = new Menu($site->getPrefix());
+		$menuObj->setId($_GET['id']??0);
+		$menu = $menuObj->findOne(TRUE);
+        if(empty($menuObj->getName())){
+            header("Location: /");
+            exit();
+        }
+        $form = $menuObj->formEdit();
         $view = new View('menu', 'back', $site);
 
+        
         if(!empty($_POST) && isset($_POST['action']) && !empty($_POST['action']) ){
             $action = $_POST['action'];
             $errors = [];
 
-            $this->manageDishInMenu($action, $site, $view, $_POST, $_GET);
+            $this->manageDishInMenu($action, $site, $view, $form);
 		}
 
-		$menuObj = new Menu($site->getPrefix());
-		$menuObj->setId($_GET['id']??0);
-		$menu = $menuObj->findOne();
-		if(!$menu){
-			header("Location: /");
-            exit();
-		}
 		
         $dishCatObj = new Dish_Category($site->getPrefix());
         $dishCatArr = $dishCatObj->findAll();
@@ -60,7 +63,7 @@ class MenuController{
         }
 
         $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
-        $dishMenuAssocObj->setMenu($menu['id']);
+        $dishMenuAssocObj->setMenu($menuObj->getId());
         $dishes = $dishMenuAssocObj->findAll();
         $dishesArr = [];
         if($dishes){
@@ -76,11 +79,10 @@ class MenuController{
             }
         }
 
-		//$form = $menuObj->formEdit((array)$menu);
-		//$view->assign("form", $form);
-        $view->assign("name", $menu['name']);
+        $view->assign("form", $form);
+        /*$view->assign("name", $menu['name']);
         $view->assign("description", $menu['description']);
-        $view->assign("notes", $menu['notes']);
+        $view->assign("notes", $menu['notes']);*/
         $view->assign("categories", $selectDishCat);
 		$view->assign('pageTitle', "Edit your menu");
         $view->assign('subDomain', $site->getSubDomain());
@@ -163,42 +165,44 @@ class MenuController{
         }
     }
 
-    public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
+    public function manageDishInMenu($action, $site, $viewObj, $form ){
         $menuObj = new Menu($site->getPrefix());
 		$menuObj->setId($_GET['id']??0);
 		$menu = $menuObj->findOne();
 
         $dishMenuAssocObj = new Menu_dish_association($site->getPrefix());
         $dishMenuAssocObj->setMenu($menu['id']);
+        $errors = [];
 
         switch($action)
         {
             case 'apply':
-                [ "name" => $name, "description" => $description, "notes" => $notes ] = $_postFields;
-
-                if( $name){
-                    //Verify the dishCategor submitted
-                    $menuObj->setName($name);
-                    $menuObj->setDescription($description);
-                    $menuObj->setNotes($notes);
-                    $menuObj->setIsActive($isActive??1);
-    
-                    $adding = $menuObj->save();
-                    if($adding){
-                        $message ='Menu successfully updated!';
-					    $viewObj->assign("alert", Helpers::displayAlert("success",$message,3500));
-                    }else{
-                        $errors[] = "Cannot update this menu";
-                        $viewObj->assign("errors", $errors);
-                    }
+                $category = $_POST['category'];
+                unset($_POST['category']);
+                /*print_r($form);
+                echo "<br><br>";
+                print_r($_postFields);*/
+                $errors = FormValidator::check($form, $_POST);
+                if( count($errors) > 0){
+                    $viewObj->assign("errors", $errors);
+                    return;
                 }
+                $adding = $menuObj->edit($_POST);
+                if($adding){
+                    header('Location: '.DOMAIN . '/site/' . $site->getSubDomain() . '/admin/menus/edit?id=' . $menuObj->getId());
+                    exit();
+                }else{
+                    $errors[] = "Cannot create this menu";
+                    $view->assign("errors", $errors);
+                }
+                $_postFields['category'] = $category;
                 break;
 
             case 'add_dish':
-                [ "menu" => $menu, "dish" => $dish] = $_postFields;
+                [ "menu" => $menu, "dish" => $dish] = $_POST;
                 $dishMenuAssocObj->setPrefix($site->getPrefix());
-                $dishMenuAssocObj->setMenu($menu);
-                $dishMenuAssocObj->setDish($dish);
+                $dishMenuAssocObj->setMenu(FormValidator::sanitizeData($menu));
+                $dishMenuAssocObj->setDish(FormValidator::sanitizeData($dish));
                 $dishMenuId = $dishMenuAssocObj->findOne();
                 if($dishMenuId !== false){ return; }
                 $adding = $dishMenuAssocObj->save();
@@ -212,19 +216,15 @@ class MenuController{
                 break;
 
             case 'remove_dish':
-                [ "dish" => $dish] = $_postFields;
-                [ "id" => $menu] = $_getFields;
-
                 $dishMenuAssocObj->setPrefix($site->getPrefix());
-                $dishMenuAssocObj->setMenu($menu);
-                $dishMenuAssocObj->setDish($dish);
+                $dishMenuAssocObj->setMenu(FormValidator::sanitizeData($_GET['id']));
+                $dishMenuAssocObj->setDish(FormValidator::sanitizeData($_POST['dish']));
                 $dishMenuId = $dishMenuAssocObj->findOne();
                 if($dishMenuId === false) return ;
                 $dishMenuAssocObj->setId($dishMenuId['id']);
                 $dishMenuAssocObj->delete();
                 break;
-        }
-		
+        }		
     }
 
     public function createMenuAction($site){
@@ -239,30 +239,26 @@ class MenuController{
 		if(!empty($_POST) )
 		{
 			$errors = [];
-			[ "name" => $name, "description" => $description, "notes" => $notes ] = $_POST;
+            $errors = FormValidator::check($form, $_POST);
+            if( count($errors) > 0){
+                $view->assign("errors", $errors);
+                return;
+            }
+            $adding = $menuObj->populate($_POST, TRUE);
+            if($adding){
+                $message ='New menu successfully created!';
+                $view->assign("alert", Helpers::displayAlert("success",$message,3500));
+
+                $id = $menuObj->getLastId();
+                if($id){
+                    header('Location: '.DOMAIN . '/site/' . $site->getSubDomain() . '/admin/menus/edit?id=' . $id);
+                    exit();
+                }
+            }else{
+                $errors[] = "Cannot create this menu";
+                $view->assign("errors", $errors);
+            }
 			
-			if( $name ){
-				//Verify the dishCategor submitted
-				$menuObj->setName($name);
-				$menuObj->setDescription($description);
-				$menuObj->setNotes($notes);
-				$menuObj->setIsActive($isActive??1);
-
-				$adding = $menuObj->save();
-				if($adding){
-                    $message ='New menu successfully created!';
-					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
-
-                    $id = $menuObj->getLastId();
-                    if($id){
-                        header('Location: '.DOMAIN . '/site/' . $site->getSubDomain() . '/admin/menus/edit?id=' . $id);
-                        exit();
-                    }
-				}else{
-					$errors[] = "Cannot create this menu";
-					$view->assign("errors", $errors);
-				}
-			}
 		}
     }
 

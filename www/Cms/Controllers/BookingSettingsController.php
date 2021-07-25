@@ -268,17 +268,22 @@ class BookingSettingsController{
     }
 
     public function deleteBookingAction($site){//CHECK IF AN ID IS GIVEN
-        if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'Booking not found ';
-			exit();
-		}
-        $bookingObj = new Booking($site->getPrefix());
-        $bookingObj->setId($_GET['id']);
-        $bookingObj->findOne(TRUE);
-        if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
-            $bookingObj->delete();
+        try{
+            if(!isset($_GET['id']) || empty($_GET['id']) ){
+                throw new \Exception('No id set');
+            }
+            $bookingObj = new Booking($site->getPrefix());
+            $bookingObj->setId($_GET['id']);
+            if( !$bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
+                throw new \Exception('Booking date not found');
+            }
+            $delete = $bookingObj->delete();
+            if(!$delete){
+                throw new \Exception('Couldn\'t delete this booking');
+            }
+        }catch(\Exception $e){
+            \App\Core\Helpers::customRedirect('/admin/booking?delete=failed', $site);
         }
-        //\App\Core\Helpers::customRedirect('/admin/booking', $site);
-        return;
+        \App\Core\Helpers::customRedirect('/admin/booking?delete=success', $site);
     }
 }

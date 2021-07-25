@@ -11,8 +11,8 @@
                                 <div class="comment" style="width: 100%">
                                     <p><?= $comment['message'] ?></p>
                                     <div class="rowList" style="justify-self: flex-end;">
-                                        <p style="font-weight: bold;">J.Does</p>
-                                        <a href="<?= \App\Core\Helpers::renderCMSLink("/ent/post?id=", $this->site)?><?= $comment['idPost']?>#<?= $comment['id']?>"><button class="cta-green-light">Post</button></a>
+                                        <p style="font-weight: bold;"><?= $comment['author']?></p>
+                                        <a href="<?= \App\Core\Helpers::renderCMSLink("ent/post?id=", $this->site)?><?= $comment['idPost']?>#<?= $comment['id']?>"><button class="cta-green-light">Post</button></a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

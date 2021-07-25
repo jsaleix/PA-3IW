@@ -155,7 +155,7 @@ class Role extends Model
                     "class"=>"input-content",
                     "error"=>"You need to specify the privileges",
                     "required"=>false,
-                    "value"=> $this->isAdmin
+                    "value"=> intval($this->isAdmin)
                 ]
             ]
         ];

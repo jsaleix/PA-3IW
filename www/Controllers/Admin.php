@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\View;
 use App\Core\FormValidator;
 use App\Core\FileUploader;
+use App\Core\Helpers;
 
 use App\Models\User;
 use App\Models\Role;
@@ -74,31 +75,87 @@ class Admin{
 		}
 		$userObj = new User();
 		$userObj->setId($_GET['id']);
-		$user = $userObj->findOne();
+		$user = $userObj->findOne(TRUE);
 		if(!$user){
 			header("Location:" . DOMAIN . '/admin/users');
 			exit();
 		}
 		$siteObj = new Site();
-		$view = new View('back/form', 'admin');
+		$view = new View('back/editUser', 'admin');
+
+		$roleObj = new Role();
+		$roles = $roleObj->findAll();
+		$rolesArr = [];
+		if($roles){
+			foreach($roles as $item){
+				$rolesArr[$item['id']] = $item['name'];
+			}
+		}
+		$form = $userObj->formAdminEdit($rolesArr);
 
 		##########
 		/*update process here */
+		if(!empty($_POST)){
+			$errors = [];
+
+			$data = array_merge($_POST, $_FILES);
+			try{
+				$errors = FormValidator::check($form, $data);
+				if( count($errors) > 0)
+				{
+					$view->assign("errors", $errors);
+					throw new \Exception('Invalid form');
+				}
+
+				if($data['email'] !== $userObj->getEmail()){
+					$newUser = new User();
+					$newUser->setEmail(htmlspecialchars($data['email']));
+					if($newUser->findOne()){
+						$message = "Mail already taken";
+						$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+
+						throw new \Exception('Invalid mail');
+					}
+				}
+
+				if(isset($_FILES['avatar']))
+				{
+					$imgDir = "/uploads/users/" . $userObj->getId() . '/';
+					$imgName = 'avatar';
+					$isUploaded = FileUploader::uploadImage($_FILES["avatar"], $imgName, $imgDir);
+					$data['avatar'] = $isUploaded ? $isUploaded : null;
+				}
+
+				if($userObj->populate($data, TRUE)){
+					$message = "Profile successfully updated!";
+					$view->assign("alert", Helpers::displayAlert("success",$message,3500));
+					$form = $userObj->formAdminEdit($rolesArr);
+
+				} else {
+					$message = "Cannot update your profile";
+					$view->assign("alert", Helpers::displayAlert("error", $message, 3500));
+				}
+			}catch(\Exception $e){
+				//echo $e->getMessage();
+				$errors[] = $e->getMessage();
+				$view->assign('errors', $errors);
+			}
+			
+		}
 		##########
 
 		$siteObj->setCreator($_GET['id']);
 		$sites = $siteObj->findAll();
 
-
 		if($sites){
-			$fields = [ 'img', 'version', 'name', 'creation date', 'visit','edit' ];
+			$fields = [ 'img', 'version', 'name', 'creation date', 'prefix', 'visit','edit' ];
 			$datas = [];
 			foreach($sites as $item){
 				$visitBtn = '<a href="'. DOMAIN . '/site/' . $item['subDomain'] . '">Go</a>';
 				$editBtn = '<a href="site?id=' . $item['id'] . '">Edit</a>';
 				$img = '<img src=' . DOMAIN . '/' . $item['image'] . ' width=100 height=80/>';
 				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/y H:i:s');
-				$formalized = "'" . $img . "','" . 0.0 . "','" . $item['name'] . "','" . $item['creationDate'] . "','" . $visitBtn . "','" . $editBtn . "'";
+				$formalized = "'" . $img . "','" . 0.0 . "','" . $item['name'] . "','" . $item['creationDate'] . "','" . $item['prefix'] . "','" . $visitBtn . "','" . $editBtn . "'";
 				$datas[] = $formalized;
 			}
 			$view->assign("fields", $fields);
@@ -106,13 +163,13 @@ class Admin{
 			$view->assign("list", true);
 		}
 
-		$form = $userObj->formEdit($user);
 		$view->assign('pageTitle', "Manage a site");
 		$view->assign("form", $form);
 
 	}
 
-	public function displayUsersAction(){
+	public function displayUsersAction()
+	{
         $userObj = new User();
 		$users = $userObj->findAll();
 		$fields = [ 'avatar', 'id', 'name', 'mail', 'join date', 'role', 'see' ];
@@ -176,7 +233,7 @@ class Admin{
 		$form = $roleObj->formCreate();
 
 		$view = new View('back/form', 'admin');
-		$view->assign('pageTitle', "Edit a role");
+		$view->assign('pageTitle', "Create a role");
 		$view->assign("form", $form);
 		if(!empty($_POST))
 		{
