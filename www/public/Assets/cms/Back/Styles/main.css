@@ -877,6 +877,7 @@ main {
   align-items: center;
   justify-content: center;
   padding-right: 2em;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 768px) {
