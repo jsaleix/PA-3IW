@@ -88,6 +88,26 @@ class MenuController{
 
     }
 
+
+    public function exportMenuAction($site){
+        try{
+            if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('Please set a menu'); }
+            
+            $menuObj = new Menu($site->getPrefix());
+            $menuObj->setId($_GET['id']??0);
+            $menu = $menuObj->findOne();
+
+            if(!$menu){ throw new \Exception('Menu not found'); }
+
+            // echo "Menu : " . $menu['name'];
+            include_once($_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Menus/Default/Default.php');
+
+        }catch(\Exception $e){
+            echo $e->getMessage();
+			// \App\Core\Helpers::customRedirect('/admin/menus?error', $site);
+        }
+    }
+
     public function deleteMenuAction($site){
         try{
             if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('menu is not set'); }
@@ -102,10 +122,6 @@ class MenuController{
             echo $e->getMessage();
 			\App\Core\Helpers::customRedirect('/admin/menus?error', $site);
         }
-    }
-
-    public function exportMenu(){
-        
     }
 
     public function manageDishInMenu($action, $site, $viewObj, $_postFields, $_getFields ){
