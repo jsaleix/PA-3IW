@@ -72,7 +72,7 @@ class Booking_planning extends CMSModels
             ],
             "start-".$this->getId()=>[
                 "type"=>"time",
-                "label"=>$this->getStart(),
+                "label"=>'Start of the day',
                 "id"=>"start",
                 "class"=>"input-content",
                 "placeholder"=>"Start of the day",
@@ -81,7 +81,7 @@ class Booking_planning extends CMSModels
             ],
             "end-".$this->getId()=>[
                 "type"=>"time",
-                "label"=>$this->getEnd(),
+                "label"=>'End of the day',
                 "id"=>"end",
                 "class"=>"input-content",
                 "placeholder"=>"End of the day",
@@ -122,10 +122,11 @@ class Booking_planning extends CMSModels
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "id"=>"form_content",
+                "id"=>"planning_form",
                 "class"=>"form-content",
                 "submit"=>"edit",
-                "submitClass"=>"cta-blue width-80 last-sm-elem"
+                "submitClass"=>"cta-blue width-80 last-sm-elem",
+                "name" => "planning-form"
             ],
             "inputs"=>$inputs
         ];
