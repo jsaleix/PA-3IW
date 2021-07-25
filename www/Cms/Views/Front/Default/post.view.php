@@ -35,6 +35,9 @@
                         <div class="comment col-6 col-md-10 col-sm-12" id="<?= $comment['id']?>">
                             <h2><span><?=$comment['author']?></span> the <b><?= $comment['date'] ?> </b></h2>
                             <p><?=$comment['message']?></p>
+                            <?php if(isset($comment['delete'])):?>
+                                <a href="<?= \App\Core\Helpers::renderCMSLink( "ent/delete/comment?id=".$comment['id'], $this->site)?>">Delete</a>
+                            <?php endif ?>
                         </div>
                     <?php endforeach;?>
                 <?php endif ?>

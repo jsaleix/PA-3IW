@@ -26,3 +26,8 @@
 /ent/sitemap.xml:
   controller: sitemapcontroller
   action: renderSiteMap
+
+/ent/delete/comment:
+  controller: commentController
+  action: deleteMyComment
+  middleware: auth
