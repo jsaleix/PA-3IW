@@ -2,6 +2,7 @@
 namespace CMS\Core\Router;
 use CMS\Core\Router\RouterInterface;
 use App\Core\Router;
+use App\Middlewares\Middleware;
 
 use App\Core\ErrorReporter;
 use App\Models\Site;
@@ -52,9 +53,13 @@ class EntityRouter extends Router implements RouterInterface
 		try{
 			$c = $this->getController();
 			$a = $this->getAction();
-	
-			$debug = 'debug: ' . $a . ' - ' . $c . '<br>';
-			// echo $debug;
+			$m = $this->getMiddleware();
+
+			if($m){
+				Middleware::$m();
+			}
+			$debug = 'debug: ' . $a . ' - ' . $c . ' - ' . $m . '<br>';
+			//echo $debug;
 
 			if(!file_exists($_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php")) throw new \Exception("Le fichier controller : ".$c." n'existe pas");
 			include $_SERVER['DOCUMENT_ROOT'] . "/Cms/Controllers/".$c.".php";
