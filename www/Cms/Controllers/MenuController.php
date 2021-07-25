@@ -141,7 +141,7 @@ class MenuController{
                 }
             }
 
-            include_once($_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Menus/Default/Default.php');
+            include_once($_SERVER['DOCUMENT_ROOT'].'/Cms/Assets/Menus/Default/Default.php');
 
         }catch(\Exception $e){
             echo $e->getMessage();

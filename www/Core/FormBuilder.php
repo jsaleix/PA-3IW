@@ -198,7 +198,7 @@ class FormBuilder
 		foreach($configInput['options'] as $key => $value)
 		{
 			$html .= '<div class="radio-option">';
-			if(isset($configInput['value']) && !is_null($configInput['value']) && ($key === $configInput['value'])){
+			if(isset($configInput['value']) && !is_null($configInput['value']) && ($key == $configInput['value'])){
 				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '" checked="checked"/>';
 			}else{
 				$html .= '<input type="radio" value="' . $key . '" name="' . $name . '"/>';
