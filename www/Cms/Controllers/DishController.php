@@ -230,7 +230,7 @@ class DishController{
 			$menu = $_GET['menu']??'';
 			$dishObj = new Dish($site->getPrefix());
 			$menuObj = new Menu($site->getPrefix());
-			$menuObj->setID($menu);
+			$menuObj->setId($menu);
 			$menu = $menuObj->findOne(TRUE);
 			if(!$menu){
 				throw new \Exception('NoMenu');
@@ -241,15 +241,19 @@ class DishController{
 	
 			$dishes = $dishObj->findAll();
 			$dishArr = [];
+
 			if(!$dishes){ 
 				$code = 404;
 			}else{
 				$code = 200;
+
 				$mdAssocObj = new Menu_dish_association($site->getPrefix());
 				$mdAssocObj->setMenu($menuObj->getId());
+
 				foreach($dishes as $dish){
 					$mdAssocObj->setDish($dish['id']);
 					$mdAssoc = $mdAssocObj->findOne();
+					
 					if(!$mdAssoc){
 						$dishArr[] = array(
 							'id' => $dish['id'],

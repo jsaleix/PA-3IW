@@ -18,6 +18,7 @@
         <div class="row" >
             <div class="col-4 col-sm-12 col-md-12 col-xl-4">
                 <?php App\Core\FormBuilder::render($form)?>
+                <a style="text-decoration: none;" target="_blank" class="btn btn-100" href="../menus/export?id=<?= $_GET['id'] ?>">Export (HTML)</a>
             </div>
 
             <div class="col-8 col-sm-12 col-md-12 col-xl-8" style="padding-left:1em; padding-right:1em;">

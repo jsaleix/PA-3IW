@@ -18,7 +18,7 @@
                         <h1><?= $menu['name'] ?></h1>
                         <p><?= $menu['description'] ?></p>
                         <div class="btn-row">
-                            <a target="_blank" href="menus/export?id=<?= $menu['id'] ?>" class="btn-menu btn-menu-purple">Export (PDF)</a>
+                            <a target="_blank" href="menus/export?id=<?= $menu['id'] ?>" class="btn-menu btn-menu-purple">Export (HTML)</a>
                             <a href="menus/edit?id=<?= $menu['id'] ?>" class="btn-menu">Edit</a>
                             <a href="menus/delete?id=<?= $menu['id'] ?>" class="btn-menu btn-menu-red">
                                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">

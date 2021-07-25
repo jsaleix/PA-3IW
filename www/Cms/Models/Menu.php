@@ -114,7 +114,7 @@ class Menu extends CMSModels
                     "minLength"=>2,
                     "maxLength"=>45,
                     "id"=>"title",
-                    "class"=>"input",
+                    "class"=>"input input-100",
                     "placeholder"=>"New dish",
                     "error"=>"The title cannot be empty!",
                     "required"=>true,
@@ -122,14 +122,14 @@ class Menu extends CMSModels
                 ],
 				"description"=>[ 
 					"type"=>"textarea",
-					"label"=>"Description",
+					"placeholder"=>"Description",
 					"id"=>"description",
 					"class"=>"input input-100",
 					"value"=> $this->description
                 ],
                 "notes"=>[ 
 					"type"=>"text",
-					"label"=>"notes",
+					"placeholder"=>"Notes",
 					"id"=>"notes",
 					"class"=>"input input-100",
 					"value"=> $this->notes
