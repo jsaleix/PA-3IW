@@ -232,7 +232,7 @@ class Database
 		return !isset($result[0]) ? false : $result;
 	}
 
-	public function findAllLike($groupBy){
+	public function findAllLike($groupBy = null){
 		$columns = array_diff_key (
 			get_object_vars($this),
 			get_class_vars(get_class())

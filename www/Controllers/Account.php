@@ -189,18 +189,20 @@ class Account{
 			$userObj->setFirstname($userParam);
 			$userObj->setLastName($userParam);
 
-			$users = $userObj->findAllLike('Id');
+			$users = $userObj->findAllLike();
 
 			if(!$users){ 
 				throw new \Exception('No result');
 			}else{
 				$code = 200;
 				foreach($users as $user){
-					$usersArr[] = array(
-						'id' => $user['id'],
-						'name' => $user['firstname'] . ' '. $user['lastname'] ,
-						'image' => DOMAIN . '/' . $user['avatar'],
-					);
+					if($user['id'] != Secu::getUser()){
+						$usersArr[] = array(
+							'id' => $user['id'],
+							'name' => $user['firstname'] . ' '. $user['lastname'] ,
+							'image' => DOMAIN . '/' . $user['avatar'],
+						);
+					}
 				}
 			}
 		}catch(\Exception $e){

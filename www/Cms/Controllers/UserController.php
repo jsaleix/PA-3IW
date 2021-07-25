@@ -71,7 +71,7 @@ class UserController{
 				if($check){  throw new \Exception('User already authorized');  }
 				$adding = $wlistObj->save();
 				if($adding){
-					$this->sendAdminMail($user);
+					$this->sendAdminMail($user, $site);
 					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 				}else{
 					\App\Core\Helpers::customRedirect('/admin/users?error', $site);
@@ -105,7 +105,7 @@ class UserController{
 		}
     }
 
-	public function sendAdminMail($user){
+	public function sendAdminMail($user, $site){
 		/*Sending mail to inform the new administrator*/
 		$receiver = new User();
 		$receiver->setId($user);
