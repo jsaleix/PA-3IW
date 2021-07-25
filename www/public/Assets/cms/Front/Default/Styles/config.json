@@ -7,6 +7,20 @@
                 "color" : true,
                 "background-color" : false
             }
+        },
+        "footer" : {
+            "associated-class" : "default-navbar",
+            "style" : {
+                "color" : true,
+                "background-color" : false
+            }
+        },
+        "body" : {
+            "associated-class" : "default-navbar",
+            "style" : {
+                "color" : true,
+                "background-color" : false
+            }
         }
     }
 }

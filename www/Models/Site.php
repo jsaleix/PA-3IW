@@ -313,7 +313,7 @@ class Site extends Model
         ];
     }
 
-    public function formStylesEdit($styles=""){
+    public function formStylesEdit($stylesElements){
         return [
             "config"=>[
                 "method"=>"POST",
@@ -323,6 +323,11 @@ class Site extends Model
                 "submitClass"=>"btn btn-100 btn-light"
             ],
             "inputs"=>[
+                "elements"=>[
+                    "type"=>"select",
+                    "class"=>"input input-100 input-select",
+                    "options"=>$stylesElements
+                ],
                 "type"=>[
                     "type"=>"hidden",
                     "value"=>"styles"

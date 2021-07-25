@@ -19,7 +19,6 @@ class DesignController{
         $themes = $this::getThemes();
 
         $form = $siteObj->formThemeEdit($themes);
-        $formStyles = $siteObj->formStylesEdit("");
 
         if(!empty($_POST)){
             if($_POST['type'] && $_POST['type'] === "themes"){
@@ -38,10 +37,14 @@ class DesignController{
 
             }
         }
-
-        $this::getStylesConfiguration($siteObj);
-
+        
         $thumbnails = $this::getThumbnails($siteObj);
+
+        // Styles
+        $config = $this::getStylesConfiguration($siteObj);
+        $elements = $this::getElements($config);
+
+        $formStyles = $siteObj->formStylesEdit($elements);
         
         $view->assign("site", $siteObj);
         $view->assign("form", $form);
@@ -49,6 +52,16 @@ class DesignController{
         $view->assign("thumbnails", $thumbnails);
     }
 
+    private function getElements($config){
+        $configArray = json_decode($config, true);
+        $elements = [];
+
+        foreach(array_keys($configArray['elements']) as $element){
+            $elements[$element]=$element;
+        }
+
+        return $elements;
+    }
 
     private function getStylesConfiguration($siteObj){
         $configFile = $_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Front/Default/Styles/config.json';
@@ -70,6 +83,7 @@ class DesignController{
         }
         return $themes;
     }
+    
     private function getThumbnails($siteObj){
         $thumbnails = [];
 

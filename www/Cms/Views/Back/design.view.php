@@ -7,6 +7,7 @@
 
         <h3>Change theme to: </h3>
         <?php App\Core\FormBuilder::render($form)?>
+        <h3>Change styles: </h3>
         <?php App\Core\FormBuilder::render($formStyles)?>
     </div>
     <div class="col-6 col-md-12 col-sm-12" style="padding: 1em; padding-top:0;">
