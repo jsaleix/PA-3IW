@@ -2,7 +2,6 @@
 /ent/post:
   controller: postcontroller
   action: renderpost
-  middleware: auth
 
 /ent/dish:
   controller: dishController
