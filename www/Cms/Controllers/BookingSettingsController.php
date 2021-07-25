@@ -278,7 +278,7 @@ class BookingSettingsController{
         if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
             $bookingObj->delete();
         }
-        //\App\Core\Helpers::customRedirect('/admin/booking', $site);
+        \App\Core\Helpers::customRedirect('admin/booking?delete=success', $site);
         return;
     }
 }
