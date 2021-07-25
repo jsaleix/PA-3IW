@@ -13,7 +13,15 @@ class Admin{
 	private function getLastComments($prefix){
 		$commentObj = new Comment($prefix);
 		$comments = $commentObj->findAll(array('limit' => 5 ));
-		return $comments;
+		$tmpComments = [];
+		foreach($comments as $comment){
+			$author = new User();
+			$author->setId($comment['idUser']);
+			$author->findOne(TRUE);
+			$comment['author'] = $author->getFullName();
+			$tmpComments[] = $comment;
+		}
+		return $tmpComments;
 	}
 
 	private function getPendingBooking($prefix){
