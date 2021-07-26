@@ -1338,11 +1338,14 @@ footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: #2DC091;
   padding: 1em;
   padding-right: 0;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+.footer{
+  background-color: #2DC091;
 }
 
 footer .bar {

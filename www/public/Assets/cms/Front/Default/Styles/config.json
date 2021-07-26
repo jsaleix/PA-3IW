@@ -19,14 +19,10 @@
             }
         },
         "footer" : {
-            "associatedClass" : "default-footer",
+            "associatedClass" : "footer",
             "style" : {
-                "color" : {
-                    "display":true,
-                    "type":"color"
-                },
                 "background-color" : {
-                    "display":false,
+                    "display":true,
                     "type":"color"
                 },
                 "font" : {

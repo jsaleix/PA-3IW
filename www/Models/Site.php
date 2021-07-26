@@ -297,7 +297,9 @@ class Site extends Model
                 "action"=>"",
                 "class"=>"col-10",
                 "submit"=>"Change theme",
-                "submitClass"=>"btn btn-100 btn-light"
+                "submitClass"=>"btn btn-100 btn-light",
+                "name"=>"editTheme"
+
             ],
             "inputs"=>[
                 "theme"=>[
@@ -321,6 +323,7 @@ class Site extends Model
                 "class"=>"col-10",
                 "submit"=>"Change Styles",
                 "submitClass"=>"btn btn-100 btn-light hidden",
+                "name"=>"editStyles"
             ],
             "inputs"=>[
                 "elements"=>[
@@ -346,6 +349,7 @@ class Site extends Model
                 "class"=>"col-10",
                 "submit"=>"Reset styles to default",
                 "submitClass"=>"btn btn-100 btn-light",
+                "name"=>"resetStyles"
             ],
             "inputs"=>[
                 "type"=>[

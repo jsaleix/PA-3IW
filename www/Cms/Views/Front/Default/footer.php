@@ -1,4 +1,4 @@
-<footer>
+<footer class="footer">
         <div class="col-4">
             <h2><?= $site->getName(); ?></h2>
             <ul>

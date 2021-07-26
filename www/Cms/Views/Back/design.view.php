@@ -1,20 +1,29 @@
 <h1><?= $title ?></h1>
 <hr/>
 
+<?php if(isset($errors)):?>
+
+<?php foreach ($errors as $error):?>
+    <li style="color:red"><?=$error;?></li>
+<?php endforeach;?>
+
+<?php endif; ?>
+
 <div class="row">
     <div class ="col-6 col-md-12 col-sm-12" style="padding: 1em; padding-top:0;">
         <h2>Current theme inuse: <span style="color:#2DC091"><?= $site->getTheme(); ?></span></h2>
 
         <h3>Change theme to: </h3>
         <?php App\Core\FormBuilder::render($form)?>
+
         <h3>Change styles: </h3>
-        
         <?php App\Core\FormBuilder::render($formStyles)?>
         <div id="stylesDiv">
 
         </div>
 
         <?php App\Core\FormBuilder::render($resetStyles)?>
+
     </div>
     <div class="col-6 col-md-12 col-sm-12" style="padding: 1em; padding-top:0;">
         <h3>Preview:</h3>
@@ -49,6 +58,18 @@
         </div> 
     </div>
 </div>
+
+<script>
+    function changeCsrf(){
+        let themeCSRF = document.forms.editTheme.CSRF;
+        let stylesCSRF = document.forms.editStyles.CSRF;
+        let resetCSRF = document.forms.resetStyles.CSRF;
+        stylesCSRF.value = resetCSRF.value;
+        themeCSRF.value = resetCSRF.value;
+    }
+
+    changeCsrf();
+</script>
 
 <script>
     var slideIndex = 1;

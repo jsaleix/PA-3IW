@@ -26,6 +26,22 @@ class StyleBuilder
         return '<link rel="stylesheet" href="'.$styleLink.'">';
 	}
 
+    public static function renderPersonnalStyles($site){
+        $css = "";
+        $allStyles = json_decode($site->getStyles());
+
+        foreach($allStyles as $class=>$styles){
+            $css .= ".".$class."{\n";
+            foreach($styles as $styleName=>$style){
+                $css .= $styleName.":".$style.";\n";
+            }
+            $css .= "\n}";
+        }
+       
+        return $css;
+
+    }
+
     public static function renderStyleScript($site){
         $styleScriptLink = DOMAIN."/Assets/cms/Front/Default/Styles/main.js";
 

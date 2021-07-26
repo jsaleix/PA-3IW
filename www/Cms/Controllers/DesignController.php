@@ -11,6 +11,7 @@ use App\Core\FormValidator;
 class DesignController{
 
     public function defaultAction($site){
+        
         $siteObj = $site;
 
         $view = new View("design", "back", $site);
@@ -22,16 +23,21 @@ class DesignController{
         $resetStyles = $siteObj->formStylesReset();
 
         if(!empty($_POST)){
+            try{
             if($_POST['type'] && $_POST['type'] === "themes"){
                 if(($_POST['theme'] !== $site->getTheme()) && array_search($_POST['theme'], $themes)){
-                    $errors = FormValidator::check($form, $_POST);
-                    if( count($errors) > 0){
-                        $view->assign("errors", $errors);
-                        return;
-                    }
-                    $siteObj->setTheme($_POST['theme']);
-                    $siteObj->save();
-                    $site = $siteObj->findOne();
+                    
+                        $errors = FormValidator::check($form, $_POST);
+                        if( count($errors) > 0){
+                            $view->assign("errors", $errors);
+                            throw new \Exception("err");
+                            return;
+                        }
+                        $siteObj->setTheme($_POST['theme']);
+                        $siteObj->save();
+                        $site = $siteObj->findOne();
+                    
+                   
                 }
             }
             if($_POST['type'] && $_POST['type'] === "styles"){
@@ -48,6 +54,9 @@ class DesignController{
                 $site->setStyles($reset);
                 $site->save();
             }
+            }catch(\Exception $e){
+                echo $e->getMessage();
+            }
         }
         
         $thumbnails = $this::getThumbnails($siteObj);
@@ -57,7 +66,7 @@ class DesignController{
         $elements = $this::getElements($config);
 
         $formStyles = $siteObj->formStylesEdit($elements);
-        
+
         $view->assign("site", $siteObj);
         $view->assign("form", $form);
         $view->assign("resetStyles", $resetStyles);
@@ -140,6 +149,7 @@ class DesignController{
             }
 
         }
+
         $currentStyles = json_encode($currentStyles);
         return $currentStyles;
         
