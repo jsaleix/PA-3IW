@@ -19,7 +19,7 @@
             }
         },
         "footer" : {
-            "associatedClass" : "default-navbar",
+            "associatedClass" : "default-footer",
             "style" : {
                 "color" : {
                     "display":true,
@@ -36,7 +36,7 @@
             }
         },
         "body" : {
-            "associatedClass" : "default-navbar",
+            "associatedClass" : "default-body",
             "style" : {
                 "color" : {
                     "display":true,

@@ -37,8 +37,9 @@ class DesignController{
                 
                 $currentStyles = $site->getStyles();
 
-
-                var_dump($_POST);
+                $newStyles = $this::stylesBuilding($currentStyles, $_POST);
+                $site->setStyles($newStyles);
+                $site->save();
             }
         }
         
@@ -93,13 +94,54 @@ class DesignController{
     }
 
     private function stylesBuilding($currentStyles, $newStyles){
-
         if($currentStyles){
-            $currentStyles = json_decode($currentStyles);
+            $currentStyles = json_decode($currentStyles,true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return false;
+            }
         }else{
             $currentStyles = [];
-            return;
         }
+
+        echo "<br/><br/> OLD: <br/>";
+        var_dump($currentStyles);
+
+
+        foreach($newStyles as $postName=>$postContent){
+
+            if(count($currentStyles) == 0){
+                if($postName == "associatedClass"){
+                    $currentStyles[$postContent] = [];
+                }
+            }
+            if($postName == "associatedClass"){
+                if(!array_key_exists($postContent, $currentStyles)){
+                    $currentStyles[$postContent] = [];
+                }
+            }
+
+            foreach($currentStyles as $className=>$styles){
+                if($postName == "associatedClass" && $postContent == $className){
+                    foreach($newStyles as $postName=>$postContent){
+                        if(!empty($postContent) && !is_null($postContent)){
+
+                            if($postName != "associatedClass" && $postName != "hidden" && $postName != "type" && $postName != "input"){
+                                
+                                $currentStyles[$className][$postName] = $postContent;
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        echo "<br/><br/> NEW: <br/>";
+        var_dump($currentStyles);
+
+        $currentStyles = json_encode($currentStyles);
+        return $currentStyles;
         
     }
 

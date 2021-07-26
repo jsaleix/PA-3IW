@@ -117,6 +117,7 @@
 
                 input.placeholder = firstKey;
                 input.name = firstKey;
+                input.value = "";
 
                 input.setAttribute("class","input input-100");
                 input.id = i;
