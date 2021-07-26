@@ -13,7 +13,7 @@
             <h3> <?=$message?> </h3>
         <?php endif;?>
         <div class="row" style="justify-content: center;">
-            <?php App\Core\FormBuilder::render($form)?>    
+            <?php App\Core\FormBuilder::render($form, TRUE)?>    
         </div>
     </div>
 </main>    

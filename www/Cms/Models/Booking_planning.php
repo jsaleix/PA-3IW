@@ -63,7 +63,6 @@ class Booking_planning extends CMSModels
         return [
             "day-".$this->getId()=>[
                 "type"=>"text",
-                "label"=>$this->getDay(),
                 "id"=>$this->getDay(),
                 "class"=>"input-content",
                 "placeholder"=>$this->getDay(),

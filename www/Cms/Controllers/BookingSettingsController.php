@@ -256,12 +256,12 @@ class BookingSettingsController{
 
     public function acceptBookingAction($site){//CHECK IF AN ID IS GIVEN
         if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'Booking not found ';
+            \App\Core\Helpers::customRedirect('/admin/booking', $site);
 			exit();
 		}
         $bookingObj = new Booking($site->getPrefix());
         $bookingObj->setId($_GET['id']);
-        if( $bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, ACCEPT IT
+        if( $bookingObj->findOne(TRUE) && $bookingObj->getStatus() == '0'){//IF WE FIND A RESERVATION WITH THIS ID, ACCEPT IT
             $bookingObj->setStatus(1);
             $bookingObj->save();
             $this->sendAcceptMail($bookingObj, $site);
@@ -276,7 +276,7 @@ class BookingSettingsController{
             }
             $bookingObj = new Booking($site->getPrefix());
             $bookingObj->setId($_GET['id']);
-            if( !$bookingObj->findOne(TRUE)){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
+            if( !$bookingObj->findOne(TRUE) || $bookingObj->getStatus() == '1' || $bookingObj->getStatus() == '2'){//IF WE FIND A RESERVATION WITH THIS ID, DELETE IT, WE DONT HAVE A REFUSED STATUS FOR THE MOMENT
                 throw new \Exception('Booking date not found');
             }
             $delete = $bookingObj->delete();

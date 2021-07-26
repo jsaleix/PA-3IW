@@ -167,10 +167,10 @@ class DesignController{
     }
 
     private function getStylesConfiguration($siteObj){
-        $configFile = $_SERVER['DOCUMENT_ROOT'].'/public/Assets/CMS/Front/Default/Styles/config.json';
+        $configFile = $_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Front/Default/Styles/config.json';
 
-        if(file_exists($_SERVER['DOCUMENT_ROOT'].'/public/Assets/CMS/Front/'.$siteObj->getTheme()."/Styles/config.json")){
-            $configFile = $_SERVER['DOCUMENT_ROOT'].'/public/Assets/CMS/Front/'.$siteObj->getTheme()."/Styles/config.json";
+        if(file_exists($_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Front/'.$siteObj->getTheme()."/Styles/config.json")){
+            $configFile = $_SERVER['DOCUMENT_ROOT'].'/public/Assets/cms/Front/'.$siteObj->getTheme()."/Styles/config.json";
         }
 
         return file_get_contents($configFile);
@@ -178,7 +178,7 @@ class DesignController{
 
     private function getThemes(){
         $themes = [];
-        $path = $_SERVER['DOCUMENT_ROOT'] . "/public/Assets/CMS/Front";
+        $path = $_SERVER['DOCUMENT_ROOT'] . "/public/Assets/cms/Front";
         foreach (glob($path . '/*') as $theme){
             $tmpTheme = explode("/", $theme);
             $tmpTheme = $tmpTheme[count($tmpTheme)-1];
@@ -190,7 +190,7 @@ class DesignController{
     private function getThumbnails($siteObj){
         $thumbnails = [];
 
-        foreach (glob( $_SERVER['DOCUMENT_ROOT'] . '/public/Assets/CMS/Front/'.$siteObj->getTheme()."/Thumbnails/*") as $thumbnail){
+        foreach (glob( $_SERVER['DOCUMENT_ROOT'] . '/public/Assets/cms/Front/'.$siteObj->getTheme()."/Thumbnails/*") as $thumbnail){
             $imageFileType = strtolower(pathinfo($thumbnail,PATHINFO_EXTENSION));
             if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif")
             {

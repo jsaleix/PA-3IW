@@ -135,7 +135,7 @@ class PageController{
 
 	public function editPageAction($site){
 		if(!isset($_GET['id']) || empty($_GET['id']) ){
-			echo 'page not set ';
+			//echo 'page not set ';
 			header("Location: pages");
 			exit();
 		}
@@ -229,7 +229,7 @@ class PageController{
 			if(!$check){ throw new \Exception('Cannot delete this page');}
 			\App\Core\Helpers::customRedirect('/admin/pages?success', $site);
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			//echo $e->getMessage();
 			\App\Core\Helpers::customRedirect('/admin/pages?error', $site);
 		}
 	}

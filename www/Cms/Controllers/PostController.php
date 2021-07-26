@@ -175,17 +175,18 @@ class PostController{
 
         if(!$posts || count($posts) === 0){
 			array_push($errors, "No result");
-            return;
+            //return;
         }
 		
 		$tmp_posts = [];
-
-		foreach ($posts as $post){
-			$publisher = new User();
-			$publisher->setId($post['publisher']);
-			$publisher = $publisher->findOne();
-
-			array_push($tmp_posts, ["post" => $post, "publisher" => $publisher]);
+		if($posts && count($posts) > 0){
+			foreach ($posts as $post){
+				$publisher = new User();
+				$publisher->setId($post['publisher']);
+				$publisher = $publisher->findOne();
+	
+				array_push($tmp_posts, ["post" => $post, "publisher" => $publisher]);
+			}
 		}
 		
 		$view = new View('posts', 'front', $site);

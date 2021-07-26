@@ -19,11 +19,7 @@
         <div style="display: flex; flex-direction: column;">
             <p>Planning</p><br>
             <div>
-                <?php //if( !empty($forms) ):?>
-                    <?php //foreach($forms as $f):?>
-                        <?php App\Core\FormBuilder::render($f, TRUE);?>  
-                    <?php //endforeach;?>
-                <?php// endif;?>
+                <?php App\Core\FormBuilder::render($f, TRUE);?>  
             </div>
         </div>
     <?php endif;?>

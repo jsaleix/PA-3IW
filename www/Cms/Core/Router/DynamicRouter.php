@@ -75,7 +75,7 @@ class DynamicRouter extends Router implements RouterInterface
 			$this->setFilter($content['filter']);
 
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			//echo $e->getMessage();
 			ErrorReporter::report("DynamicRouter Construct():" . $e->getMessage() );
 			\App\Core\Helpers::customRedirect('/');
 			//\App\Core\Helpers::customRedirect('/');
