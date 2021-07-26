@@ -102,24 +102,25 @@
             if(res.code === 200){
                 var i = 0;
                 Object.entries(res.style).forEach(([firstKey, firstValue]) => {
+
+                    let input   = document.createElement("input");
+                    let label = document.createElement("label");
+
+                    input.placeholder = firstKey;
+
+                    input.setAttribute("class","input input-100");
+                    input.id = i;
+
+                    label.setAttribute("for",i);
+                    label.innerHTML = firstKey + ": ";
+                    form.setAttribute("class","col-10");
+
                     Object.entries(firstValue).forEach(([key, value]) => {
+                        // input.setAttribute("type","text");
 
-                        let input   = document.createElement("input");
-                        let label = document.createElement("label");
-
-                        input.placeholder = firstKey;
-                        
                         if(key == "type"){
-                            input.setAttribute("type", value);
+                            input.setAttribute(key,value);
                         }
-
-                        input.setAttribute("class","input input-100");
-                        input.id = i;
-
-                        label.setAttribute("for",i);
-                        label.innerHTML = firstKey + ": ";
-                        form.setAttribute("class","col-10");
-
                         if((key == "display") && (value == true)){
                             form.append(label);
                             form.append(input);
