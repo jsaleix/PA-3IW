@@ -52,6 +52,42 @@ class DesignController{
         $view->assign("thumbnails", $thumbnails);
     }
 
+    public function getStylesAction($site){
+        http_response_code(200);
+        header('Content-Type: application/json');
+
+        try{
+            if(!isset($_GET['element'])){
+                echo "Element not set";
+                http_response_code(400);
+                throw new \Exception('Element not set');
+            }
+
+            $configJson = $this::getStylesConfiguration($site);
+            $config = json_decode($configJson, true);
+            $styles = [];
+
+            foreach($config['elements'] as $elementName => $element){
+                if($elementName == $_GET['element']){
+                    $styles = $element;
+                }
+            }
+
+            $styles["code"] = 200;
+            
+            if(count($styles) == 0){
+                http_response_code(404);
+                $styles['code'] = 404;
+            }
+            
+            $styles = json_encode($styles);
+            echo $styles;
+
+        }catch(\Exception $e){
+            $code = 200;  
+        }
+    }
+
     private function getElements($config){
         $configArray = json_decode($config, true);
         $elements = [];
@@ -83,7 +119,7 @@ class DesignController{
         }
         return $themes;
     }
-    
+
     private function getThumbnails($siteObj){
         $thumbnails = [];
 

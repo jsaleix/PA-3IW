@@ -345,3 +345,7 @@ textarea{
   cursor: default!important;
   transform: none;
 }
+
+.hidden{
+  display: none;
+}

@@ -8,7 +8,11 @@
         <h3>Change theme to: </h3>
         <?php App\Core\FormBuilder::render($form)?>
         <h3>Change styles: </h3>
+        
         <?php App\Core\FormBuilder::render($formStyles)?>
+        <div id="stylesDiv">
+
+        </div>
     </div>
     <div class="col-6 col-md-12 col-sm-12" style="padding: 1em; padding-top:0;">
         <h3>Preview:</h3>
@@ -71,4 +75,67 @@
     }
     
     showSlide(slideIndex);
+</script>
+
+<script>
+    async function getStyleConf(){
+        var div = document.getElementById('stylesDiv');
+        div.innerHTML = "";
+
+        var element = document.getElementById('stylesConf').value;
+
+        let form    = document.createElement("form");
+        form.method = "POST";
+        form.action = "";
+        
+        div.append(form);
+
+        let res = await fetch('<?=DOMAIN?>/site/<?=$site->getSubDomain();?>/admin/api/getstyle?element=' + element, 
+            {
+                method: 'GET',
+                headers:{
+                    'Content-type': 'application/json'
+                },
+            })
+            .then((res)=>res.json());
+            
+            if(res.code === 200){
+                var i = 0;
+                Object.entries(res.style).forEach(([firstKey, firstValue]) => {
+                    Object.entries(firstValue).forEach(([key, value]) => {
+
+                        let input   = document.createElement("input");
+                        let label = document.createElement("label");
+
+                        input.placeholder = firstKey;
+                        
+                        if(key == "type"){
+                            input.setAttribute("type", value);
+                        }
+
+                        input.setAttribute("class","input input-100");
+                        input.id = i;
+
+                        label.setAttribute("for",i);
+                        label.innerHTML = firstKey + ": ";
+                        form.setAttribute("class","col-10");
+
+                        if((key == "display") && (value == true)){
+                            form.append(label);
+                            form.append(input);
+                        }
+                    });
+                    i++;
+                });
+
+                let submit = document.createElement("input");
+                submit.setAttribute("class","btn btn-100");
+                submit.type = "submit";
+                submit.value = "UPDATE STYLES";
+
+                form.append(submit);
+            }
+        
+    }
+    getStyleConf();
 </script>

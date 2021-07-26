@@ -320,12 +320,14 @@ class Site extends Model
                 "action"=>"",
                 "class"=>"col-10",
                 "submit"=>"Change Styles",
-                "submitClass"=>"btn btn-100 btn-light"
+                "submitClass"=>"btn btn-100 btn-light hidden",
             ],
             "inputs"=>[
                 "elements"=>[
                     "type"=>"select",
                     "class"=>"input input-100 input-select",
+                    "script"=>'getStyleConf()',
+                    "id"=>"stylesConf",
                     "options"=>$stylesElements
                 ],
                 "type"=>[

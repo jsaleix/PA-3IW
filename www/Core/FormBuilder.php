@@ -212,7 +212,7 @@ class FormBuilder
 
 
 	public static function renderSelect($name, $configInput){
-		$html = "<select name='".$name."' id='".($configInput["id"]??"")."'
+		$html = "<select onchange='".($configInput["script"]??"")."' name='".$name."' id='".($configInput["id"]??"")."'
 						class='".($configInput["class"]??"")."'>";
 
 		foreach ($configInput["options"] as $key => $value) {

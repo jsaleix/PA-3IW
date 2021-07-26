@@ -190,3 +190,7 @@
 /api/getfilters:
   controller: actionController
   action: getActionFilters
+
+/api/getstyle:
+  controller: DesignController
+  action: getStyles

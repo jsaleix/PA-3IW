@@ -4,22 +4,52 @@
         "navbar" : {
             "associated-class" : "default-navbar",
             "style" : {
-                "color" : true,
-                "background-color" : false
+                "color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "background-color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "font" : {
+                    "display":true,
+                    "type":"text"
+                }
             }
         },
         "footer" : {
             "associated-class" : "default-navbar",
             "style" : {
-                "color" : true,
-                "background-color" : false
+                "color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "background-color" : {
+                    "display":false,
+                    "type":"color"
+                },
+                "font" : {
+                    "display":true,
+                    "type":"text"
+                }
             }
         },
         "body" : {
             "associated-class" : "default-navbar",
             "style" : {
-                "color" : true,
-                "background-color" : false
+                "color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "background-color" : {
+                    "display":false,
+                    "type":"color"
+                },
+                "font" : {
+                    "display":true,
+                    "type":"text"
+                }
             }
         }
     }
