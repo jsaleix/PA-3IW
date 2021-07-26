@@ -266,7 +266,6 @@ class MenuController{
 	//CMS FRONT
     /*
 	* Front vizualization
-	* returns html for pageRenderer
 	*/
     public function renderMenus($site, $filter = null){
         $view = new View('menus', 'front', $site);

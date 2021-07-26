@@ -40,7 +40,7 @@ class AdminRouter extends Router implements RouterInterface
             $this->site = $site;
         }catch(\Exception $e){
             ErrorReporter::report("AdminRouter Construct():" . $e->getMessage() );
-			echo $e->getMessage();
+			//echo $e->getMessage();
             \App\Core\Helpers::customRedirect('/', $site);
 		}
 	}
@@ -58,10 +58,9 @@ class AdminRouter extends Router implements RouterInterface
 			if(!method_exists($cObjet, $a)) throw new \Exception("L'action' : ".$a." n'existe pas");
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			//echo $e->getMessage();
             ErrorReporter::report("AdminRouter route():" . $e->getMessage() );
 		}
-
 	}
 
 

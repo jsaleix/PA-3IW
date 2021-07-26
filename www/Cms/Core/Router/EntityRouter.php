@@ -7,6 +7,8 @@ use App\Middlewares\Middleware;
 use App\Core\ErrorReporter;
 use App\Models\Site;
 
+use CMS\Core\CMSView as View;
+
 use CMS\Models\Page;
 
 class EntityRouter extends Router implements RouterInterface
@@ -43,10 +45,15 @@ class EntityRouter extends Router implements RouterInterface
 
 		}catch(\Exception $e){
 			ErrorReporter::report("EntityRouter Construct():" . $e->getMessage() );
-			echo $e->getMessage();
+			//echo $e->getMessage();
 			\App\Core\Helpers::customRedirect('/');
 			return;
 		}
+	}
+
+	public function renderInvalidRoute() : void{
+		$view = new View('somethingWentWrong', 'front',  $this->site);
+		$view->assign('pageTitle', "Dashboard");
 	}
 
 	public function route(): void{
@@ -69,8 +76,9 @@ class EntityRouter extends Router implements RouterInterface
 			if(!method_exists($cObjet, $a)) throw new \Exception("L'action' : ".$a." n'existe pas");
 			$cObjet->$a($this->site);
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			//echo $e->getMessage();
 			ErrorReporter::report("EntityRouter route():" . $e->getMessage() );
+			$this->renderInvalidRoute();
 		}
 	}
 
