@@ -215,7 +215,7 @@ class Site extends Model
     //Overrides database->delete methode
     public function delete(){
         $sqlFiles = array(
-            'dish_category', 'dish', 'booking','booking_settings', 'booking_planning', 
+            'dish_Category', 'dish', 'booking','booking_settings', 'booking_planning', 
             'booking_planning_data', 'page', 'medium', 'post', 'content', 'comment', 
             'menu', 'menu_dish_association', 'post_medium_association'
         );
@@ -482,6 +482,7 @@ class Site extends Model
 					"type"=>"text",
 					"placeholder"=>"Description",
 					"id"=>"description",
+                    "label"=>"Description",
 					"class"=>"input input-100",
                     "error"=>"The description cannot be empty!",
 					"required"=> false,

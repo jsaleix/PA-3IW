@@ -27,7 +27,7 @@
             <p>Be sure this is what you want, <br>this action is irreversible.</p>
             <?php App\Core\FormBuilder::render($form)?>
             <?php else: ?>
-                <?php App\Core\FormBuilder::render($form)?>
+                <?php App\Core\FormBuilder::render($form, TRUE)?>
                 <form class="edit-site col-5 col-sm-12">
                     <a class="width-80 " href="<?= \App\Core\Helpers::renderCMSLink( "admin/settings/delete", $this->site) ?> "><input class="btn btn-light btn-100" type="button" value="Delete"></a>
                 </form>

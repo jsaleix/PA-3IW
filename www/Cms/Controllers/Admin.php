@@ -7,8 +7,39 @@ use App\Models\User;
 use CMS\Core\CMSView as View;
 use CMS\Models\Booking;
 use CMS\Models\Comment;
+use CMS\Models\Menu;
+use CMS\Models\Post;
+use CMS\Models\Page;
 
 class Admin{
+
+	private function getDatas($site){
+		$pageObj = new Page($site->getPrefix());
+		$pages = $pageObj->findAll();
+		if(!$pages) $pages = [];
+
+		$postObj = new Post($site->getPrefix());
+		$posts = $postObj->findAll();
+		if(!$posts) $posts = [];
+
+		$commentObj = new Comment($site->getPrefix());
+		$comments = $commentObj->findAll();
+		if(!$comments) $comments = [];
+
+		return array( 
+			'theme' => $site->getTheme(),
+			'posts' => count($posts),
+			'pages' => count($pages),
+			'comments' => count($comments)
+		);
+		
+	}
+
+	private function getMenus($prefix){
+		$menuObj = new Menu($prefix);
+		$menus = $menuObj->findAll(array('limit' => 3, 'order by' => 'ASC'));
+		return $menus;
+	}
 
 	private function getLastComments($prefix){
 		$commentObj = new Comment($prefix);
@@ -46,8 +77,9 @@ class Admin{
 					$client = new User();
 					$client->setId($item['client']);
 					$client->findOne(TRUE);
-					$item['date'] = (new \DateTime())->format('d/m/Y');
-					$item['hour'] = (new \DateTime())->format('H:i:s');
+					$date = new \DateTime($item['date']);
+					$item['date'] = $date->format('d/m/Y');
+					$item['hour'] = $date->format('H:i:s');
 					$item['client'] = ($client->getFirstname(). ' ' . $client->getLastname());
 					$list[] = $item;
 				}
@@ -90,7 +122,9 @@ class Admin{
 	public function defaultAction($site){
 		$pendingBooking = $this->getPendingBooking($site->getPrefix());
 		$currentBooking = $this->getCurrentBooking($site->getPrefix());
-		$comments = $this->getLastComments($site->getPrefix());
+		$comments 		= $this->getLastComments($site->getPrefix());
+		$menus 			= $this->getMenus($site->getPRefix());
+		$datas 			= $this->getDatas($site);
 
 		$html = 'Default admin action on CMS <br>';
 		$html .= 'We\'re gonna assume that you are the site owner <br>'; 
@@ -100,6 +134,8 @@ class Admin{
 		$view->assign('pendingBooking', $pendingBooking );
 		$view->assign('currentBooking', $currentBooking );
 		$view->assign('lastComments', $comments );
+		$view->assign('menus', $menus );
+		$view->assign('datas', $datas );
 
 	}
 

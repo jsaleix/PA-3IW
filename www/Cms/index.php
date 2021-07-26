@@ -11,7 +11,7 @@ function handleCMS($uri){ // $uri = // site/subDomain/page
         if(!$uri){ throw new \InvalidArgumentException ('Missing uri parameter');}
         if(!$uri[0]){ throw new \InvalidArgumentException ('Missing uri parameter index 0');}
     }catch(\Exception $e){
-        echo $e->getMessage();
+        //echo $e->getMessage();
         \App\Core\Helpers::errorStatus();
     }
     

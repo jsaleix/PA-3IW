@@ -292,6 +292,9 @@ class PostController{
 	
 					$date = new \DateTime($comment['date']);
 					$comment['date'] =  $date->format('d/m/y \a\t H:i');
+					if($userObj->getId() == Security::getUser()){
+						$comment['delete'] = TRUE;
+					}
 					$commentsTmp[] = $comment;
 				}
 				$comments = $commentsTmp;

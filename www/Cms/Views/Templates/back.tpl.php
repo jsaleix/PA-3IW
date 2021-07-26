@@ -28,9 +28,7 @@
 				</button>
 				<img class="logoHead" src="/Assets/images/logo_black.png"/>
 			</div>
-			<div class="nameMenu">
-				<?= CMS\Core\UserRenderer::render() ?>
-			</div>
+			<?= CMS\Core\UserRenderer::render("nameMenu") ?>
 		</div>
 		<main>
 			<?= CMS\Core\navbarBuilder::renderBackNavigation($this->site) ?>

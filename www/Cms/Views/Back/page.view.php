@@ -20,12 +20,11 @@
             <h3> <?=$message?> </h3>
         <?php endif;?>
 
-
         <div class="row" >
             <div class="col-12 col-sm-12 col-md-12 col-xl-12">
                 <div class="col-inner">
                     <div class="darkSection">
-                        <?php App\Core\FormBuilder::render($form)?>
+                        <?php App\Core\FormBuilder::render($form, TRUE)?>
                     </div>
                 </div>
 

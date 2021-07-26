@@ -5,7 +5,7 @@ namespace App\Core;
 class FormBuilder
 {
 
-	public static function render($form){
+	public static function render($form, $displayLabel = false){
 		
 		$html = "<form 
 				method='".($form["config"]["method"]??"GET")."' 
@@ -25,6 +25,9 @@ class FormBuilder
 		}
 
 		foreach ($form["inputs"] as $name => $configInput) {
+			if($displayLabel && !empty($configInput['label'])){
+				$html .= '<div><label>' . $configInput['label'] . '</label>';
+			}
 
 			switch($configInput["type"]){
 				case "radio":
@@ -60,10 +63,11 @@ class FormBuilder
 
 				default:
 					$html .= self::renderInput($name, $configInput);
-
-
 			}
-			
+
+			if($displayLabel && !empty($configInput['label'])){
+				$html .= '</div>';
+			}
 		}
 
 		$html .= self::createCSRFToken();
