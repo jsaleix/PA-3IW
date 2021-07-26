@@ -86,6 +86,7 @@ class SiteController{
 					$errors[] = 'Couldn\'t delete this site';
 					$view->assign("errors", $errors);
 				}
+				\App\Core\Helpers::customRedirect('/account/sites');
 			}catch(\Exception $e){
 				ErrorReporter::report("SiteController deleteSite:" . $e->getMessage() );
 				$errors[] = 'Couldn\'t delete this site';

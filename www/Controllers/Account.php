@@ -166,10 +166,10 @@ class Account{
 				$item['creationDate'] = (new \DateTime($item['creationDate']))->format('d/m/Y H:i:s');
 				$datas[] = $item;
 			}
+			$lists[] = array( "title" => "Sites you are whitelisted on", "datas" => $datas);
 		}
-		$lists[] = array( "title" => "Sites you are whitelisted on", "datas" => $datas);
 		$view = new View('front/list.account', 'front');
-		$view->assign("lists", $lists);
+		$view->assign("lists", $lists??null);
 		$view->assign('pageTitle', "Manage the sites");
 	}
 
