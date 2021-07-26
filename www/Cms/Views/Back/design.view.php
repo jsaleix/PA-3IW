@@ -84,6 +84,15 @@
 
         var element = document.getElementById('stylesConf').value;
 
+        let hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "associatedClass";
+
+        let formIdentificator = document.createElement('input');
+        formIdentificator.type = "hidden";
+        formIdentificator.name = "type";
+        formIdentificator.value = "styles";
+
         let form    = document.createElement("form");
         form.method = "POST";
         form.action = "";
@@ -99,43 +108,45 @@
             })
             .then((res)=>res.json());
             
-            if(res.code === 200){
-                var i = 0;
-                Object.entries(res.style).forEach(([firstKey, firstValue]) => {
+        if(res.code === 200){
+            var i = 0;
+            hidden.value = res.associatedClass;
+            Object.entries(res.style).forEach(([firstKey, firstValue]) => {
+                let input   = document.createElement("input");
+                let label = document.createElement("label");
 
-                    let input   = document.createElement("input");
-                    let label = document.createElement("label");
+                input.placeholder = firstKey;
+                input.name = firstKey;
 
-                    input.placeholder = firstKey;
+                input.setAttribute("class","input input-100");
+                input.id = i;
 
-                    input.setAttribute("class","input input-100");
-                    input.id = i;
+                label.setAttribute("for",i);
+                label.innerHTML = firstKey + ": ";
+                form.setAttribute("class","col-10");
 
-                    label.setAttribute("for",i);
-                    label.innerHTML = firstKey + ": ";
-                    form.setAttribute("class","col-10");
+                Object.entries(firstValue).forEach(([key, value]) => {
 
-                    Object.entries(firstValue).forEach(([key, value]) => {
-                        // input.setAttribute("type","text");
-
-                        if(key == "type"){
-                            input.setAttribute(key,value);
-                        }
-                        if((key == "display") && (value == true)){
-                            form.append(label);
-                            form.append(input);
-                        }
-                    });
-                    i++;
+                    if(key == "type"){
+                        input.setAttribute(key,value);
+                    }
+                    if((key == "display") && (value == true)){
+                        form.append(label);
+                        form.append(input);
+                    }
                 });
+                i++;
+            });
 
-                let submit = document.createElement("input");
-                submit.setAttribute("class","btn btn-100");
-                submit.type = "submit";
-                submit.value = "UPDATE STYLES";
+            let submit = document.createElement("input");
+            submit.setAttribute("class","btn btn-100");
+            submit.type = "submit";
+            submit.value = "UPDATE STYLES";
 
-                form.append(submit);
-            }
+            form.append(hidden);
+            form.append(formIdentificator);
+            form.append(submit);
+        }
         
     }
     getStyleConf();

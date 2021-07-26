@@ -2,7 +2,7 @@
     "theme" : "Default",
     "elements" : {
         "navbar" : {
-            "associated-class" : "default-navbar",
+            "associatedClass" : "default-navbar",
             "style" : {
                 "color" : {
                     "display":true,
@@ -19,7 +19,7 @@
             }
         },
         "footer" : {
-            "associated-class" : "default-navbar",
+            "associatedClass" : "default-navbar",
             "style" : {
                 "color" : {
                     "display":true,
@@ -36,13 +36,13 @@
             }
         },
         "body" : {
-            "associated-class" : "default-navbar",
+            "associatedClass" : "default-navbar",
             "style" : {
                 "color" : {
                     "display":true,
                     "type":"color"
                 },
-                "background-color" : {
+                "backgroundColor" : {
                     "display":false,
                     "type":"color"
                 },

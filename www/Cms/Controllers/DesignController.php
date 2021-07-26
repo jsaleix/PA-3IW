@@ -34,7 +34,11 @@ class DesignController{
                 }
             }
             if($_POST['type'] && $_POST['type'] === "styles"){
+                
+                $currentStyles = $site->getStyles();
 
+
+                var_dump($_POST);
             }
         }
         
@@ -74,7 +78,7 @@ class DesignController{
             }
 
             $styles["code"] = 200;
-            
+
             if(count($styles) == 0){
                 http_response_code(404);
                 $styles['code'] = 404;
@@ -86,6 +90,17 @@ class DesignController{
         }catch(\Exception $e){
             $code = 200;  
         }
+    }
+
+    private function stylesBuilding($currentStyles, $newStyles){
+
+        if($currentStyles){
+            $currentStyles = json_decode($currentStyles);
+        }else{
+            $currentStyles = [];
+            return;
+        }
+        
     }
 
     private function getElements($config){
