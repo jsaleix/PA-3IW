@@ -10,6 +10,15 @@
                 }
             }
         },
+        "Post Title":{
+            "associatedClass":"postLinkTitle",
+            "style":{
+                "color":{
+                    "display":true,
+                    "type":"color"
+                }
+            }
+        },
         "footer" : {
             "associatedClass" : "footer",
             "style" : {

@@ -178,7 +178,7 @@ class DesignController{
 
     private function getThemes(){
         $themes = [];
-        $path = $_SERVER['DOCUMENT_ROOT'] ."/Cms/Views/Front";
+        $path = $_SERVER['DOCUMENT_ROOT'] . "/public/Assets/cms/Front";
         foreach (glob($path . '/*') as $theme){
             $tmpTheme = explode("/", $theme);
             $tmpTheme = $tmpTheme[count($tmpTheme)-1];
@@ -203,11 +203,6 @@ class DesignController{
         } 
         return $thumbnails;
     }
-
-    // public function styleModifierAction($site){
-
-    // }
-
 
 }   
 

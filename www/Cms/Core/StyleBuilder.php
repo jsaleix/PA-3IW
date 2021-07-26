@@ -9,7 +9,7 @@ class StyleBuilder
 	}
 
     public static function renderStyle($site){
-        $styleLink = DOMAIN."Assets/cms/Front/Default/Styles/main.css";
+        $styleLink = DOMAIN."/Assets/cms/Front/Default/Styles/main.css";
 
         $theme = "Default";
 
@@ -28,7 +28,7 @@ class StyleBuilder
 
     public static function renderPersonnalStyles($site){
         $css = "";
-        
+
         $allStyles = json_decode($site->getStyles());
 
         if (json_last_error() !== JSON_ERROR_NONE) {
