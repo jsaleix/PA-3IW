@@ -51,6 +51,19 @@
                     "type":"text"
                 }
             }
+        },
+        "sidebar" : {
+            "associatedClass" : "default-sidebar",
+            "style" : {
+                "color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "background-color" : {
+                    "display":true,
+                    "type":"color"
+                }
+            }
         }
     }
 }

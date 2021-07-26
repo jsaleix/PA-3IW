@@ -19,6 +19,7 @@ class DesignController{
         $themes = $this::getThemes();
 
         $form = $siteObj->formThemeEdit($themes);
+        $resetStyles = $siteObj->formStylesReset();
 
         if(!empty($_POST)){
             if($_POST['type'] && $_POST['type'] === "themes"){
@@ -41,6 +42,12 @@ class DesignController{
                 $site->setStyles($newStyles);
                 $site->save();
             }
+            if($_POST['type'] && $_POST['type']==="resetStyles"){
+                $currentStyles = $site->getStyles();
+                $reset = json_encode([]);
+                $site->setStyles($reset);
+                $site->save();
+            }
         }
         
         $thumbnails = $this::getThumbnails($siteObj);
@@ -53,6 +60,7 @@ class DesignController{
         
         $view->assign("site", $siteObj);
         $view->assign("form", $form);
+        $view->assign("resetStyles", $resetStyles);
         $view->assign("formStyles", $formStyles);
         $view->assign("thumbnails", $thumbnails);
     }
@@ -103,10 +111,6 @@ class DesignController{
             $currentStyles = [];
         }
 
-        echo "<br/><br/> OLD: <br/>";
-        var_dump($currentStyles);
-
-
         foreach($newStyles as $postName=>$postContent){
 
             if(count($currentStyles) == 0){
@@ -136,10 +140,6 @@ class DesignController{
             }
 
         }
-
-        echo "<br/><br/> NEW: <br/>";
-        var_dump($currentStyles);
-
         $currentStyles = json_encode($currentStyles);
         return $currentStyles;
         

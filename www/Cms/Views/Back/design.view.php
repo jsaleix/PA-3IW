@@ -13,6 +13,8 @@
         <div id="stylesDiv">
 
         </div>
+
+        <?php App\Core\FormBuilder::render($resetStyles)?>
     </div>
     <div class="col-6 col-md-12 col-sm-12" style="padding: 1em; padding-top:0;">
         <h3>Preview:</h3>

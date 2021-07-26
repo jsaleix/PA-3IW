@@ -338,6 +338,25 @@ class Site extends Model
         ];
     }
 
+    public function formStylesReset(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "class"=>"col-10",
+                "submit"=>"Reset styles to default",
+                "submitClass"=>"btn btn-100 btn-light",
+            ],
+            "inputs"=>[
+                "type"=>[
+                    "type"=>"hidden",
+                    "value"=>"resetStyles",
+                    "name"=>'type'
+                ]
+            ]
+        ];
+    }
+
     public function formDelete(){
         return [
             "config"=>[
