@@ -4,17 +4,9 @@
         "navbar" : {
             "associatedClass" : "default-navbar",
             "style" : {
-                "color" : {
-                    "display":true,
-                    "type":"color"
-                },
                 "background-color" : {
                     "display":true,
                     "type":"color"
-                },
-                "font" : {
-                    "display":true,
-                    "type":"text"
                 }
             }
         },
@@ -24,27 +16,15 @@
                 "background-color" : {
                     "display":true,
                     "type":"color"
-                },
-                "font" : {
-                    "display":true,
-                    "type":"text"
                 }
             }
         },
         "body" : {
             "associatedClass" : "default-body",
             "style" : {
-                "color" : {
-                    "display":true,
-                    "type":"color"
-                },
-                "backgroundColor" : {
+                "background-color" : {
                     "display":false,
                     "type":"color"
-                },
-                "font" : {
-                    "display":true,
-                    "type":"text"
                 }
             }
         },

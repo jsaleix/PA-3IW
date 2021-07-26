@@ -8,7 +8,6 @@
             <div class="col">
                 <h3>C’est votre première fois ici?</h3>
                 <div class="row" id="btnRow">
-                    <a href="#" class="btn btn-green">Pas besoin d'aide</a>
                     <a href="?step=2" class="btn btn-purple">Je me laisse guider</a>
                 </div>
             </div>

@@ -28,7 +28,13 @@ class StyleBuilder
 
     public static function renderPersonnalStyles($site){
         $css = "";
+        
         $allStyles = json_decode($site->getStyles());
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return false;
+        }
+
 
         foreach($allStyles as $class=>$styles){
             $css .= ".".$class."{\n";
