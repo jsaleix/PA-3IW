@@ -11,7 +11,7 @@
 	</style>
 </head>
 <body>
-	<?= CMS\Core\navbarBuilder::renderFrontNavigation($this->site) ?>
+	<?= CMS\Core\NavbarBuilder::renderFrontNavigation($this->site) ?>
 
 	<?php include $this->view ;?>
 

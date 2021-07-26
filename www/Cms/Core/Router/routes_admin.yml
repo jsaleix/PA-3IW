@@ -1,62 +1,62 @@
 /:
-  controller: admin
+  controller: Admin
   action: default
 
 /manage:
-  controller: admin
+  controller: Admin
   action: default
 
 /articles:
-  controller: postcontroller
-  action: managearticles
+  controller: PostController
+  action: manageArticles
 
 /article/create:
-  controller: postcontroller
+  controller: PostController
   action: createArticle
 
 /article/edit:
-  controller: postcontroller
-  action: editarticle
+  controller: PostController
+  action: editArticle
 
 /article/delete:
-  controller: postcontroller
-  action: deletearticle
+  controller: PostController
+  action: deleteArticle
 
 /pages:
-  controller: pagecontroller
-  action: managepages
+  controller: PageController
+  action: managePages
 
 /page/create:
-  controller: pagecontroller
-  action: createpage
+  controller: PageController
+  action: createPage
 
 /page/edit:
-  controller: pagecontroller
-  action: editpage
+  controller: PageController
+  action: editPage
 
 /page/delete:
-  controller: pagecontroller
-  action: deletepage
+  controller: PageController
+  action: deletePage
 
 /dishes:
-  controller: dishController
-  action: managedishes
+  controller: DishController
+  action: manageDishes
 
 /dish/create:
-  controller: dishController
-  action: createdish
+  controller: DishController
+  action: createDish
 
 /dish/edit:
-  controller: dishController
-  action: editdish
+  controller: DishController
+  action: editDish
 
 /dishcategories:
   controller: DishCategoryController
-  action: managedishcategories
+  action: manageDishCategories
 
 /dish/delete:
-  controller: dishController
-  action: deletedish
+  controller: DishController
+  action: deleteDish
 
 /dishcategory/create:
   controller: DishCategoryController
@@ -71,126 +71,122 @@
   action: deleteDishCategory
 
 /comments:
-  controller: commentController
-  action: managecomments
+  controller: CommentController
+  action: manageComments
 
 /comment/delete:
-  controller: commentController
-  action: deletecomment
+  controller: CommentController
+  action: deleteComment
 
 /menus:
-  controller: menuController
+  controller: MenuController
   action: manageMenus
   
 /menus/edit:
-  controller: menuController
+  controller: MenuController
   action: editMenus
 
 /menus/create:
-  controller: menuController
+  controller: MenuController
   action: createMenu
 
 /menus/delete:
-  controller: menuController
+  controller: MenuController
   action: deleteMenu
 
 /menus/export:
-  controller: menuController
+  controller: MenuController
   action: exportMenu
 
 /booking:
-  controller: bookingSettingsController
+  controller: BookingSettingsController
   action: manageBookingSettings
 
 /booking/records:
-  controller: bookingController
+  controller: BookingController
   action: renderRecords
 
 /booking/edit/settings:
-  controller: bookingSettingsController
+  controller: BookingSettingsController
   action: editSettings
 
 /booking/edit/planning:
-  controller: bookingSettingsController
+  controller: BookingSettingsController
   action: editPlannings
 
 /booking/front:
-  controller: bookingController
+  controller: BookingController
   action: addBooking
 
 /booking/accept:
-  controller: bookingSettingsController
+  controller: BookingSettingsController
   action: acceptBooking
 
 /booking/decline:
-  controller: bookingSettingsController
+  controller: BookingSettingsController
   action: deleteBooking
 
 /settings:
-  controller: sitecontroller
-  action: editsite
+  controller: SiteController
+  action: editSite
 
 /settings/delete:
-  controller: sitecontroller
-  action: deletesite
+  controller: SiteController
+  action: deleteSite
   
 /design:
-  controller: designController
+  controller: DesignController
   action: default
 
 /contacts:
-  controller: contactsController
+  controller: ContactsController
   action: default
 
 /medium:
-  controller: mediacontroller
+  controller: MediaController
   action: listMedias
 
 /medium/edit:
-  controller: mediacontroller
+  controller: MediaController
   action: editMedium
 
 /medium/delete:
-  controller: mediacontroller
+  controller: MediaController
   action: deleteMedium
 
 /medium/create:
-  controller: mediacontroller
+  controller: MediaController
   action: createMedium
 
 /medium/assoc/delete:
-  controller: pmacontroller
+  controller: PmaController
   action: deleteAssoc
 
 /medium/assoc/remove:
-  controller: pmacontroller
+  controller: PmaController
   action: deleteAssocFromPost
 
 /medium/assoc/create:
-  controller: pmacontroller
+  controller: PmaController
   action: createAssoc
 
 /users:
-  controller: usercontroller
-  action: listadmin
+  controller: UserController
+  action: listAdmin
 
 /users/add:
-  controller: usercontroller
-  action: addadmin
+  controller: UserController
+  action: addAdmin
 
 /users/delete:
-  controller: usercontroller
-  action: deleteadmin
+  controller: UserController
+  action: deleteAdmin
 
 #Api routes
 /api/searchdish:
-  controller: dishController
+  controller: DishController
   action: getDish
 
 /api/getfilters:
-  controller: actionController
+  controller: ActionController
   action: getActionFilters
-
-/api/getstyle:
-  controller: DesignController
-  action: getStyles

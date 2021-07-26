@@ -174,7 +174,7 @@ class PostController{
 		$errors = [];
 
         if(!$posts || count($posts) === 0){
-			array_push($errors, "Aucun résultats");
+			array_push($errors, "No result");
             return;
         }
 		
@@ -188,7 +188,6 @@ class PostController{
 			array_push($tmp_posts, ["post" => $post, "publisher" => $publisher]);
 		}
 		
-
 		$view = new View('posts', 'front', $site);
 		$view->assign('pageTitle', 'Posts');
 		$view->assign('posts', $tmp_posts);
@@ -196,7 +195,7 @@ class PostController{
 
 	public function renderPostAction($site, $filter = null){
 		$view = new View('post', 'front',  $site);
-		//Checks if the methode is called as an action of the site or as an entity
+		//Checks if the method is called as an action of the site or as an entity
 		try{
 			if(!empty($filter)){
 				$filter = json_decode($filter, true);

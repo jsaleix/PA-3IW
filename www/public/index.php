@@ -23,8 +23,8 @@ $uri = $uriExploded[0];
 *	with its own routers mecanisms
 */
 if( preg_match('/\/site\/+/', $uri) ){
-	if( file_exists(__DIR__.'/../Cms/index.php') ){
-		include __DIR__.'/../Cms/index.php';
+	if( file_exists(__DIR__.'/../CMS/index.php') ){
+		include __DIR__.'/../CMS/index.php';
 		\CMS\handleCMS($uri);
 	}else{
 		ErrorReporter::report("index for /site: Missing required cms file" );
