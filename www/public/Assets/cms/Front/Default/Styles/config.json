@@ -1,0 +1,54 @@
+{
+    "theme" : "Default",
+    "elements" : {
+        "navbar" : {
+            "associatedClass" : "default-navbar",
+            "style" : {
+                "background-color" : {
+                    "display":true,
+                    "type":"color"
+                }
+            }
+        },
+        "Post Title":{
+            "associatedClass":"postLinkTitle",
+            "style":{
+                "color":{
+                    "display":true,
+                    "type":"color"
+                }
+            }
+        },
+        "footer" : {
+            "associatedClass" : "footer",
+            "style" : {
+                "background-color" : {
+                    "display":true,
+                    "type":"color"
+                }
+            }
+        },
+        "body" : {
+            "associatedClass" : "default-body",
+            "style" : {
+                "background-color" : {
+                    "display":false,
+                    "type":"color"
+                }
+            }
+        },
+        "sidebar" : {
+            "associatedClass" : "default-sidebar",
+            "style" : {
+                "color" : {
+                    "display":true,
+                    "type":"color"
+                },
+                "background-color" : {
+                    "display":true,
+                    "type":"color"
+                }
+            }
+        }
+    }
+}

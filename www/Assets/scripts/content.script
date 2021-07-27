@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Content` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `page` INT NOT NULL UNIQUE,
+  `method` INT NOT NULL,
+  `filter` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_content_page_:X`
+    FOREIGN KEY (`page`)
+    REFERENCES `easymeal`.`:X_Page` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_method_page_:X`
+    FOREIGN KEY (`method`)
+    REFERENCES `easymeal`.`:prefixAction` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);

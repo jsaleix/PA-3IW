@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Post_medium_association` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `medium` INT NULL,
+    `post` INT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_post_association_:X`
+        FOREIGN KEY (`post`)
+        REFERENCES `easymeal`.`:X_Post` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT `fk_medium_association_:X`
+        FOREIGN KEY (`medium`)
+        REFERENCES `easymeal`.`:X_Medium` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);

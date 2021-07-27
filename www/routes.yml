@@ -3,25 +3,93 @@
   controller: Main
   action: default
 
-/admin:
-  controller: Security
-  action: default
-
-/s-inscrire:
+/register:
   controller: Security
   action: register
-
-/se-connecter:
-  controller: Security
-  action: login
+  middleware: noAuth
 
 /login:
   controller: Security
   action: login  
+  middleware: noAuth
 
-
-/se-deconnecter:
+/logout:
   controller: Security
   action: logout
+  middleware: auth
 
+/create:
+  controller: ManageSite
+  action: create
+  middleware: auth
+
+/mailconfirm:
+  controller: Security
+  action: mailconfirm
+
+/profile:
+  controller: Main
+  action: displayUserProfile
+
+# authenticated user routes
+/account:
+  controller: Account
+  action: default
+  middleware: auth
+  
+/account/password:
+  controller: Account
+  action: updatePassword
+  middleware: auth
+
+/account/sites:
+  controller: Account
+  action: mysites
+  middleware: auth
+
+/api/users:
+  controller: Account
+  action: searchUsers
+  middleware: auth
+
+# admin routes
+/admin:
+  controller: Admin
+  action: default
+  middleware: isAdmin
+
+/admin/sites:
+  controller: Admin
+  action: displaySites
+  middleware: isAdmin
+
+/admin/site:
+  controller: Admin
+  action: displaySite
+  middleware: isAdmin
+
+/admin/users:
+  controller: Admin
+  action: displayUsers
+  middleware: isAdmin
+
+/admin/user:
+  controller: Admin
+  action: displayUser
+  middleware: isAdmin
+
+/admin/roles:
+  controller: Admin
+  action: displayRoles
+  middleware: isAdmin
+
+/admin/role/create:
+  controller: Admin
+  action: createRole
+  middleware: isAdmin
+
+/admin/role:
+  controller: Admin
+  action: editrole
+  middleware: isAdmin
 

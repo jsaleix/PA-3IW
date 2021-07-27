@@ -1,0 +1,196 @@
+/:
+  controller: Admin
+  action: default
+
+/manage:
+  controller: Admin
+  action: default
+
+/articles:
+  controller: PostController
+  action: manageArticles
+
+/article/create:
+  controller: PostController
+  action: createArticle
+
+/article/edit:
+  controller: PostController
+  action: editArticle
+
+/article/delete:
+  controller: PostController
+  action: deleteArticle
+
+/pages:
+  controller: PageController
+  action: managePages
+
+/page/create:
+  controller: PageController
+  action: createPage
+
+/page/edit:
+  controller: PageController
+  action: editPage
+
+/page/delete:
+  controller: PageController
+  action: deletePage
+
+/dishes:
+  controller: DishController
+  action: manageDishes
+
+/dish/create:
+  controller: DishController
+  action: createDish
+
+/dish/edit:
+  controller: DishController
+  action: editDish
+
+/dishcategories:
+  controller: DishCategoryController
+  action: manageDishCategories
+
+/dish/delete:
+  controller: DishController
+  action: deleteDish
+
+/dishcategory/create:
+  controller: DishCategoryController
+  action: createDishCategory
+
+/dishcategory/edit:
+  controller: DishCategoryController
+  action: editDishCategory
+
+/dishcategory/delete:
+  controller: DishCategoryController
+  action: deleteDishCategory
+
+/comments:
+  controller: CommentController
+  action: manageComments
+
+/comment/delete:
+  controller: CommentController
+  action: deleteComment
+
+/menus:
+  controller: MenuController
+  action: manageMenus
+  
+/menus/edit:
+  controller: MenuController
+  action: editMenus
+
+/menus/create:
+  controller: MenuController
+  action: createMenu
+
+/menus/delete:
+  controller: MenuController
+  action: deleteMenu
+
+/menus/export:
+  controller: MenuController
+  action: exportMenu
+
+/booking:
+  controller: BookingSettingsController
+  action: manageBookingSettings
+
+/booking/records:
+  controller: BookingController
+  action: renderRecords
+
+/booking/edit/settings:
+  controller: BookingSettingsController
+  action: editSettings
+
+/booking/edit/planning:
+  controller: BookingSettingsController
+  action: editPlannings
+
+/booking/front:
+  controller: BookingController
+  action: addBooking
+
+/booking/accept:
+  controller: BookingSettingsController
+  action: acceptBooking
+
+/booking/decline:
+  controller: BookingSettingsController
+  action: deleteBooking
+
+/settings:
+  controller: SiteController
+  action: editSite
+
+/settings/delete:
+  controller: SiteController
+  action: deleteSite
+  
+/design:
+  controller: DesignController
+  action: default
+
+/contacts:
+  controller: ContactsController
+  action: default
+
+/medium:
+  controller: MediaController
+  action: listMedias
+
+/medium/edit:
+  controller: MediaController
+  action: editMedium
+
+/medium/delete:
+  controller: MediaController
+  action: deleteMedium
+
+/medium/create:
+  controller: MediaController
+  action: createMedium
+
+/medium/assoc/delete:
+  controller: PmaController
+  action: deleteAssoc
+
+/medium/assoc/remove:
+  controller: PmaController
+  action: deleteAssocFromPost
+
+/medium/assoc/create:
+  controller: PmaController
+  action: createAssoc
+
+/users:
+  controller: UserController
+  action: listAdmin
+
+/users/add:
+  controller: UserController
+  action: addAdmin
+
+/users/delete:
+  controller: UserController
+  action: deleteAdmin
+
+#Api routes
+/api/searchdish:
+  controller: DishController
+  action: getDish
+
+/api/getfilters:
+  controller: ActionController
+  action: getActionFilters
+
+/api/getstyle:
+  controller: DesignController
+  action: getStyles

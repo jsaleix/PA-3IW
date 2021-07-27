@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-
-class User extends Database
+class User extends Model
 {
 
-	private $id = null;
+	protected $id = null;
 	protected $firstname;
 	protected $lastname;
 	protected $email;
 	protected $pwd;
-	protected $country = "fr";
-	protected $role = 0;
-	protected $status = 0;
-	protected $isDeleted = 0;
+    protected $avatar;
+	protected $role;
+	protected $isActive;
+    protected $token;
 
 	public function __construct(){
 		parent::__construct();
@@ -48,7 +46,7 @@ class User extends Database
     }
 
     /**
-     * @param mixed $firstname
+     * @param mixed $name
      */
     public function setFirstname($firstname)
     {
@@ -64,7 +62,7 @@ class User extends Database
     }
 
     /**
-     * @param mixed $lastname
+     * @param mixed $surname
      */
     public function setLastname($lastname)
     {
@@ -80,7 +78,7 @@ class User extends Database
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $mail
      */
     public function setEmail($email)
     {
@@ -96,59 +94,43 @@ class User extends Database
     }
 
     /**
-     * @param mixed $pwd
+     * @param mixed $password
      */
-    public function setPwd($pwd)
+    public function setPwd($password)
     {
-        $this->pwd = $pwd;
+        $this->pwd = $password;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getCountry(): string
+    public function getAvatar()
     {
-        return $this->country;
+        return $this->avatar;
     }
 
     /**
-     * @param string $country
+     * @param mixed $password
      */
-    public function setCountry(string $country)
+    public function setAvatar($avatar)
     {
-        $this->country = $country;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus(int $status)
-    {
-        $this->status = $status;
+        $this->avatar = $avatar;
     }
 
     /**
      * @return int
      */
-    public function getIsDeleted(): int
+    public function getIsActive(): int
     {
-        return $this->isDeleted;
+        return $this->isActive;
     }
 
     /**
      * @param int $idDeleted
      */
-    public function setIsDeleted(int $isDeleted)
+    public function setIsActive(int $isActive)
     {
-        $this->isDeleted = $isDeleted;
+        $this->isActive = $isActive;
     }
 
     /**
@@ -167,6 +149,25 @@ class User extends Database
         $this->role = $role;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $surname
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    public function getFullName(){
+        return $this->firstname . ' ' . $this->lastname;
+    }
 
     public function formRegister(){
         return [
@@ -175,8 +176,9 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_register",
-                "class"=>"form_builder",
-                "submit"=>"S'inscrire"
+                "class"=>"form-auth",
+                "submit"=>"S'inscrire",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "firstname"=>[ 
@@ -185,8 +187,8 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>55,
                     "id"=>"firstname",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: Yves",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Prénom",
                     "error"=>"Votre prénom doit faire entre 2 et 55 caractères",
                     "required"=>true
                 ],
@@ -196,8 +198,8 @@ class User extends Database
                     "minLength"=>2,
                     "maxLength"=>255,
                     "id"=>"lastname",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: SKRZYPCZYK",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Nom de famille",
                     "error"=>"Votre nom doit faire entre 2 et 255 caractères",
                     "required"=>true
                 ],
@@ -207,8 +209,8 @@ class User extends Database
                     "minLength"=>8,
                     "maxLength"=>320,
                     "id"=>"email",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Email",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
                 ],
@@ -217,8 +219,8 @@ class User extends Database
                     "label"=>"Votre mot de passe",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
                 ],
@@ -227,25 +229,10 @@ class User extends Database
                     "label"=>"Confirmation",
                     "confirm"=>"pwd",
                     "id"=>"pwdConfirm",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Confirmation de mot de passe",
                     "error"=>"Votre mot de mot de passe de confirmation ne correspond pas",
                     "required"=>true
-                ],
-                "country"=>[ 
-                    "type"=>"select",
-                    "label"=>"Votre pays",
-                    "options" => [ 
-                                    "fr"=>"France",
-                                    "ru"=>"Russie",
-                                    "pl"=>"Pologne",
-                                    ],
-                    "minLength"=>2,
-                    "maxLength"=>2,
-                    "id"=>"country",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: fr",
-                    "error"=>"Votre pays doit faire 2 caractères"
                 ]
             ]
 
@@ -260,33 +247,164 @@ class User extends Database
                 "method"=>"POST",
                 "action"=>"",
                 "id"=>"form_login",
-                "class"=>"form_builder",
-                "submit"=>"Se connecter"
+                "class"=>"form-auth",
+                "submit"=>"Connexion",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
             ],
             "inputs"=>[
                 "email"=>[ 
                     "type"=>"email",
-                    "label"=>"Votre email",
+                    "label"=>"",
                     "minLength"=>8,
                     "maxLength"=>320,
-                    "id"=>"email",
-                    "class"=>"form_input",
-                    "placeholder"=>"Exemple: nom@gmail.com",
+                    "id"=>"mail",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Adresse email",
                     "error"=>"Votre email doit faire entre 8 et 320 caractères",
                     "required"=>true
                 ],
                 "pwd"=>[ 
                     "type"=>"password",
-                    "label"=>"Votre mot de passe",
+                    "label"=>"",
                     "minLength"=>8,
                     "id"=>"pwd",
-                    "class"=>"form_input",
-                    "placeholder"=>"",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Mot de passe",
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères",
                     "required"=>true
+                ],
+                "remember"=>[
+                    "type"=>"checkbox",
+                    "id"=>"checkbox-auth",
+                    "labelClass"=>"checkbox-label",
+                    "label"=>"Se souvenir de moi"
                 ]
             ]
 
+        ];
+    }
+
+    public function formEdit(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"",
+                "class"=>"col-4 form-account",
+                "submit"=>"Apply",
+                "submitClass"=>"btn btn-100",
+                "enctype" => "multipart/form-data"
+            ],
+            "inputs"=>[
+                "firstname"=>[ 
+                    "type"=>"text",
+                    "label"=>"Your first name",
+                    "minLength"=>2,
+                    "maxLength"=>55,
+                    "id"=>"firstname",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Example: John",
+                    "error"=>"Your name length must be between 2 and 55 characters",
+                    "required"=>true,
+                    "value"=> $this->getFirstname()
+                ],
+                "lastname"=>[ 
+                    "type"=>"text",
+                    "label"=>"Your last name",
+                    "minLength"=>2,
+                    "maxLength"=>255,
+                    "id"=>"lastname",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Example: Doe",
+                    "error"=>"Your last name length must be between 2 and 255 characters",
+                    "required"=>true,
+                    "value"=> $this->getLastname()
+                ],
+                "email"=>[ 
+                    "type"=>"email",
+                    "label"=>"Your mail",
+                    "minLength"=>8,
+                    "maxLength"=>320,
+                    "id"=>"email",
+                    "class"=>"input input-100",
+                    "placeholder"=>"Example: name@gmail.com",
+                    "error"=>"Your mail must be between 8 and 320 characters",
+                    "required"=>true,
+                    "value"=> $this->getEmail()
+                ],
+                "avatar"=>[ 
+					"type"=>"file-img",
+					"label"=>"Avatar",
+                    "name"=>"avatar",
+					"id"=>"avatar",
+					"class"=>"input-file",
+                    "error"=>"",
+					"required"=> false,
+					"value"=> $this->getAvatar()
+                ],
+            ]
+
+        ];
+    }
+
+    public function formAdminEdit($roleValues){
+        $form = $this->formEdit();
+        $roleInput =  [
+                "type"=>"select",
+                "label"=>"Role",
+                "id"=>"role",
+                "class"=>"input-role-select",
+                "value" => $this->role,
+                "options" => $roleValues
+        ];
+        $form['inputs']['role'] = $roleInput;
+        return $form;
+    }
+
+    public function formPwd(){
+        return [
+
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "id"=>"form_pwd",
+                "class"=>"form-pwd",
+                "submit"=>"Apply",
+                "submitClass"=>"cta-blue width-80 last-sm-elem"
+            ],
+            "inputs"=>[
+                "oldPwd"=>[ 
+                    "type"=>"password",
+                    "label"=>"Your current password",
+                    "minLength"=>8,
+                    "id"=>"pwd",
+                    "class"=>"input-auth",
+                    "placeholder"=>"Your current password",
+                    "error"=>"Your password must be at least 8 characters",
+                    "required"=>true
+                ],
+                "pwd"=>[ 
+                    "type"=>"password",
+                    "label"=>"New password",
+                    "minLength"=>8,
+                    "id"=>"pwd",
+                    "class"=>"input-auth",
+                    "placeholder"=>"New password",
+                    "error"=>"Your password must be at least 8 characters",
+                    "required"=>true
+                ],
+                "pwdConfirm"=>[ 
+                    "type"=>"password",
+                    "label"=>"Confirmation",
+                    "confirm"=>"pwd",
+                    "id"=>"pwdConfirm",
+                    "class"=>"input-auth",
+                    "placeholder"=>"New password confirmation",
+                    "error"=>"Your confirmation password does not match",
+                    "required"=>true
+                ]
+            ]
         ];
     }
 

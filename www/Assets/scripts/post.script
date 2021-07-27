@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Post` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(45) NULL,
+  `content` LONGTEXT NULL,
+  `publisher` INT NULL,
+  `publicationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `type` VARCHAR(45) NULL DEFAULT 'article',
+  `allowComment` TINYINT NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`id`),
+  INDEX `fk_post_creator_idx` (`publisher` ASC));

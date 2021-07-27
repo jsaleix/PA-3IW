@@ -5,7 +5,7 @@ namespace App\Core;
 class ConstantMaker
 {
 
-	private $envPath = ".env";
+	private $envPath = "../.env";
 	private $data = [];
 
 	public function __construct(){

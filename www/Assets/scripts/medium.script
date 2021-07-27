@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS `easymeal`.`:X_Medium` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `type` VARCHAR(45) NULL,
+  `image` VARCHAR(255) NULL,
+  `publisher` INT NULL,
+  `publicationDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_medium_publisher_idx` (`publisher` ASC),
+  CONSTRAINT `fk_medium_publisher_:X`
+    FOREIGN KEY (`publisher`)
+    REFERENCES `easymeal`.`:prefixUser` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
