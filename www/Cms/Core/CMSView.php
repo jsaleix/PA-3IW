@@ -20,6 +20,7 @@ class CMSView extends View
 		if($template == "back" || $template == "Back"){
 			$this->setView("Back/".$view);
 		}else{
+			$template = ucfirst($template);
 			$theme = "Default";
 
 			if(gettype($site) == "array"){
