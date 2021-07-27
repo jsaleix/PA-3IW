@@ -24,7 +24,7 @@
   action: apiGetTimes
 
 /ent/sitemap.xml:
-  controller: Sitemapcontroller
+  controller: SitemapController
   action: renderSiteMap
 
 /ent/delete/comment:
