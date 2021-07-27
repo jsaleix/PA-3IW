@@ -58,16 +58,19 @@ class PostController{
 		$posts = $postObj->findAll();
 		$fields = [ 'id', 'title', 'content', 'publisher', 'publication date', 'Edit', 'Delete' ];
 		$datas = [];
-		foreach($posts as $item){
-			$userObj = new User();
-			$userObj->setId($item['publisher']);
-			$user = $userObj->findOne();
-
-			$item['publisher'] = $user['firstname']??'None';
-			$buttonEdit = '<a href=\"article/edit?id=' . $item['id'] . '\">Go</a>';
-			$buttonDelete = '<a href=\"article/delete?id=' . $item['id'] . '\">Go</a>';
-			$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
+		if($posts && count($posts) > 0){
+			foreach($posts as $item){
+				$userObj = new User();
+				$userObj->setId($item['publisher']);
+				$user = $userObj->findOne();
+	
+				$item['publisher'] = $user['firstname']??'None';
+				$buttonEdit = '<a href=\"article/edit?id=' . $item['id'] . '\">Go</a>';
+				$buttonDelete = '<a href=\"article/delete?id=' . $item['id'] . '\">Go</a>';
+				$datas[] = "\"" . $item['id'] . "\",\"" . $item['title'] . "\",\"" . $item['content'] . "\",\"" . $item['publisher'] .  "\",\"" . $item['publicationDate'] . "\",\"" . $buttonEdit . "\",\"" . $buttonDelete ."\"";
+			}
 		}
+
 		$createArticleBtn = ['label' => 'Create an article', 'link' => 'article/create'];
 		$view = new View('list', 'back',  $site);
 		$view->assign("createButton", $createArticleBtn);
