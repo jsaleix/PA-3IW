@@ -57,7 +57,7 @@ class Page extends CMSModels
         {
             $name.='1';
         }
-        $name = htmlspecialchars($name);
+        $name = $name;
         $name = preg_replace("/[^A-Za-z0-9]+/", "", $name);//keeps letters and digits
 
         $this->name = $name;

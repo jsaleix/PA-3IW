@@ -26,8 +26,8 @@ class Post extends CMSModels
 	}
 
 	public function setTitle($title){
-		$title = htmlspecialchars($title);
-		$title = preg_replace("/[^A-Za-z0-9]+/", "", $title);//keeps letters and digits
+		$title = $title;
+		$title = preg_replace("/[^A-Za-z0-9 ]+/", "", $title);//keeps letters and digits
 
 		$this->title = $title;
 	}
@@ -37,7 +37,7 @@ class Post extends CMSModels
 	}
 
 	public function setContent($content){
-		$this->content = htmlspecialchars($content);
+		$this->content = $content;
 	}
 
 	public function getContent(){
