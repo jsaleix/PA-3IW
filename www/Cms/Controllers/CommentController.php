@@ -35,13 +35,16 @@ class CommentController{
                 if($item['idUser'] !== NULL){
                     $userObj->setId($item['idUser']);
                     $username = $userObj->findOne();
-                    if($username) $item['idUser'] = $username['firstname'] . ' ' . $username['lastname'];
+                    if($username) {
+                        $item['user'] = $username['firstname'] . ' ' . $username['lastname'];
+                        $item['user'] = "<a href='" . DOMAIN . '/profile?id='. $item['idUser'] ."'>".$item['user']."</a>";
+                    }
                 }else{
-                    $item['idUser'] = 'Unknown';
+                    $item['user'] = 'Unknown';
                 }
                 $buttonDelete = "<a href='comment/delete?id=" .$item['id']."'>Go</a>";
 
-				$formalized = "\"" . $item['id'] . "\",\"" . htmlspecialchars($item['message']) . "\",\"" . $item['idPost'] .  "\",\"" . $item['idUser'] . "\",\"" . $item['date']. "\",\"" . $buttonDelete . "\"";
+				$formalized = "\"" . $item['id'] . "\",\"" . htmlspecialchars($item['message']) . "\",\"" . $item['idPost'] .  "\",\"" . $item['user'] . "\",\"" . $item['date']. "\",\"" . $buttonDelete . "\"";
 				$datas[] = $formalized;
 			}
 		}
