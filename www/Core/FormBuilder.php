@@ -110,7 +110,7 @@ class FormBuilder
 						(!empty($configInput["disabled"])?"disabled":"").
 						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
 						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
-						" value=\"" . htmlspecialchars($configInput["value"]??"") . "\" />";
+						" value=\"" . ($configInput["value"]??"") . "\" />";
 		return $html;
 	}
 
@@ -125,7 +125,7 @@ class FormBuilder
 						(!empty($configInput["disabled"])?"disabled":"").
 						(!empty($configInput["min"])?"min=\"".$configInput["min"]."\" ":"").
 						(!empty($configInput["max"])?"max=\"".$configInput["max"]."\" ":"").
-						">".htmlspecialchars($configInput["value"]??"")."</textarea>";
+						">".($configInput["value"]??"")."</textarea>";
 		return $html;
 	}
 

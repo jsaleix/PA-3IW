@@ -24,7 +24,7 @@ class Menu extends CMSModels
 	}
 
 	public function setName($name){
-        $name = htmlspecialchars($name);
+        $name = $name;
         $name = preg_replace("/[^A-Za-z0-9\s]+/", "", $name);
 
         $this->name = $name;

@@ -139,7 +139,7 @@ class FormValidator
 	}
 
 	public static function sanitizeData($data){
-		return htmlspecialchars(trim($data), ENT_QUOTES);
+		return filter_var(trim($data), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	}
 
 	public static function emailValidate($email){
