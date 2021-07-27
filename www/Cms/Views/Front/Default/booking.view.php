@@ -13,7 +13,7 @@
             <h3> <?=$message?> </h3>
         <?php endif;?>
         <div class="row" style="justify-content: center;">
-            <?php App\Core\FormBuilder::render($form, TRUE)?>    
+            <?php App\Core\FormBuilder::render($form, false)?>    
         </div>
     </div>
 </main>    
@@ -39,6 +39,11 @@
         bookSubmit.setAttribute('type', 'hidden');
         bookSubmit.setAttribute('disabled', 'true');
 
+        let label = document.createElement('label');
+        label.setAttribute('id', 'label');
+        label.innerHTML = 'Number of people';
+        form.insertBefore(label, bookPplNumber );
+
         let nextBtn = document.createElement('input');
         nextBtn.setAttribute('id', 'step1');
         nextBtn.setAttribute('type', 'button');
@@ -57,6 +62,15 @@
         await displaysTimes();
         let nextBtn = document.getElementById('step1');
         if(nextBtn) nextBtn.remove();
+
+        let oldLabel = document.getElementById('label');
+        if(oldLabel) oldLabel.remove();
+
+        let label = document.createElement('label');
+        label.setAttribute('id', 'label');
+        label.innerHTML = 'Date to reserve';
+        form.insertBefore(label, bookDate );
+
         bookPplNumber.setAttribute('type', 'hidden');
         bookDate.setAttribute('type', 'date');
         bookSubmit.setAttribute('type', 'submit');
