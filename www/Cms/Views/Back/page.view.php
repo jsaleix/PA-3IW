@@ -114,7 +114,14 @@ function createSelector(){
     selector.setAttribute('name', 'filters');
 
     let form = document.getElementById('form_content');
-    form.insertBefore(selector, form.childNodes[form.length]);
+    let hiddenFilters = document.getElementById('filters');
+    //Some issue with dom, js sometimes does not consider selector & hiddenFilters to be in the same childnodes, in this case it just append the selector at the end of the form
+    try{
+        form.insertBefore(selector, hiddenFilters);
+    }catch(e){
+        form.append(selector);
+    }
+
 }
 
 function eraseSelector(){
