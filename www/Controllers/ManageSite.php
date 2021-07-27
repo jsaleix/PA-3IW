@@ -58,12 +58,16 @@ class ManageSite{
                     ErrorReporter::report("Invalid form: " . implode(' - ', $errors));
 					throw new \Exception('Invalid form');
 				}
-
+                
                 /*
                 * Checkings
                 */
                 #Checks if sub domain is not already taken
                 $tmpSite = new Site();
+
+                if ( !preg_match('#^[0-9]*[a-zA-Z]+[a-zA-Z0-9]*$#', $_POST['subDomain']) ) {
+                    throw new \Exception('Invalid chars in sub domain');
+                }
 
                 if (in_array($_POST['subDomain'], $site->getInvalidDomains())) {
                     throw new \Exception('Invalid sub Domain');
