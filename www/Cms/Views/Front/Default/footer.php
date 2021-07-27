@@ -1,14 +1,6 @@
 <footer class="footer">
         <div class="col-4">
-            <h2><?= $site->getName(); ?></h2>
-            <ul>
-                <li><a href="#">Links</a></li>
-                <li><a href="#">Links</a></li>
-                <li><a href="#">Links</a></li>
-                <li><a href="#">Links</a></li>
-                
-            </ul>
-    
+            <h2><?= $site->getName(); ?></h2>   
             <br/>
             <p><?= $site->getName(); ?> Copyright © 2021-2022</p>
         </div>

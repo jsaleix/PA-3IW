@@ -27,8 +27,10 @@ class UserController{
                 $user = $userObj->findOne();
                 if($user){
                     $name = $user['firstname'] . " " . $user['lastname']; 
+					$username = '<a href="' . DOMAIN . '/profile?id='. $user['id'] .'">'.$name.'</a>';
+
                     $button = '<a href="users/delete?id=' . $user['id'] . '">Go</a>';
-                    $formalized = "'" . $user['id'] . "','" . $name . "','" . $user['email'] . "','" . $user['joinDate'] .  "','" . $button . "'";
+                    $formalized = "'" . $user['id'] . "','" . $username . "','" . $user['email'] . "','" . $user['joinDate'] .  "','" . $button . "'";
                     $datas[] = $formalized;
                 }
 			}

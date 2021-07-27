@@ -1,8 +1,8 @@
 INSERT INTO `easymeal`.`:X_Booking_planning` (`id`, `day`, `start`, `end`, `notes`, `disabled`) VALUES
-  (1, 'monday', '00:00:00', '00:00:00', NULL, 0),
-  (2, 'tuesday', '00:00:00', '00:00:00', NULL, 0),
-  (3, 'wednesday', '00:00:00', '00:00:00', NULL, 0),
-  (4, 'thursday', '00:00:00', '00:00:00', NULL, 0),
-  (5, 'friday', '08:00:00', '00:00:00', NULL, 0),
-  (6, 'saturday', '00:00:00','00:00:00', NULL, 0),
-  (7, 'sunday', '05:00:00', '00:00:00', NULL, 0);
+  (1, 'monday', '10:00:00', '20:00:00', NULL, 0),
+  (2, 'tuesday', '10:00:00', '20:00:00', NULL, 0),
+  (3, 'wednesday', '10:00:00', '20:00:00', NULL, 0),
+  (4, 'thursday', '10:00:00', '20:00:00', NULL, 0),
+  (5, 'friday', '10:00:00', '20:00:00', NULL, 0),
+  (6, 'saturday', '10:00:00','20:00:00', NULL, 0),
+  (7, 'sunday', '10:00:00', '20:00:00', NULL, 0);

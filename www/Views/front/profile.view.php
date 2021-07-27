@@ -19,7 +19,7 @@
         <section>
             <img id="profile_pic" src="<?=DOMAIN . '/'. $user->getAvatar()?>"/>
             <div id="role_div">
-                <img src="<?php echo DOMAIN . '/'. $role->getIcon(); ?>">
+                <img id="role_icon" src="<?php echo DOMAIN . '/'. $role->getIcon(); ?>">
                 <p><?php echo $role->getName(); ?></p>
             </div>
         </section>
@@ -61,6 +61,12 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+    }
+
+    #role_icon{
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
     }
 
     #sites_section{
