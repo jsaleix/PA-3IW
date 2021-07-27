@@ -8,7 +8,7 @@ use App\Core\FormValidator;
 use CMS\Models\Dish;
 use CMS\Models\Dish_Category;
 use CMS\Models\Menu;
-use CMS\Models\Menu_Dish_Association;
+use CMS\Models\Menu_dish_association;
 
 use CMS\Core\CMSView as View;
 use CMS\Core\StyleBuilder;
