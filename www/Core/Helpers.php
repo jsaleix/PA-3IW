@@ -35,7 +35,8 @@ class Helpers
 
 	public static function errorStatus(){
 		http_response_code(404);
-		exit();
+		include($_SERVER['DOCUMENT_ROOT']. "/public/404.php");
+		die();
 	}
 
 	public static function serverErrorStatus(){
