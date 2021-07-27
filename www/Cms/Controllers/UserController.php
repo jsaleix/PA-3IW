@@ -14,15 +14,15 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 class UserController{
 
-    public function listAdminAction($site){
+    public function listAdminAction($site){//List all admins on a given site
         $wlistObj = new Whitelist();
         $wlistObj->setIdSite($site->getId());
-        $wlist = $wlistObj->findAll();
+        $wlist = $wlistObj->findAll();//go take all association from the site to the admins of it
         $userObj = new User();
         $fields = [ 'id', 'name', 'email', 'joinDate', 'Delete' ];
         $datas = [];
-		if($wlist){
-			foreach($wlist as $item){
+		if($wlist){//it there is admins
+			foreach($wlist as $item){//loop on it to sanitize the display of the admins
                 $userObj->setId($item['idUser']);
                 $user = $userObj->findOne();
                 if($user){
@@ -45,7 +45,7 @@ class UserController{
 		$view->assign('pageTitle', "Users allowed to manage this site");
     }
 
-    public function addAdminAction($site){
+    public function addAdminAction($site){//Function to add an admin to the site
         $wlistObj = new Whitelist();
 		$wlistObj->setIdSite($site->getId());
 
@@ -54,7 +54,7 @@ class UserController{
 		$view = new View('whitelist', 'back', $site);
 
 		try{
-			if(!empty($_POST) )
+			if(!empty($_POST) )//on form submit
 			{
 				$errors = [];
 				[ "user" => $user] = $_POST;
@@ -68,11 +68,11 @@ class UserController{
                     $view->assign("errors", $errors);
                     return;
                 }
-				$wlistObj->setIdUser($user);
+				$wlistObj->setIdUser($user);//Initialize a new object to check association
 				$check = $wlistObj->findOne();
-				if($check){  throw new \Exception('User already authorized');  }
+				if($check){  throw new \Exception('User already authorized');  }//If the user is already admin, return
 				$adding = $wlistObj->save();
-				if($adding){
+				if($adding){//check the addition on db
 					$this->sendAdminMail($user, $site);
 					\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 				}else{
@@ -87,19 +87,22 @@ class UserController{
 		}
     }
 
-    public function deleteAdminAction($site){
+    public function deleteAdminAction($site){//Delete an admin from the site
 		try{
 			if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('whitelist id not set');}
-			if($site->getCreator() != Security::getUser()){ throw new \Exception('Cannot do this action'); }
-			$userObj = new User();
+			if($site->getCreator() != Security::getUser()){ throw new \Exception('Cannot do this action'); }//check that only the creator can delete admùins
+			
+			$userObj = new User();//Try to find the user in db
 			$userObj->setId($_GET['id']);
 			$user = $userObj->findOne();
 			if(!$user){ throw new \Exception('Cannot find this user on the whitelist'); }
-			$wlistObj = new Whitelist();
+			
+			$wlistObj = new Whitelist();//Find the association of the user
 			$wlistObj->setIdSite($site->getId());
 			$wlistObj->setIdUser($_GET['id']);
 			$check = $wlistObj->delete();
-			if(!$check){ throw new \Exception('Cannot delete this user from whitelist');}
+			
+			if(!$check){ throw new \Exception('Cannot delete this user from whitelist');}//Check the deletion
 			\App\Core\Helpers::customRedirect('/admin/users?success', $site);
 		}catch(\Exception $e){
 			echo $e->getMessage();

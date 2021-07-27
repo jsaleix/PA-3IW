@@ -59,7 +59,7 @@ class Booking_planning extends CMSModels
         return $this->disabled;
     }
 
-    public function individualInput(){//CREATE AND INPUT ASSOCIATED TO THE ID IN DB
+    public function individualInput(){//CREATE AN INPUT ASSOCIATED TO THE ID IN DB
         return [
             "day-".$this->getId()=>[
                 "type"=>"text",

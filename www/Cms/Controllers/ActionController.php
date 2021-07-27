@@ -7,7 +7,7 @@ use App\Models\Action;
 class ActionController{
 
 
-	public function getActionFiltersAction($site){
+	public function getActionFiltersAction($site){//Function get filters for actions
         $code = 200;
         $itemsArr = [];
 

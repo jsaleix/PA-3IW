@@ -11,18 +11,18 @@ use CMS\Core\CMSView as View;
 
 class CommentController{
 
-	public function manageCommentsAction($site){
+	public function manageCommentsAction($site){//List the comments and btn to manage them
 		$commentObj = new Comment($site->getPrefix());
 		$comments = $commentObj->findAll();
 
         $userObj = new User();
         $postObj = new Post($site->getPrefix());
 
-        $content = "";
+        $content = "";//Prepare data for the render in front
 		$fields = [ 'Id', 'Message', 'Post', 'Author', 'Date', 'Delete' ];
 		$datas = [];
 
-		if($comments){
+		if($comments){//If there is comments, formalize to render them
 			foreach($comments as $item){
                 if($item['idPost'] !== NULL){
                     $postObj->setId($item['idPost']);
@@ -55,15 +55,17 @@ class CommentController{
 		$view->assign('pageTitle', "Manage the comments");
 	}
 
-    public function deleteCommentAction($site){
+    public function deleteCommentAction($site){//Delete comment from id in admin
         try{
             if(!isset($_GET['id']) || empty($_GET['id']) ){ throw new \Exception('comment not set'); }
             $commentObj = new Comment($site->getPrefix());
             $commentObj->setId($_GET['id']??0);
             $comment = $commentObj->findOne();
-            if(!$comment){ throw new \Exception('Cannot delete this comment'); }
+
+            if(!$comment){ throw new \Exception('Cannot delete this comment'); }//Check if the comment exists
             $check = $commentObj->delete();
-            if(!$check){ throw new \Exception('Cannot delete this comment');}
+
+            if(!$check){ throw new \Exception('Cannot delete this comment');}//Check the deletion
 			\App\Core\Helpers::customRedirect('/admin/comments?success', $site);
         }catch(\Exception $e){
 			echo $e->getMessage();
@@ -72,16 +74,19 @@ class CommentController{
         
     }
 
-    public function deleteMyCommentAction($site){
+    public function deleteMyCommentAction($site){//Delete comment from id in front, can be used only by the user that created it
         try{
             if(!isset($_GET['id']) || empty($_GET['id'])){ throw new \Exception('no comment specified'); }
-            $commentObj = new Comment($site->getPrefix());
+
+            $commentObj = new Comment($site->getPrefix());//Try to find the comment
             $commentObj->setId($_GET['id']??0);
             $comment = $commentObj->findOne();
-            if(!$comment || $comment['idUser'] != Security::getUser()){ throw new \Exception('Cannot delete this comment'); }
+            if(!$comment || $comment['idUser'] != Security::getUser()){ throw new \Exception('Cannot delete this comment'); }//Check that it's the creator that tries to delete it
+
             $check = $commentObj->delete();
-            if(!$check){ throw new \Exception('Cannot delete this comment');}
+            if(!$check){ throw new \Exception('Cannot delete this comment');}//Check the deletion
             \App\Core\Helpers::customRedirect('/ent/post?id='.$comment['idPost'], $site);
+            
         }catch(\Exception $e){
             echo $e->getMessage();
             \App\Core\Helpers::customRedirect('/ent/post?error', $site);
