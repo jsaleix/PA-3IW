@@ -20,7 +20,9 @@ class Database
     		}
 
 		}catch(\Exception $e){
-			die("Erreur SQL " . $e->getMessage());
+			ErrorReporter::report('construct db : ' . $e->getMessage());
+			die();
+			//die("Erreur SQL " . $e->getMessage());
 		}
 
 		$getCalledClassExploded = explode("\\", get_called_class()); //App\Models\User
@@ -111,7 +113,8 @@ class Database
 			$query->execute($columns);
 			return true;
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			ErrorReporter::report('save ' . $this->table .': ' . $e->getMessage());
+			//echo $e->getMessage();
 			return false;
 		}
 	}
@@ -158,7 +161,8 @@ class Database
 			$query->execute($columns);
 			return true;
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			ErrorReporter::report('delete: ' . $e->getMessage());
+			//echo $e->getMessage();
 			return false;
 		}
 	}
@@ -328,7 +332,7 @@ class Database
 			$query->execute();
 			return true;
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			ErrorReporter::report('updateAll: ' . $e->getMessage());
 			return false;
 		}
 

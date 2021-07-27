@@ -25,7 +25,7 @@
         </section>
 
         <section id="sites_section">
-            <?php if(isset($sites)): ?>
+            <?php if(isset($sites) && $sites && count($sites) > 0): ?>
                 <section class="site_list">
                     <?php foreach($sites as $site): ?>
                         <div class="site_row" style="background-image: url('<?= DOMAIN . $site['image']?>'); ">
