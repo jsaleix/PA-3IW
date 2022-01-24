@@ -12,6 +12,7 @@ services:
      - ./server/php.ini:/usr/local/etc/php/php.ini
 
   database:
+    platform: linux/x86_64
     image: mysql:5.7
     container_name: mysql
     ports :
