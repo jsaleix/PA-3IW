@@ -28,29 +28,35 @@ class SiteController{
 		$form = $siteObj->formEdit();
 
 		if(!empty($_POST) ) {
-			[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
-			[ "image" => $image ] = $_FILES;
-			$data = array_merge($_POST, $_FILES);
-			$errors = FormValidator::check($form, $data);
-			if(count($errors) != 0){ 
-				$errors[] = 'Form not accepted';
-				throw new \Exception('Form not accepted'); 
-			}
-			if(isset($data['image'])){
-				$imgDir = "/uploads/cms/" . $site->getSubDomain() . '/';
-				$imgName = 'banner';
-				$isUploaded = FileUploader::uploadImage($data['image'], $imgName, $imgDir);
-				
-				if($isUploaded != false){
-					$data['image']= $isUploaded;
-				}else{
-					$data['image'] = null;
+			try{
+				[ "name" => $name, "description" => $description, "type" => $type] = $_POST;
+				[ "image" => $image ] = $_FILES;
+				$data = array_merge($_POST, $_FILES);
+				$errors = FormValidator::check($form, $data);
+				if(count($errors) != 0){ 
+					$errors[] = 'Form not accepted';
+					throw new \Exception('Form not accepted'); 
 				}
-			}
-			$adding = $siteObj->edit($data);
-			if($adding){
-				\App\Core\Helpers::customRedirect('/admin/settings', $site);
-			}else{
+
+				if(isset($data['image'])){
+					$imgDir = "/uploads/cms/" . $site->getSubDomain() . '/';
+					$imgName = 'banner';
+					$isUploaded = FileUploader::uploadImage($data['image'], $imgName, $imgDir);
+					
+					if($isUploaded != false){
+						$data['image']= $isUploaded;
+					}else{
+						$data['image'] = null;
+					}
+				}
+
+				$adding = $siteObj->edit($data);
+				if($adding){
+					\App\Core\Helpers::customRedirect('/admin/settings', $site);
+				}else{
+					throw new \Exception('Not added'); 
+				}
+			}catch(\Exception $e){
 				$errors = ["Error when updating the site"];
 				$view->assign("errors", $errors);
 			}

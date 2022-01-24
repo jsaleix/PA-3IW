@@ -18,3 +18,5 @@ www/public/uploads/users/*
 
 !www/reports/
 www/reports/report.txt
+
+.DS_Store
